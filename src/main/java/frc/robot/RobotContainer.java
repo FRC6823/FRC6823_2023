@@ -2,6 +2,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+//import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.AutoSearchLeft;
 import frc.robot.commands.AutoSearchRight;
@@ -11,6 +13,7 @@ import frc.robot.commands.RotateToAngle;
 import frc.robot.commands.RotateToZero;
 import frc.robot.commands.ServoTuck;
 import frc.robot.commands.Shoot;
+import frc.robot.commands.SwitchPipelineCommand;
 import frc.robot.commands.TargetSpaceDrive;
 import frc.robot.commands.Load;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -132,69 +135,83 @@ public class RobotContainer {
         RotateToZero.setInitialAngle(navX.getAngleRad());
         // Hold button 8 to set the swerve just forward, this is for calibration
         // purposes
-        joystickHandler3.button(8).whileHeld(() -> swerveDriveSubsystem.drive(0,
-                0.1, 0), swerveDriveSubsystem);
+        joystickHandler3.button(8).whileTrue(() -> swerveDriveSubsystem.drive(0,
+                0.1, 0));
 
         // This will set the current orientation to be "forward" for field drive
-        joystickHandler3.button(3).whenPressed(fieldSpaceDriveCommand::zero);
+        joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);
 
         // Holding 7 will enable robot space drive, instead of field space
-        joystickHandler3.button(2).whileHeld(robotSpaceDriveCommand);
+        joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
 
-        joystickHandler3.button(4).whileHeld(targetSpaceDriveCommand);
+        joystickHandler3.button(4).whileTrue(targetSpaceDriveCommand);
 
-        joystickHandler4.button(6).whileHeld(backLoad);
+        joystickHandler4.button(6).whileTrue(backLoad);
 
-        joystickHandler4.button(6).whenReleased(backLoad::stop);
+        //joystickHandler4.button(6).whenReleased(backLoad::stop); 
+        //do we still need this? i'm pretty sure while true takes care of this step. 
 
-        joystickHandler4.button(1).whileActiveContinuous(() -> intakeSubsystem.backAngle(), intakeSubsystem)
-                .whenInactive(intakeSubsystem::stopAngle);
-        joystickHandler4.button(2).whileActiveContinuous(() -> intakeSubsystem.intake(), intakeSubsystem)
-                .whenInactive(intakeSubsystem::stopIntake);    
-        joystickHandler4.button(3).whileActiveContinuous(() -> intakeSubsystem.backIntake(), intakeSubsystem)
-                .whenInactive(intakeSubsystem::stopIntake);
-        joystickHandler4.button(4).whileActiveContinuous(() -> intakeSubsystem.angle(), intakeSubsystem)
-                .whenInactive(intakeSubsystem::stopAngle);
+        //joystickHandler4.button(1).whileActiveContinuous(() -> intakeSubsystem.backAngle(), intakeSubsystem)
+                //.whenInactive(intakeSubsystem::stopAngle);
 
-        joystickHandler4.button(2).whileActiveContinuous(() -> conveyorSubsystem.convey(), conveyorSubsystem)
-                .whenInactive(conveyorSubsystem::stopConvey);
-        joystickHandler4.button(3).whileActiveContinuous(() -> conveyorSubsystem.backConvey(), conveyorSubsystem)
-                .whenInactive(conveyorSubsystem::stopConvey);
+                joystickHandler4.button(1).whileTrue(() -> intakeSubsystem.backAngle());
+                
+        //joystickHandler4.button(2).whileActiveContinuous(() -> intakeSubsystem.intake(), intakeSubsystem)
+                //.whenInactive(intakeSubsystem::stopIntake);    
+
+                joystickHandler4.button(2).whileTrue(() -> intakeSubsystem.intake());
+
+        //joystickHandler4.button(3).whileActiveContinuous(() -> intakeSubsystem.backIntake(), intakeSubsystem)
+                //.whenInactive(intakeSubsystem::stopIntake);
+
+                joystickHandler4.button(3).whileTrue(() -> intakeSubsystem.backIntake());
+
+        //joystickHandler4.button(4).whileActiveContinuous(() -> intakeSubsystem.angle(), intakeSubsystem)
+                //.whenInactive(intakeSubsystem::stopAngle);
+
+                joystickHandler4.button(4).whileTrue(() -> intakeSubsystem.angle());
+
+        //joystickHandler4.button(2).whileActiveContinuous(() -> conveyorSubsystem.convey(), conveyorSubsystem)
+                //.whenInactive(conveyorSubsystem::stopConvey);
+
+                joystickHandler4.button(2).whileTrue(() -> conveyorSubsystem.convey());
+
+        //joystickHandler4.button(3).whileActiveContinuous(() -> conveyorSubsystem.backConvey(), conveyorSubsystem)
+                //.whenInactive(conveyorSubsystem::stopConvey);
+
+                joystickHandler4.button(3).whileTrue(() -> conveyorSubsystem.backConvey());
 
         //joystickHandler4.button(7).whenPressed(() -> swerveDriveSubsystem.autoCali(), swerveDriveSubsystem);
         // joystickHandler4.button(8).whileHeld(() ->
         // shooterSubsystem.setShooterAngle(30), shooterSubsystem);
-        joystickHandler3.button(1).whileHeld(() ->
-        liftSubsystem.liftUp(), liftSubsystem)
-        .whenInactive(liftSubsystem::liftStop);
+        joystickHandler3.button(1).whileTrue(
+        liftSubsystem.liftUp());
 
-        joystickHandler3.button(6).whileHeld(() ->
-        liftSubsystem.liftDown(), liftSubsystem)
-        .whenInactive(liftSubsystem::liftStop);
+        joystickHandler3.button(6).whileTrue(() ->
+        liftSubsystem.liftDown());
 
-        joystickHandler3.button(9).whileHeld(() ->
-        liftSubsystem.leftUp(), liftSubsystem)
-        .whenInactive(liftSubsystem::liftStop);
-        joystickHandler3.button(10).whileHeld(() ->
-        liftSubsystem.leftDown(), liftSubsystem)
-        .whenInactive(liftSubsystem::liftStop);
-        joystickHandler3.button(11).whileHeld(() ->
-        liftSubsystem.rightUp(), liftSubsystem)
-        .whenInactive(liftSubsystem::liftStop);
-        joystickHandler3.button(12).whileHeld(() ->
-        liftSubsystem.rightDown(), liftSubsystem)
-        .whenInactive(liftSubsystem::liftStop);
+        joystickHandler3.button(9).whileTrue(() ->
+        liftSubsystem.leftUp());
 
-        joystickHandler3.button(13).whenPressed(new 
+        joystickHandler3.button(10).whileTrue(() ->
+        liftSubsystem.leftDown());
+
+        joystickHandler3.button(11).whileTrue(() ->
+        liftSubsystem.rightUp());
+
+        joystickHandler3.button(12).whileTrue(() ->
+        liftSubsystem.rightDown());
+
+        joystickHandler3.button(13).onTrue(new 
         AutoSearchLeft(swerveDriveSubsystem, 
-        limeLightSubsystem, 0), false);
-        joystickHandler3.button(14).whenPressed(new 
+        limeLightSubsystem, 0));
+        joystickHandler3.button(14).onTrue(new 
         AutoSearchRight(swerveDriveSubsystem, 
-        limeLightSubsystem, 1), false);
+        limeLightSubsystem, 1));
 
-        joystickHandler3.button(7).whenPressed(new 
+        joystickHandler3.button(7).onTrue(new 
         ServoTuck(limeLightSubsystem));
-        joystickHandler3.button(7).whenPressed(() -> 
-        limeLightSubsystem.setPipeline(1), limeLightSubsystem);
+        joystickHandler3.button(7).whileTrue(
+         new SwitchPipelineCommand(limeLightSubsystem, 1));
     }
 }

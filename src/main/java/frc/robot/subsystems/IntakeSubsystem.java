@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Map;
+import java.util.TreeSet;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -50,24 +52,36 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
 
-    public void backIntake() {
+    public TreeSet<Subsystem> backIntake() {
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         intakeMotor.set(-inTakePower * 0.5);
+        return tree;
     }
 
-    public void angle() {
+    public TreeSet<Subsystem> angle() {
         // while(Math.abs(angleEncoder.getAbsolutePosition() - downPos) > margin){
         //     pidPower = pid.calculate(angleEncoder.getAbsolutePosition(), downPos);
         //     angleMotor.set(-pidPower);
         // }
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         angleMotor.set(-1.5 * anglePower);
+        return tree;
     }
 
-    public void intake() {
+    public TreeSet<Subsystem> intake() {
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         intakeMotor.set(inTakePower);
+        return tree;
     }
 
-    public void backAngle() {
+    public TreeSet<Subsystem> backAngle() {
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         angleMotor.set(anglePower);
+        return tree;
     }
 
     public void backAngle(double power){

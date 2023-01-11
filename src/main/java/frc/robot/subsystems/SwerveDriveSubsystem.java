@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.TreeSet;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -7,6 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 //import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
@@ -79,7 +81,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         //autoCaliZero();
     }
 
-    public void drive(double x1, double y1, double x2) {
+    public TreeSet<Subsystem> drive(double x1, double y1, double x2) {
+        
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
+
         double r = Math.sqrt((L * L) + (W * W)); // diagonal of robot
         double backRightSpeed;
         double backLeftSpeed;
@@ -127,6 +133,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Frontright Speed", frontRightSpeed);
         SmartDashboard.putNumber("Frontleft Speed", frontLeftSpeed);
 
+        return tree;
     }
 
     // @Override

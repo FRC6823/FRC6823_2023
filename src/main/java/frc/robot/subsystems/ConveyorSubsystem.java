@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
+import java.util.TreeSet;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.util.sendable.SendableRegistry;
@@ -24,12 +27,18 @@ public class ConveyorSubsystem extends SubsystemBase {
         SendableRegistry.addLW(this, "Conveyor");
     }
 
-    public void backConvey() {
+    public TreeSet<Subsystem> backConvey() {
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         conveyorMotor.set(-conveyorPower);
+        return tree;
     }
 
-    public void convey() {
+    public TreeSet<Subsystem> convey() {
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         conveyorMotor.set(conveyorPower);
+        return tree;
     }
 
     public void stopConvey() {

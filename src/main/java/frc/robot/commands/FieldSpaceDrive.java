@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.TreeSet;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.JoystickHandler;
@@ -83,8 +86,12 @@ public class FieldSpaceDrive extends CommandBase {
         return x * Math.sin(angle) + y * Math.cos(angle);
     }
 
-    public void zero() { //Zeroes direction
+    public TreeSet<Subsystem> zero() { //Zeroes direction
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(swerveDrive);
         this.fieldAngle = navXHandler.getAngleRad(); // + Math.PI
         swerveDrive.setFieldAngle(fieldAngle);
+        return tree;
     }
+
 }

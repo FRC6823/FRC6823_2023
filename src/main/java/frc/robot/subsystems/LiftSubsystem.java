@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.TreeSet;
 import java.util.Map;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -7,6 +8,8 @@ import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LiftSubsystem extends SubsystemBase {
@@ -35,35 +38,53 @@ public class LiftSubsystem extends SubsystemBase {
 
     }
 
-    public void liftDown() {
+    public TreeSet<Subsystem> liftDown() {
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         leftLiftMotor.set(-leftLiftPower);
         rightLiftMotor.set(-rightLiftPower);
+        return tree;
     }
     
-    public void liftUp() {
+    public Command liftUp() {
         leftLiftMotor.set(leftLiftPower);
         rightLiftMotor.set(rightLiftPower);
     }
 
-    public void leftUp(){
+    public TreeSet<Subsystem> leftUp(){
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         leftLiftMotor.set(leftLiftPower);
+        return tree;
     }
 
-    public void leftDown(){
+    public TreeSet<Subsystem> leftDown(){
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         leftLiftMotor.set(-leftLiftPower);
+        return tree;
     }
 
-    public void rightUp(){
+    public TreeSet<Subsystem> rightUp(){
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         rightLiftMotor.set(rightLiftPower);
+        return tree;
     }
 
-    public void rightDown(){
+    public TreeSet<Subsystem> rightDown(){
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         rightLiftMotor.set(-rightLiftPower);
+        return tree;
     }
 
-    public void liftStop() {
+    public TreeSet<Subsystem> liftStop() {
+        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        tree.add(this);
         leftLiftMotor.set(0);
         rightLiftMotor.set(0);
+        return tree;
     }
 
     @Override

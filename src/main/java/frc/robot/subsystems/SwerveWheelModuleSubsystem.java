@@ -60,7 +60,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     //     encoderOffset = offset;
     // }
 
-    // angle is a value between -1 to 1
+    // angle is a value between -180 to 180
     public void drive(double speed, double angle) {
 
         double currentEncoderValue = angleEncoder.getAbsolutePosition();

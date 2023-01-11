@@ -1,13 +1,19 @@
 package frc.robot.subsystems;
 
 import java.util.TreeSet;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 //import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
@@ -31,6 +37,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private SwerveWheelModuleSubsystem backLeft;
     private SwerveWheelModuleSubsystem frontRight;
     private SwerveWheelModuleSubsystem frontLeft;
+    private SwerveDriveKinematics kinematics;
 
     private PIDController angleController;
     private double fieldangle = 0; //
@@ -39,7 +46,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // private SimpleWidget BLAngle;
     // private SimpleWidget BRAngle;
     private SimpleWidget calibrateWidget;
-    private SimpleWidget invertWidget;
+    //private SimpleWidget invertWidget;
 
     public void setFieldAngle(double fieldangle) {
         this.fieldangle = fieldangle;
@@ -50,8 +57,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public SwerveDriveSubsystem() {
         calibrateWidget = Shuffleboard.getTab("Preferences").addPersistent("Calibrate?", false)
                 .withWidget(BuiltInWidgets.kToggleButton);
-        invertWidget = Shuffleboard.getTab("Preferences").addPersistent("Invert?", false)
-                .withWidget(BuiltInWidgets.kToggleButton);
+        // invertWidget = Shuffleboard.getTab("Preferences").addPersistent("Invert?", false)
+        //         .withWidget(BuiltInWidgets.kToggleButton);
 
         backRight = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", calibrateWidget, Constants.bROffset);// These are the motors and encoder
                                                                 // CAN IDs for swerve drive
@@ -79,6 +86,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // BRAngle = Shuffleboard.getTab("Calibrate").addPersistent("BRAngle", 0).withWidget(BuiltInWidgets.kNumberSlider)
         //         .withProperties(Map.of("min", 0, "max", 360));
         //autoCaliZero();
+
+        // Locations for the swerve drive modules relative to the robot center.
+        Translation2d backRightLocation = new Translation2d(1, -1);
+        Translation2d backLeftLocation = new Translation2d(-1, -1);
+        Translation2d frontRightLocation = new Translation2d(1, 1);
+        Translation2d frontLeftLocation = new Translation2d(-1, 1);
+
+        kinematics = new SwerveDriveKinematics(backRightLocation, backLeftLocation, frontRightLocation, frontLeftLocation);
     }
 
     public TreeSet<Subsystem> drive(double x1, double y1, double x2) {
@@ -86,52 +101,74 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
         tree.add(this);
 
-        double r = Math.sqrt((L * L) + (W * W)); // diagonal of robot
-        double backRightSpeed;
-        double backLeftSpeed;
-        double frontRightSpeed;
-        double frontLeftSpeed;
+        ChassisSpeeds speeds = new ChassisSpeeds(x1 * 715, y1 * 715, -x2 * 715); //715.23 radians/second is the top no load speed of the motors
 
-        double backRightAngle;
-        double backLeftAngle;
-        double frontRightAngle;
-        double frontLeftAngle;
+        // Convert to module states
+        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
 
-        // From here to the next comment sets each module to the <x,y> from
-        // the joystick plus rotation times the diagonal to that module
-        // (i.e. FR is set to <x1,y1> + x2*<diagonal BL->FR>)
-        double a = x1 - x2 * (L / r);
-        double b = x1 + x2 * (L / r);
-        double c = y1 - x2 * (W / r);
-        double d = y1 + x2 * (W / r);
+        // Front left module state
+        SwerveModuleState backRightState = moduleStates[0];
 
-        backRightSpeed = Math.sqrt((b * b) + (c * c));
-        backLeftSpeed = Math.sqrt((a * a) + (c * c));
-        frontRightSpeed = Math.sqrt((b * b) + (d * d));
-        frontLeftSpeed = Math.sqrt((a * a) + (d * d));
+        // Front right module state
+        SwerveModuleState backLeftState = moduleStates[1];
 
-        frontRightAngle = Math.atan2(b, c) / Math.PI;
-        backRightAngle = Math.atan2(a, c) / Math.PI;
-        frontLeftAngle = Math.atan2(b, d) / Math.PI;
-        backLeftAngle = Math.atan2(a, d) / Math.PI;
+        // Back left module state
+        SwerveModuleState frontRightState = moduleStates[2];
 
-        if (invertWidget.getEntry().getBoolean(false)){
-            backLeft.drive(-backLeftSpeed, -backLeftAngle);
-            backRight.drive(backRightSpeed, -backRightAngle);
-            frontRight.drive(frontRightSpeed, -frontRightAngle);
-            frontLeft.drive(-frontLeftSpeed, -frontLeftAngle);
-        }else{
-            backLeft.drive(backLeftSpeed, -backLeftAngle);
-            backRight.drive(-backRightSpeed, -backRightAngle);
-            frontRight.drive(-frontRightSpeed, -frontRightAngle);
-            frontLeft.drive(frontLeftSpeed, -frontLeftAngle);
-        }
+        // Back right module state
+        SwerveModuleState frontLeftState = moduleStates[3];
 
-        //Print speed values
-        SmartDashboard.putNumber("Backright Speed", backRightSpeed);
-        SmartDashboard.putNumber("Backleft Speed", backLeftSpeed);
-        SmartDashboard.putNumber("Frontright Speed", frontRightSpeed);
-        SmartDashboard.putNumber("Frontleft Speed", frontLeftSpeed);
+        backLeft.drive(backLeftState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(backLeftState.angle.getDegrees())/Math.PI); //5.5 m/s is maximum zero load velocity
+        backRight.drive(backRightState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(backRightState.angle.getDegrees())/Math.PI);
+        frontLeft.drive(frontLeftState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(frontLeftState.angle.getDegrees())/Math.PI);
+        frontRight.drive(frontRightState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(frontRightState.angle.getDegrees())/Math.PI);
+
+        // double r = Math.sqrt((L * L) + (W * W)); // diagonal of robot
+        // double backRightSpeed;
+        // double backLeftSpeed;
+        // double frontRightSpeed;
+        // double frontLeftSpeed;
+
+        // double backRightAngle;
+        // double backLeftAngle;
+        // double frontRightAngle;
+        // double frontLeftAngle;
+
+        // // From here to the next comment sets each module to the <x,y> from
+        // // the joystick plus rotation times the diagonal to that module
+        // // (i.e. FR is set to <x1,y1> + x2*<diagonal BL->FR>)
+        // double a = x1 - x2 * (L / r);
+        // double b = x1 + x2 * (L / r);
+        // double c = y1 - x2 * (W / r);
+        // double d = y1 + x2 * (W / r);
+
+        // backRightSpeed = Math.sqrt((b * b) + (c * c));
+        // backLeftSpeed = Math.sqrt((a * a) + (c * c));
+        // frontRightSpeed = Math.sqrt((b * b) + (d * d));
+        // frontLeftSpeed = Math.sqrt((a * a) + (d * d));
+
+        // frontRightAngle = Math.atan2(b, c) / Math.PI;
+        // backRightAngle = Math.atan2(a, c) / Math.PI;
+        // frontLeftAngle = Math.atan2(b, d) / Math.PI;
+        // backLeftAngle = Math.atan2(a, d) / Math.PI;
+
+        // if (invertWidget.getEntry().getBoolean(false)){
+        //     backLeft.drive(-backLeftSpeed, -backLeftAngle);
+        //     backRight.drive(backRightSpeed, -backRightAngle);
+        //     frontRight.drive(frontRightSpeed, -frontRightAngle);
+        //     frontLeft.drive(-frontLeftSpeed, -frontLeftAngle);
+        // }else{
+        //     backLeft.drive(backLeftSpeed, -backLeftAngle);
+        //     backRight.drive(-backRightSpeed, -backRightAngle);
+        //     frontRight.drive(-frontRightSpeed, -frontRightAngle);
+        //     frontLeft.drive(frontLeftSpeed, -frontLeftAngle);
+        // }
+
+        // //Print speed values
+        // SmartDashboard.putNumber("Backright Speed", backRightSpeed);
+        // SmartDashboard.putNumber("Backleft Speed", backLeftSpeed);
+        // SmartDashboard.putNumber("Frontright Speed", frontRightSpeed);
+        // SmartDashboard.putNumber("Frontleft Speed", frontLeftSpeed);
 
         return tree;
     }

@@ -5,7 +5,7 @@ import java.util.Map;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+//import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -51,8 +51,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem() {
         this.leftMotor = new TalonFX(11);
         this.rightMotor = new TalonFX(12);
-        this.angleMotor = new CANSparkMax(14, CANSparkMaxLowLevel.MotorType.kBrushed);
-        this.loadMotor = new CANSparkMax(13, CANSparkMaxLowLevel.MotorType.kBrushless);
+        this.angleMotor = new CANSparkMax(14, CANSparkMax.MotorType.kBrushed);
+        this.loadMotor = new CANSparkMax(13, CANSparkMax.MotorType.kBrushless);
         // this.angleEncoder = new AnalogInput(0);
         // this.speedController = new PIDController(0.0001, 0, 0);
         this.encoder = new DutyCycleEncoder(0);
@@ -150,8 +150,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        percent = RPMPercent.getEntry().getNumber(2).doubleValue();
-        ratio = RPMRatio.getEntry().getNumber(2).doubleValue();
+        percent = RPMPercent.getEntry().getDouble(2);
+        ratio = RPMRatio.getEntry().getDouble(2);
 
         if(ratio >= 0){
             shooterRPMLeft = (int)(6000 * percent);

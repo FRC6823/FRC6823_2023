@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+// import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -20,7 +20,7 @@ public class ConveyorSubsystem extends SubsystemBase {
     private SimpleWidget conveyorWidget;
 
     public ConveyorSubsystem() {
-        this.conveyorMotor = new CANSparkMax(15, CANSparkMaxLowLevel.MotorType.kBrushless);
+        this.conveyorMotor = new CANSparkMax(15, CANSparkMax.MotorType.kBrushless);
         conveyorWidget = Shuffleboard.getTab("Preferences").addPersistent("conveyorPower", 0.3).withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", 0, "max", 1));
         SendableRegistry.addChild(this, conveyorMotor);

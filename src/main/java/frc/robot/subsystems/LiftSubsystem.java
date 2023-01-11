@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import java.util.TreeSet;
 import java.util.Map;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+//import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -22,8 +22,8 @@ public class LiftSubsystem extends SubsystemBase {
     private double rightLiftPower;
 
     public LiftSubsystem() {
-        this.leftLiftMotor = new CANSparkMax(16, CANSparkMaxLowLevel.MotorType.kBrushed);
-        this.rightLiftMotor = new CANSparkMax(17, CANSparkMaxLowLevel.MotorType.kBrushed);
+        this.leftLiftMotor = new CANSparkMax(16, CANSparkMax.MotorType.kBrushed);
+        this.rightLiftMotor = new CANSparkMax(17, CANSparkMax.MotorType.kBrushed);
         leftPowWidget = Shuffleboard.getTab("Preferences").add("Left Lift Power", 1)
         .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", -1, "max", 1));
@@ -49,6 +49,7 @@ public class LiftSubsystem extends SubsystemBase {
     public Command liftUp() {
         leftLiftMotor.set(leftLiftPower);
         rightLiftMotor.set(rightLiftPower);
+        return null;
     }
 
     public TreeSet<Subsystem> leftUp(){

@@ -44,6 +44,18 @@ public class PhotonCameraSubsystem extends SubsystemBase {
         else return 0;
     }
 
+    public double getSkew() {
+        if (hasTarget())
+            return target.getSkew();
+        else return 0;
+    }
+
+    public double getSkewRad() {
+        if (hasTarget())
+            return (target.getSkew() / 360.0) * (2.0 * Math.PI);
+        else return 0;
+    }
+
     public boolean hasTarget() {
         return result.hasTargets();
     }

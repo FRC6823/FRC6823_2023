@@ -13,8 +13,6 @@ public class PhotonCameraSubsystem extends SubsystemBase {
     private PhotonCamera photonCamera;
     private PhotonPipelineResult result;
     private PhotonTrackedTarget target;
-    private double lastKnownZ;
-    private double lastKnownX;
 
     public PhotonCameraSubsystem(String cameraName) {
         photonCamera = new PhotonCamera(cameraName);

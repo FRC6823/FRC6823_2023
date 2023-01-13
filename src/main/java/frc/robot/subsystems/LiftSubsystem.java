@@ -49,7 +49,9 @@ public class LiftSubsystem extends SubsystemBase {
     public Command liftUp() {
         leftLiftMotor.set(leftLiftPower);
         rightLiftMotor.set(rightLiftPower);
+        return null;
     }
+
 
     public TreeSet<Subsystem> leftUp(){
         TreeSet<Subsystem> tree = new TreeSet<Subsystem>();

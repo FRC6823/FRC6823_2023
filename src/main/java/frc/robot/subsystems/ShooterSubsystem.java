@@ -150,8 +150,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        percent = RPMPercent.getEntry().getNumber(2).doubleValue();
-        ratio = RPMRatio.getEntry().getNumber(2).doubleValue();
+        percent = RPMPercent.getEntry().getInteger(2) * 2;
+        ratio = RPMRatio.getEntry().getInteger(2) * 2;
 
         if(ratio >= 0){
             shooterRPMLeft = (int)(6000 * percent);

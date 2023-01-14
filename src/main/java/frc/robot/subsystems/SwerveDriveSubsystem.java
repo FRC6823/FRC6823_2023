@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import java.util.TreeSet;
+import java.util.HashSet;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -81,9 +81,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         //autoCaliZero();
     }
 
-    public TreeSet<Subsystem> drive(double x1, double y1, double x2) {
+    public HashSet<Subsystem> drive(double x1, double y1, double x2) {
         
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
 
         double r = Math.sqrt((L * L) + (W * W)); // diagonal of robot

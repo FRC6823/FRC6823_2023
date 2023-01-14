@@ -1,7 +1,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.TreeSet;
+
+import java.util.HashSet;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,8 +28,8 @@ public class LimeLightSubsystem extends SubsystemBase {
         SendableRegistry.addLW(this, "LimeLight Subsystem");
     }
 
-    public TreeSet<Subsystem> setPipeline(int pipeline) {
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> setPipeline(int pipeline) {
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         table.getEntry("pipeline").setNumber(pipeline);
         if (pipeline == 0)

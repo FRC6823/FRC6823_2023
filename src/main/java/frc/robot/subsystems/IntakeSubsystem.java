@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Map;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -52,33 +52,33 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
 
-    public TreeSet<Subsystem> backIntake() {
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> backIntake() {
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         intakeMotor.set(-inTakePower * 0.5);
         return tree;
     }
 
-    public TreeSet<Subsystem> angle() {
+    public HashSet<Subsystem> angle() {
         // while(Math.abs(angleEncoder.getAbsolutePosition() - downPos) > margin){
         //     pidPower = pid.calculate(angleEncoder.getAbsolutePosition(), downPos);
         //     angleMotor.set(-pidPower);
         // }
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         angleMotor.set(-1.5 * anglePower);
         return tree;
     }
 
-    public TreeSet<Subsystem> intake() {
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> intake() {
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         intakeMotor.set(inTakePower);
         return tree;
     }
 
-    public TreeSet<Subsystem> backAngle() {
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> backAngle() {
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         angleMotor.set(anglePower);
         return tree;

@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import java.util.TreeSet;
+import java.util.HashSet;
 import java.util.Map;
 import com.revrobotics.CANSparkMax;
 //import com.revrobotics.CANSparkMaxLowLevel;
@@ -38,8 +38,8 @@ public class LiftSubsystem extends SubsystemBase {
 
     }
 
-    public TreeSet<Subsystem> liftDown() {
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> liftDown() {
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         leftLiftMotor.set(-leftLiftPower);
         rightLiftMotor.set(-rightLiftPower);
@@ -52,36 +52,36 @@ public class LiftSubsystem extends SubsystemBase {
         return null;
     }
 
-    public TreeSet<Subsystem> leftUp(){
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> leftUp(){
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         leftLiftMotor.set(leftLiftPower);
         return tree;
     }
 
-    public TreeSet<Subsystem> leftDown(){
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> leftDown(){
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         leftLiftMotor.set(-leftLiftPower);
         return tree;
     }
 
-    public TreeSet<Subsystem> rightUp(){
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> rightUp(){
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         rightLiftMotor.set(rightLiftPower);
         return tree;
     }
 
-    public TreeSet<Subsystem> rightDown(){
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> rightDown(){
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         rightLiftMotor.set(-rightLiftPower);
         return tree;
     }
 
-    public TreeSet<Subsystem> liftStop() {
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> liftStop() {
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
         leftLiftMotor.set(0);
         rightLiftMotor.set(0);

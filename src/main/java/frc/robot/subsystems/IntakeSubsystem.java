@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Map;
@@ -52,11 +53,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
 
-    public HashSet<Subsystem> backIntake() {
-        HashSet<Subsystem> tree = new HashSet<Subsystem>();
-        tree.add(this);
-        intakeMotor.set(-inTakePower * 0.5);
-        return tree;
+    public CommandBase backIntake() {
+        return this.runOnce(() -> 
+        intakeMotor.set(-inTakePower * 0.5)
+        );
     }
 
     public HashSet<Subsystem> angle() {
@@ -70,11 +70,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return tree;
     }
 
-    public HashSet<Subsystem> intake() {
-        HashSet<Subsystem> tree = new HashSet<Subsystem>();
-        tree.add(this);
-        intakeMotor.set(inTakePower);
-        return tree;
+    public CommandBase intake() {
+        return this.runOnce(() ->
+        intakeMotor.set(inTakePower)
+        );
     }
 
     public HashSet<Subsystem> backAngle() {
@@ -88,8 +87,8 @@ public class IntakeSubsystem extends SubsystemBase {
         angleMotor.set(power);
     }
 
-    public void stopIntake() {
-        intakeMotor.set(0);
+    public CommandBase stopIntake() {
+        return this.runOnce(() -> intakeMotor.set(0));
     }
 
     public void stopAngle() {

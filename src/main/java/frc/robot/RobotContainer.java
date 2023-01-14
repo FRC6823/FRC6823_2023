@@ -159,12 +159,12 @@ public class RobotContainer {
         //joystickHandler4.button(2).whileActiveContinuous(() -> intakeSubsystem.intake(), intakeSubsystem)
                 //.whenInactive(intakeSubsystem::stopIntake);    
 
-                joystickHandler4.button(2).whileTrue(() -> intakeSubsystem.intake());
+                joystickHandler4.button(2).whileTrue(intakeSubsystem.intake()).onFalse(intakeSubsystem.stopIntake());
 
         //joystickHandler4.button(3).whileActiveContinuous(() -> intakeSubsystem.backIntake(), intakeSubsystem)
                 //.whenInactive(intakeSubsystem::stopIntake);
 
-                joystickHandler4.button(3).whileTrue(() -> intakeSubsystem.backIntake());
+                joystickHandler4.button(3).whileTrue(intakeSubsystem.backIntake()).onFalse(intakeSubsystem.stopIntake());
 
         //joystickHandler4.button(4).whileActiveContinuous(() -> intakeSubsystem.angle(), intakeSubsystem)
                 //.whenInactive(intakeSubsystem::stopAngle);
@@ -185,22 +185,22 @@ public class RobotContainer {
         // joystickHandler4.button(8).whileHeld(() ->
         // shooterSubsystem.setShooterAngle(30), shooterSubsystem);
         joystickHandler3.button(1).whileTrue(
-        liftSubsystem.liftUp());
+        liftSubsystem.liftUp()).onFalse(liftSubsystem.liftStop());
 
         joystickHandler3.button(6).whileTrue(() ->
-        liftSubsystem.liftDown());
-
-        joystickHandler3.button(9).whileTrue(() ->
-        liftSubsystem.leftUp());
+        liftSubsystem.liftDown()).onFalse(liftSubsystem.liftStop());
+        
+        joystickHandler3.button(9).whileTrue(
+        liftSubsystem.leftUp()).onFalse(liftSubsystem.liftStop());
 
         joystickHandler3.button(10).whileTrue(() ->
-        liftSubsystem.leftDown());
+        liftSubsystem.leftDown()).onFalse(liftSubsystem.liftStop());
 
         joystickHandler3.button(11).whileTrue(() ->
-        liftSubsystem.rightUp());
+        liftSubsystem.rightUp()).onFalse(liftSubsystem.liftStop());
 
         joystickHandler3.button(12).whileTrue(() ->
-        liftSubsystem.rightDown());
+        liftSubsystem.rightDown()).onFalse(liftSubsystem.liftStop());
 
         joystickHandler3.button(13).onTrue(new 
         AutoSearchLeft(swerveDriveSubsystem, 

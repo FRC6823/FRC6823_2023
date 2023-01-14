@@ -8,7 +8,8 @@ import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
-import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -46,17 +47,20 @@ public class LiftSubsystem extends SubsystemBase {
         return tree;
     }
     
-    public Command liftUp() {
-        leftLiftMotor.set(leftLiftPower);
-        rightLiftMotor.set(rightLiftPower);
-        return null;
+    public CommandBase liftUp() {
+        
+        return this.runOnce( () -> {
+            leftLiftMotor.set(leftLiftPower);
+            rightLiftMotor.set(rightLiftPower);
+            } 
+        );
     }
 
-    public HashSet<Subsystem> leftUp(){
-        HashSet<Subsystem> tree = new HashSet<Subsystem>();
-        tree.add(this);
+    public CommandBase leftUp(){
+        return this.runOnce(() -> {
         leftLiftMotor.set(leftLiftPower);
-        return tree;
+        }
+        );
     }
 
     public HashSet<Subsystem> leftDown(){
@@ -80,12 +84,11 @@ public class LiftSubsystem extends SubsystemBase {
         return tree;
     }
 
-    public HashSet<Subsystem> liftStop() {
-        HashSet<Subsystem> tree = new HashSet<Subsystem>();
-        tree.add(this);
+    public CommandBase liftStop() {
+        return this.runOnce(() ->{        
         leftLiftMotor.set(0);
         rightLiftMotor.set(0);
-        return tree;
+        });
     }
 
     @Override

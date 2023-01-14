@@ -3,10 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.NavXHandler;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ConveyorSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.util.Constants;
 
@@ -14,23 +11,17 @@ public class AutoCommandGroup extends SequentialCommandGroup {
 
     //Declare subsystems and NavX used
     private SwerveDriveSubsystem swerveDriveSubsystem;
-    private ShooterSubsystem shooterSubsystem;
-    private ConveyorSubsystem conveyorSubsystem;
-    private IntakeSubsystem intakeSubsystem;
     private LimeLightSubsystem limeLightSubsystem;
     private NavXHandler navX;
 
     public AutoCommandGroup(RobotContainer robotContainer, String selection) {
         //Instantiate subsystems and NavX; set limelight to desired pipeline
         swerveDriveSubsystem = robotContainer.getSwervedriveSubsystem();
-        shooterSubsystem = robotContainer.getShooterSubsystem();
-        conveyorSubsystem = robotContainer.getConveyorSubsystem();
-        intakeSubsystem = robotContainer.getIntakeSubsystem();
         limeLightSubsystem = robotContainer.getLimeLightSubsystem();
         navX = robotContainer.getNavXHandler();
         
         //Add each command you want the robot to do in order
-        if (selection.toUpperCase().equals("1BALL")){
+        /*if (selection.toUpperCase().equals("1BALL")){
             addCommands(new ServoTuck(limeLightSubsystem));
             addCommands(new HammerDrop(intakeSubsystem, 0.1));
             addCommands(new GoBackwards(swerveDriveSubsystem, 0.1, 0.5));
@@ -187,7 +178,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             addCommands(new FullHalt(swerveDriveSubsystem, shooterSubsystem, conveyorSubsystem, intakeSubsystem));
             addCommands(new ServoTuck(limeLightSubsystem));
             addCommands(new GoBackwards(swerveDriveSubsystem, 0.6, 0.5));
+         
         }
+        */
     }
 
 }

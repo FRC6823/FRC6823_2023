@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -29,8 +29,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * This code heavily attributed from Jacob Misirian of FIRST Robotics Team 2506
      * of Franklin, WI.
      */
-    public final double L = 1;
-    public final double W = 1; // These are from the Length and Width between wheels.
+    public final double L = 26;
+    public final double W = 32; // These are from the Length and Width between wheels.
     // CHANGE THESE IF THE ROBOT IS NOT A SQUARE
 
     private SwerveWheelModuleSubsystem backRight;
@@ -88,17 +88,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         //autoCaliZero();
 
         // Locations for the swerve drive modules relative to the robot center.
-        Translation2d backRightLocation = new Translation2d(1, -1);
-        Translation2d backLeftLocation = new Translation2d(-1, -1);
-        Translation2d frontRightLocation = new Translation2d(1, 1);
-        Translation2d frontLeftLocation = new Translation2d(-1, 1);
+        Translation2d backRightLocation = new Translation2d(W, -L);
+        Translation2d backLeftLocation = new Translation2d(-W, -L);
+        Translation2d frontRightLocation = new Translation2d(W, L);
+        Translation2d frontLeftLocation = new Translation2d(-W, L);
 
         kinematics = new SwerveDriveKinematics(backRightLocation, backLeftLocation, frontRightLocation, frontLeftLocation);
     }
 
-    public TreeSet<Subsystem> drive(double x1, double y1, double x2) {
+    public HashSet<Subsystem> drive(double x1, double y1, double x2) {
         
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(this);
 
         ChassisSpeeds speeds = new ChassisSpeeds(x1 * 715, y1 * 715, -x2 * 715); //715.23 radians/second is the top no load speed of the motors

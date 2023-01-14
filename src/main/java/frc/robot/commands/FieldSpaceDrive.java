@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.TreeSet;
+import java.util.HashSet;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.JoystickHandler;
@@ -86,8 +86,8 @@ public class FieldSpaceDrive extends CommandBase {
         return x * Math.sin(angle) + y * Math.cos(angle);
     }
 
-    public TreeSet<Subsystem> zero() { //Zeroes direction
-        TreeSet<Subsystem> tree = new TreeSet<Subsystem>();
+    public HashSet<Subsystem> zero() { //Zeroes direction
+        HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(swerveDrive);
         this.fieldAngle = navXHandler.getAngleRad(); // + Math.PI
         swerveDrive.setFieldAngle(fieldAngle);

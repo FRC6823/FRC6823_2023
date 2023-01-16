@@ -8,6 +8,7 @@ import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.AutoSearchLeft;
 import frc.robot.commands.AutoSearchRight;
 import frc.robot.commands.FieldSpaceDrive;
+import frc.robot.commands.FollowLeader;
 import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.commands.RotateToAngle;
 import frc.robot.commands.RotateToZero;
@@ -22,6 +23,7 @@ import frc.robot.subsystems.ConveyorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.PhotonVisionSubsystem;
 
 public class RobotContainer {
     // test commit
@@ -33,6 +35,8 @@ public class RobotContainer {
     public Shoot shoot;
     public Load backLoad;
     public LiftSubsystem liftSubsystem;
+    public PhotonVisionSubsystem photonVisionSubsystem;
+    public FollowLeader followLeaderCommand;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
@@ -79,6 +83,7 @@ public class RobotContainer {
         joystickHandler3 = new JoystickHandler(3);
         joystickHandler4 = new JoystickHandler(4);
         limeLightSubsystem = new LimeLightSubsystem(8);
+        photonVisionSubsystem = new PhotonVisionSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         conveyorSubsystem = new ConveyorSubsystem();
         liftSubsystem = new LiftSubsystem();
@@ -91,6 +96,7 @@ public class RobotContainer {
         targetSpaceDriveCommand = new TargetSpaceDrive(swerveDriveSubsystem, joystickHandler3, limeLightSubsystem, navX);
         backLoad = new Load(shooterSubsystem, conveyorSubsystem);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
+        followLeaderCommand = new FollowLeader(swerveDriveSubsystem, photonVisionSubsystem);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
 
         shoot = new Shoot(shooterSubsystem, conveyorSubsystem, joystickHandler4);
@@ -143,7 +149,7 @@ public class RobotContainer {
 
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
-
+        joystickHandler3.button(5).whileTrue(followLeaderCommand).onFalse(()->swerveDriveSubsystem.drive(0, 0, 0));
         joystickHandler3.button(4).whileTrue(targetSpaceDriveCommand);
 
         joystickHandler4.button(6).whileTrue(backLoad);

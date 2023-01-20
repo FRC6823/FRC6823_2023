@@ -8,25 +8,25 @@ import java.util.HashSet;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.JoystickHandler;
-import frc.robot.NavXHandler;
+import frc.robot.Pigeon2Handler;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class FieldSpaceDrive extends CommandBase {
     //Declare subsystem, Joystick Handler, NavX
     private SwerveDriveSubsystem swerveDrive;
     private JoystickHandler joystickHandler;
-    private NavXHandler navXHandler;
+    private Pigeon2Handler Pigeon2Handler;
     private SimpleWidget speedRateWidget;
     private SimpleWidget turnRateWidget;
 
     private double fieldAngle = 0; //Angle of away from driver from zero
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
-    JoystickHandler joystickHandler, NavXHandler navXHandler) {
+    JoystickHandler joystickHandler, Pigeon2Handler Pigeon2Handler) {
         //Instantiate subsystem, Joystick Handler, NavX
         this.swerveDrive = subsystem;
         this.joystickHandler = joystickHandler;
-        this.navXHandler = navXHandler;
+        this.Pigeon2Handler = Pigeon2Handler;
         this.speedRateWidget = Shuffleboard.getTab("Preferences").addPersistent("Speed Rate", 0.5)
         .withWidget(BuiltInWidgets.kNumberSlider);
         this.turnRateWidget = Shuffleboard.getTab("Preferences").addPersistent("Turn Rate", 0.5)
@@ -36,7 +36,7 @@ public class FieldSpaceDrive extends CommandBase {
 
     @Override
     public void execute() {
-        navXHandler.printEverything();
+        Pigeon2Handler.printEverything();
         joystickHandler.updateDeadZone();
 
         //Set speed and turn rates for full throttle and not full throttle
@@ -69,7 +69,7 @@ public class FieldSpaceDrive extends CommandBase {
         //xval *= -1; //Left right swap
         
 
-        double robotAngle = navXHandler.getAngleRad() - fieldAngle;
+        double robotAngle = Pigeon2Handler.getAngleRad() - fieldAngle;
 
         // mapping field space to robot space
         double txval = getTransX(xval, yval, robotAngle);
@@ -89,7 +89,7 @@ public class FieldSpaceDrive extends CommandBase {
     public HashSet<Subsystem> zero() { //Zeroes direction
         HashSet<Subsystem> tree = new HashSet<Subsystem>();
         tree.add(swerveDrive);
-        this.fieldAngle = navXHandler.getAngleRad(); // + Math.PI
+        this.fieldAngle = Pigeon2Handler.getAngleRad(); // + Math.PI
         swerveDrive.setFieldAngle(fieldAngle);
         return tree;
     }

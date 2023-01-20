@@ -1,14 +1,14 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.SerialPort;
+//import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
-public class NavXHandler {
-    private AHRS ahrs;
+public class Pigeon2Handler {
+    private PigeonIMU pigeon;
     private double initialAngle;
 
     public double getInitialAngle() {
@@ -19,19 +19,19 @@ public class NavXHandler {
         initialAngle = getAngleRad();
     }
 
-    public AHRS getAhrs() {
-        return ahrs;
+    public PigeonIMU getAhrs() {
+        return pigeon;
     }
 
-    public NavXHandler() {
+    public Pigeon2Handler() {
         try {
             /***********************************************************************
-             * navX-MXP: - Communication via RoboRIO MXP (SPI, I2C) and USB. - See
-             * http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
+             * pigeon2-MXP: - Communication via RoboRIO MXP (SPI, I2C) and USB. - See
+             * http://pigeon2-mxp.kauailabs.com/guidance/selecting-an-interface.
              ***********************************************************************/
-            ahrs = new AHRS(SerialPort.Port.kMXP);
+            pigeon = new PigeonIMU(18);
         } catch (RuntimeException ex) {
-            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+            DriverStation.reportError("Error instantiating pigeon:  " + ex.getMessage(), true);
         }
     }
 
@@ -46,26 +46,26 @@ public class NavXHandler {
         // SmartDashboard.putNumber("getVelocityY()", ahrs.getVelocityY());
         // SmartDashboard.putNumber("getVelocityZ()", ahrs.getVelocityZ());
 
-        SmartDashboard.putNumber("Pitch", ahrs.getPitch());
-        SmartDashboard.putNumber("Roll", ahrs.getRoll());
-        SmartDashboard.putNumber("Yaw", ahrs.getYaw());
+        SmartDashboard.putNumber("Pitch", pigeon.getPitch());
+        SmartDashboard.putNumber("Roll", pigeon.getRoll());
+        SmartDashboard.putNumber("Yaw", pigeon.getYaw());
 
-        SmartDashboard.putNumber("NavX Angle", MathUtil.mod(getAngleRad(), 2 * Math.PI));
+        SmartDashboard.putNumber("pigeon2 Angle", MathUtil.mod(getAngleRad(), 2 * Math.PI));
     }
 
     public double getAngleRad() {
-        return MathUtil.mod(ahrs.getAngle() * 2 * Math.PI / 360, Math.PI * 2);
+        return MathUtil.mod(pigeon.getYaw() * 2 * Math.PI / 360, Math.PI * 2);
     }
 
-    public double getAngle() {
+    /*public double getAngle() {
         return ahrs.getAngleAdjustment();
-    }
+    }*/
 
     public void zeroYaw() {
-        ahrs.reset();
+        pigeon.setYaw(0);
     }
 
-    public double getVelocity() {
+    /*public double getVelocity() {
         return Math.sqrt(Math.pow(ahrs.getVelocityX(), 2) + Math.pow(ahrs.getVelocityY(), 2));
-    }
+    }*/
 }

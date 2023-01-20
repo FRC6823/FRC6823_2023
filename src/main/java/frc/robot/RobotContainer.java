@@ -61,7 +61,7 @@ public class RobotContainer {
         //Shuffleboard.getTab("Preferences").add("Auto Turn PID", RotateToAngle.angleController);
         */
         //limeLightSubsystem.setServoAngle(35);
-        //RotateToZero.setInitialAngle(pigeon2.getAngleRad());
+        //RotateToZero.setInitialAngle(navX.getAngleRad());
         pigeon.setInitialAngle();
         fieldSpaceDriveCommand.zero();
 
@@ -77,8 +77,8 @@ public class RobotContainer {
     }*/
 
     private void configureButtonBindings() {
-        //RotateToAngle.setInitialAngle(pigeon2.getAngleRad());
-        //RotateToZero.setInitialAngle(pigeon2.getAngleRad());
+        //RotateToAngle.setInitialAngle(navX.getAngleRad());
+        //RotateToZero.setInitialAngle(navX.getAngleRad());
         // Hold button 8 to set the swerve just forward, this is for calibration
         // purposes
         joystickHandler3.button(8).whileTrue(() -> swerveDriveSubsystem.drive(0,

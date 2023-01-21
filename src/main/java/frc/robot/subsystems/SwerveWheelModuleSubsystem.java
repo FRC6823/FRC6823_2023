@@ -85,7 +85,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
         // Sets angle motor to angle
        // pidController.setSetpoint(angle);
-        double pidOut = pidController.calculate(currentEncoderValue, angle);
+        double pidOut = -pidController.calculate(currentEncoderValue, angle);
         // pidOut *= 3000 * 4096 * 600; //pidOut is on [-1, 1], pidOut * 3000 (Max rpm)
         // * 4096 units/revolution * (600*100)ms/min
 

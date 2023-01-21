@@ -74,6 +74,7 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
+        
         swerveDriveSubsystem = new SwerveDriveSubsystem();
         shooterSubsystem = new ShooterSubsystem();
         joystickHandler3 = new JoystickHandler(3);
@@ -88,9 +89,7 @@ public class RobotContainer {
         // Field space uses navx to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, navX);
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
-        targetSpaceDriveCommand = new TargetSpaceDrive(swerveDriveSubsystem, joystickHandler3, limeLightSubsystem, navX);
-        backLoad = new Load(shooterSubsystem, conveyorSubsystem);
-        swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
+        swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);  //normally fieldspace
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
 
         shoot = new Shoot(shooterSubsystem, conveyorSubsystem, joystickHandler4);
@@ -136,7 +135,7 @@ public class RobotContainer {
         // Hold button 8 to set the swerve just forward, this is for calibration
         // purposes
         joystickHandler3.button(8).whileTrue(() -> swerveDriveSubsystem.drive(0,
-                0.1, 0));
+                0.1, 0)); //8 is not correct
 
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);

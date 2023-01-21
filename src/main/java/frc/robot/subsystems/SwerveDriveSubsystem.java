@@ -23,8 +23,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * This code heavily attributed from Jacob Misirian of FIRST Robotics Team 2506
      * of Franklin, WI.
      */
-    public final double L = 1;
-    public final double W = 1; // These are from the Length and Width between wheels.
+    public final double L = 32;
+    public final double W = 26; // These are from the Length and Width between wheels.
     // CHANGE THESE IF THE ROBOT IS NOT A SQUARE
 
     private SwerveWheelModuleSubsystem backRight;

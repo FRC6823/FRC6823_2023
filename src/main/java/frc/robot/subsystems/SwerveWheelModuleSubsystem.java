@@ -39,7 +39,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         // Integral/Derivative control but increasing the P value will make
         // the motors more aggressive to changing to angles.
 
-        angleEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+        //angleEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
 
         // pidController.setTolerance(20); //sets tolerance, shouldn't be needed.
 
@@ -63,11 +63,11 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     // angle is a value between -180 to 180
     public void drive(double speed, double angle) {
 
-        double currentEncoderValue = angleEncoder.getAbsolutePosition();
+        double currentEncoderValue = angleEncoder.getAbsolutePosition() - encoderOffset;
 
         // Optimal offset can be calculated here.
-        angle *= 180;
-        angle += encoderOffset;
+        //angle *= 180;
+        //angle += encoderOffset;
         angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
 
         // if the setpoint is more than 90 degrees away form the current position, then
@@ -85,7 +85,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
         // Sets angle motor to angle
        // pidController.setSetpoint(angle);
-        double pidOut = pidController.calculate(currentEncoderValue, angle);
+        double pidOut = -pidController.calculate(currentEncoderValue, angle);
         // pidOut *= 3000 * 4096 * 600; //pidOut is on [-1, 1], pidOut * 3000 (Max rpm)
         // * 4096 units/revolution * (600*100)ms/min
 
@@ -100,13 +100,13 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         else
             angleMotor.set(ControlMode.PercentOutput, pidOut);
 
-        SmartDashboard.putNumber("Encoder " + motorName, getPosition());
+        SmartDashboard.putNumber("Encoder " + motorName, currentEncoderValue);
     }
 
     // this method outputs position of the encoder to the smartDashBoard, useful for
     // calibrating the encoder offsets
     public double getPosition() {
-        return MathUtil.mod(angleEncoder.getAbsolutePosition() * 180 - encoderOffset, 360);
+        return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360);
     }
 
     public void stop() {

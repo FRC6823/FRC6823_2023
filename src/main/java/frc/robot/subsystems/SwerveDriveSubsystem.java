@@ -96,6 +96,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         Translation2d frontLeftLocation = new Translation2d(-W, L);
 
         kinematics = new SwerveDriveKinematics(backRightLocation, backLeftLocation, frontRightLocation, frontLeftLocation);
+        speeds = new ChassisSpeeds(0, 0, 0);
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
@@ -120,10 +121,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Back right module state
         SwerveModuleState frontLeftState = moduleStates[3];
 
-        backLeft.drive(backLeftState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(backLeftState.angle.getDegrees())/Math.PI); //5.5 m/s is maximum zero load velocity
-        backRight.drive(backRightState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(backRightState.angle.getDegrees())/Math.PI);
-        frontLeft.drive(frontLeftState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(frontLeftState.angle.getDegrees())/Math.PI);
-        frontRight.drive(frontRightState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(frontRightState.angle.getDegrees())/Math.PI);
+        backLeft.drive(backLeftState.speedMetersPerSecond / 5.5, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
+        backRight.drive(backRightState.speedMetersPerSecond / 5.5, backRightState.angle.getDegrees());
+        frontLeft.drive(frontLeftState.speedMetersPerSecond / 5.5, frontLeftState.angle.getDegrees());
+        frontRight.drive(frontRightState.speedMetersPerSecond / 5.5, frontRightState.angle.getDegrees());
     }
 
     public void stop() {

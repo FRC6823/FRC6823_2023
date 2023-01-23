@@ -18,7 +18,7 @@ public class RobotContainer {
     private RobotSpaceDrive robotSpaceDriveCommand;
 
     private JoystickHandler joystickHandler3;
-    //private JoystickHandler joystickHandler4;
+    private JoystickHandler joystickHandler4;
 
     //private SendableChooser<String> autoSelect;
 
@@ -33,7 +33,7 @@ public class RobotContainer {
     public RobotContainer() {
         swerveDriveSubsystem = new SwerveDriveSubsystem();
         joystickHandler3 = new JoystickHandler(3);
-        //joystickHandler4 = new JoystickHandler(4);
+        joystickHandler4 = new JoystickHandler(4);
 
         pigeon = new Pigeon2Handler(); // pigeon2 input
 

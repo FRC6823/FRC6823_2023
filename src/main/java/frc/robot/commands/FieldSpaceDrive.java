@@ -58,8 +58,8 @@ public class FieldSpaceDrive extends CommandBase {
         double robotAngle = pigeon2Handler.getAngleRad() - fieldAngle;
 
         // mapping field space to robot space
-        double txval = getTransX(xval, yval, robotAngle);
-        double tyval = getTransY(xval, yval, robotAngle);
+        //double txval = getTransX(xval, yval, robotAngle);
+        //double tyval = getTransY(xval, yval, robotAngle);
 
         swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, new Rotation2d(robotAngle)));
     }

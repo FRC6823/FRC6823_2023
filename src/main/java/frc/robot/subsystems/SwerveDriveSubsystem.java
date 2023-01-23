@@ -39,6 +39,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private SwerveWheelModuleSubsystem frontLeft;
     private SwerveDriveKinematics kinematics;
 
+    private ChassisSpeeds speeds;
+
     private PIDController angleController;
     private double fieldangle = 0; //
     // private SimpleWidget FLAngle;
@@ -96,13 +98,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         kinematics = new SwerveDriveKinematics(backRightLocation, backLeftLocation, frontRightLocation, frontLeftLocation);
     }
 
-    public HashSet<Subsystem> drive(double x1, double y1, double x2) {
-        
-        HashSet<Subsystem> tree = new HashSet<Subsystem>();
-        tree.add(this);
+    public void drive(ChassisSpeeds chassisSpeeds) {
+        // implementation from Pride of the North
+        speeds = chassisSpeeds;
+    }
 
-        ChassisSpeeds speeds = new ChassisSpeeds(x1 * 715, y1 * 715, -x2 * 715); //715.23 radians/second is the top no load speed of the motors
-
+    // @Override
+    public void periodic() {
         // Convert to module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
 
@@ -122,65 +124,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         backRight.drive(backRightState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(backRightState.angle.getDegrees())/Math.PI);
         frontLeft.drive(frontLeftState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(frontLeftState.angle.getDegrees())/Math.PI);
         frontRight.drive(frontRightState.speedMetersPerSecond / 5.5, MathUtil.angleModulus(frontRightState.angle.getDegrees())/Math.PI);
-
-        // double r = Math.sqrt((L * L) + (W * W)); // diagonal of robot
-        // double backRightSpeed;
-        // double backLeftSpeed;
-        // double frontRightSpeed;
-        // double frontLeftSpeed;
-
-        // double backRightAngle;
-        // double backLeftAngle;
-        // double frontRightAngle;
-        // double frontLeftAngle;
-
-        // // From here to the next comment sets each module to the <x,y> from
-        // // the joystick plus rotation times the diagonal to that module
-        // // (i.e. FR is set to <x1,y1> + x2*<diagonal BL->FR>)
-        // double a = x1 - x2 * (L / r);
-        // double b = x1 + x2 * (L / r);
-        // double c = y1 - x2 * (W / r);
-        // double d = y1 + x2 * (W / r);
-
-        // backRightSpeed = Math.sqrt((b * b) + (c * c));
-        // backLeftSpeed = Math.sqrt((a * a) + (c * c));
-        // frontRightSpeed = Math.sqrt((b * b) + (d * d));
-        // frontLeftSpeed = Math.sqrt((a * a) + (d * d));
-
-        // frontRightAngle = Math.atan2(b, c) / Math.PI;
-        // backRightAngle = Math.atan2(a, c) / Math.PI;
-        // frontLeftAngle = Math.atan2(b, d) / Math.PI;
-        // backLeftAngle = Math.atan2(a, d) / Math.PI;
-
-        // if (invertWidget.getEntry().getBoolean(false)){
-        //     backLeft.drive(-backLeftSpeed, -backLeftAngle);
-        //     backRight.drive(backRightSpeed, -backRightAngle);
-        //     frontRight.drive(frontRightSpeed, -frontRightAngle);
-        //     frontLeft.drive(-frontLeftSpeed, -frontLeftAngle);
-        // }else{
-        //     backLeft.drive(backLeftSpeed, -backLeftAngle);
-        //     backRight.drive(-backRightSpeed, -backRightAngle);
-        //     frontRight.drive(-frontRightSpeed, -frontRightAngle);
-        //     frontLeft.drive(frontLeftSpeed, -frontLeftAngle);
-        // }
-
-        // //Print speed values
-        // SmartDashboard.putNumber("Backright Speed", backRightSpeed);
-        // SmartDashboard.putNumber("Backleft Speed", backLeftSpeed);
-        // SmartDashboard.putNumber("Frontright Speed", frontRightSpeed);
-        // SmartDashboard.putNumber("Frontleft Speed", frontLeftSpeed);
-
-        return tree;
-    }
-
-    // @Override
-    public void periodic() {
-        // Do NOT make negative!!!!
-        // adding is counter clockwise, subtratcting is clockwise?
-        // frontLeft.setZero(FLAngle.getEntry().getDouble(0));
-        // frontRight.setZero(FRAngle.getEntry().getDouble(0));
-        // backLeft.setZero(BLAngle.getEntry().getDouble(0));
-        // backRight.setZero(BRAngle.getEntry().getDouble(0));
     }
 
     public void stop() {

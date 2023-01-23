@@ -81,8 +81,8 @@ public class RobotContainer {
         //RotateToZero.setInitialAngle(navX.getAngleRad());
         // Hold button 8 to set the swerve just forward, this is for calibration
         // purposes
-        joystickHandler3.button(8).whileTrue(() -> swerveDriveSubsystem.drive(0,
-                0.1, 0));
+        
+        //      joystickHandler3.button(8).whileTrue(swerveDriveSubsystem.drive(0, 0.1, 0));
 
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);

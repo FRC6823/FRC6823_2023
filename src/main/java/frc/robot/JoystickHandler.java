@@ -92,6 +92,11 @@ public class JoystickHandler {
         return getAxis0() != 0 || getAxis1() != 0 || getAxis5() != 0;
     }
 
+    public void setDeadZone(double deadZone)
+    {
+        this.deadZone = deadZone;
+    }
+    
     public void updateDeadZone(){
         if (!Preferences.containsKey("Dead Zone"))
             Preferences.setDouble("Dead Zone", 0.1);

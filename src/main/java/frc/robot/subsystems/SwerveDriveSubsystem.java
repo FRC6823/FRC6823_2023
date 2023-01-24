@@ -7,8 +7,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableRegistry;
-//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 //import edu.wpi.first.wpilibj.Preferences;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,6 +42,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private PIDController angleController;
     private double fieldangle = 0; //
+    private SimpleWidget speedLim;
     // private SimpleWidget FLAngle;
     // private SimpleWidget FRAngle;
     // private SimpleWidget BLAngle;
@@ -59,12 +61,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 //.withWidget(BuiltInWidgets.kToggleButton);
         // invertWidget = Shuffleboard.getTab("Preferences").addPersistent("Invert?", false)
         //         .withWidget(BuiltInWidgets.kToggleButton);
+        speedLim = Shuffleboard.getTab("Preferences").addPersistent("Spd Hard Limit", 0.5)
+            .withWidget(BuiltInWidgets.kNumberSlider);;
 
-        backRight = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", Constants.bROffset);// These are the motors and encoder
+        backRight = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", Constants.bROffset, speedLim.getEntry().getDouble(1));// These are the motors and encoder
                                                                 // CAN IDs for swerve drive
-        backLeft = new SwerveWheelModuleSubsystem(3, 2, 27, "BL", Constants.bLOffset);
-        frontRight = new SwerveWheelModuleSubsystem(5, 4, 28, "FR", Constants.fROffset);
-        frontLeft = new SwerveWheelModuleSubsystem(7, 6, 25, "FL", Constants.fLOffset);// The order is angle, speed,
+        backLeft = new SwerveWheelModuleSubsystem(3, 2, 27, "BL", Constants.bLOffset, speedLim.getEntry().getDouble(1));
+        frontRight = new SwerveWheelModuleSubsystem(5, 4, 28, "FR", Constants.fROffset, speedLim.getEntry().getDouble(1));
+        frontLeft = new SwerveWheelModuleSubsystem(7, 6, 25, "FL", Constants.fLOffset, speedLim.getEntry().getDouble(1));// The order is angle, speed,
                                                                                    // encoder, calibrateWidget
         SendableRegistry.addChild(this, backRight);
         SendableRegistry.addChild(this, backLeft);
@@ -108,10 +112,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Back right module state
         SwerveModuleState frontLeftState = moduleStates[3];
 
-        backLeft.drive(backLeftState.speedMetersPerSecond * 7, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
-        backRight.drive(-backRightState.speedMetersPerSecond * 7, backRightState.angle.getDegrees());
-        frontLeft.drive(frontLeftState.speedMetersPerSecond * 7, frontLeftState.angle.getDegrees());
-        frontRight.drive(-frontRightState.speedMetersPerSecond * 7, frontRightState.angle.getDegrees());
+        backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
+        backRight.drive(-backRightState.speedMetersPerSecond, backRightState.angle.getDegrees());
+        frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
+        frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
     }
 
     public void stop() {

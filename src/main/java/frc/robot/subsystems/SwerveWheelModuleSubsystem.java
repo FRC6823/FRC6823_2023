@@ -26,10 +26,10 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     //private boolean calibrateMode;
     private double encoderOffset;
     private String motorName;
-    //private SimpleWidget speedLim;
+    private double speedLim;
 
     public SwerveWheelModuleSubsystem(int angleMotorChannel, int speedMotorChannel, int angleEncoderChannel,
-            String motorName, double offset) {
+            String motorName, double offset, double limit) {
         // We're using TalonFX motors on CAN.
         this.angleMotor = new TalonFX(angleMotorChannel);
         this.speedMotor = new TalonFX(speedMotorChannel);
@@ -53,10 +53,9 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         SendableRegistry.addChild(this, speedMotor);
         SendableRegistry.addChild(this, angleEncoder);
         SendableRegistry.addLW(this, "Swerve Wheel Module");
-        //speedLim = Shuffleboard.getTab("Preferences").addPersistent("Speed Lim", 0.5)
-        //.withWidget(BuiltInWidgets.kNumberSlider);;
-        encoderOffset = offset;
 
+        speedLim = limit;
+        encoderOffset = offset;
     }
 
     public void drive(double speed, double angle) {
@@ -77,7 +76,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public void setSpeed(double speed)
     {
-        speedMotor.set(ControlMode.PercentOutput, Math.min(speed, 0.9)); // sets motor speed //22150 units/100 ms at 12.4V
+        speedMotor.set(ControlMode.PercentOutput, Math.min(speed, speedLim)); // sets motor speed //22150 units/100 ms at 12.4V
     }
 
     // this method outputs position of the encoder to the smartDashBoard, useful for

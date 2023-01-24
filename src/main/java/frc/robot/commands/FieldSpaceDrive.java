@@ -53,7 +53,7 @@ public class FieldSpaceDrive extends CommandBase {
         //Set xval, yval, spinval to the scaled values from the joystick, bounded on [-1, 1]
         double xval = Math.max(Math.min(joystickHandler.getAxis0() * -speedRate, 1), -1);
         double yval = Math.max(Math.min(joystickHandler.getAxis1() * speedRate, 1), -1);
-        double spinval = Math.max(Math.min(joystickHandler.getAxis5() * turnRate, 1), -1);
+        double spinval = Math.max(Math.min(joystickHandler.getAxis5() * turnRate, 1), -1)*2/180;
 
         double robotAngle = pigeon2Handler.getAngleRad() - fieldAngle;
 
@@ -62,14 +62,6 @@ public class FieldSpaceDrive extends CommandBase {
         //double tyval = getTransY(xval, yval, robotAngle);
 
         swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, new Rotation2d(robotAngle)));
-    }
-
-    private double getTransX(double x, double y, double angle) { //Returns x direction robot needs to move in
-        return x * Math.cos(angle) + -y * Math.sin(angle);
-    }
-
-    private double getTransY(double x, double y, double angle) { //Returns y direction robot needs to move in
-        return x * Math.sin(angle) + y * Math.cos(angle);
     }
 
     public void zero() { //Zeroes direction

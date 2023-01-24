@@ -1,20 +1,18 @@
 package frc.robot.subsystems;
 
-import java.util.HashSet;
-
-import edu.wpi.first.math.MathUtil;
+//import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+//import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 //import edu.wpi.first.wpilibj.Preferences;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+//import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
@@ -47,7 +45,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // private SimpleWidget FRAngle;
     // private SimpleWidget BLAngle;
     // private SimpleWidget BRAngle;
-    private SimpleWidget calibrateWidget;
+    //private SimpleWidget calibrateWidget;
     //private SimpleWidget invertWidget;
 
     public void setFieldAngle(double fieldangle) {
@@ -57,16 +55,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public SwerveDriveSubsystem() {
-        calibrateWidget = Shuffleboard.getTab("Preferences").addPersistent("Calibrate?", false)
-                .withWidget(BuiltInWidgets.kToggleButton);
+        //calibrateWidget = Shuffleboard.getTab("Preferences").addPersistent("Calibrate?", false)
+                //.withWidget(BuiltInWidgets.kToggleButton);
         // invertWidget = Shuffleboard.getTab("Preferences").addPersistent("Invert?", false)
         //         .withWidget(BuiltInWidgets.kToggleButton);
 
-        backRight = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", calibrateWidget, Constants.bROffset);// These are the motors and encoder
+        backRight = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", Constants.bROffset);// These are the motors and encoder
                                                                 // CAN IDs for swerve drive
-        backLeft = new SwerveWheelModuleSubsystem(3, 2, 27, "BL", calibrateWidget, Constants.bLOffset);
-        frontRight = new SwerveWheelModuleSubsystem(5, 4, 28, "FR", calibrateWidget, Constants.fROffset);
-        frontLeft = new SwerveWheelModuleSubsystem(7, 6, 25, "FL", calibrateWidget, Constants.fLOffset);// The order is angle, speed,
+        backLeft = new SwerveWheelModuleSubsystem(3, 2, 27, "BL", Constants.bLOffset);
+        frontRight = new SwerveWheelModuleSubsystem(5, 4, 28, "FR", Constants.fROffset);
+        frontLeft = new SwerveWheelModuleSubsystem(7, 6, 25, "FL", Constants.fLOffset);// The order is angle, speed,
                                                                                    // encoder, calibrateWidget
         SendableRegistry.addChild(this, backRight);
         SendableRegistry.addChild(this, backLeft);
@@ -78,18 +76,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         angleController = new PIDController(.3, 0, 0);
         angleController.enableContinuousInput(0, Math.PI * 2);
         angleController.setSetpoint(0);
-        //SmartDashboard.putString("Ready Call", "Autobots, Roll Out!");
-        // FLAngle = Shuffleboard.getTab("Calibrate").addPersistent("FLAngle", 0).withWidget(BuiltInWidgets.kNumberSlider)
-        //         .withProperties(Map.of("min", 0, "max", 360));
-        // FRAngle = Shuffleboard.getTab("Calibrate").addPersistent("FRAngle", 0).withWidget(BuiltInWidgets.kNumberSlider)
-        //         .withProperties(Map.of("min", 0, "max", 360));
-        // BLAngle = Shuffleboard.getTab("Calibrate").addPersistent("BLAngle", 0).withWidget(BuiltInWidgets.kNumberSlider)
-        //         .withProperties(Map.of("min", 0, "max", 360));
-        // BRAngle = Shuffleboard.getTab("Calibrate").addPersistent("BRAngle", 0).withWidget(BuiltInWidgets.kNumberSlider)
-        //         .withProperties(Map.of("min", 0, "max", 360));
-        //autoCaliZero();
-
-        // Locations for the swerve drive modules relative to the robot center.
+        
         Translation2d backRightLocation = new Translation2d(W, -L);
         Translation2d backLeftLocation = new Translation2d(-W, -L);
         Translation2d frontRightLocation = new Translation2d(W, L);
@@ -121,10 +108,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Back right module state
         SwerveModuleState frontLeftState = moduleStates[3];
 
-        backLeft.drive(backLeftState.speedMetersPerSecond / 5.5, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
-        backRight.drive(backRightState.speedMetersPerSecond / 5.5, backRightState.angle.getDegrees());
-        frontLeft.drive(frontLeftState.speedMetersPerSecond / 5.5, frontLeftState.angle.getDegrees());
-        frontRight.drive(frontRightState.speedMetersPerSecond / 5.5, frontRightState.angle.getDegrees());
+        backLeft.drive(backLeftState.speedMetersPerSecond * 7, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
+        backRight.drive(-backRightState.speedMetersPerSecond * 7, backRightState.angle.getDegrees());
+        frontLeft.drive(frontLeftState.speedMetersPerSecond * 7, frontLeftState.angle.getDegrees());
+        frontRight.drive(-frontRightState.speedMetersPerSecond * 7, frontRightState.angle.getDegrees());
     }
 
     public void stop() {
@@ -133,22 +120,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         frontRight.stop();
         frontLeft.stop();
     }
-
-    // public void autoCali() {
-    //     FLAngle.getEntry().setDouble(frontLeft.autoCali());
-    //     FRAngle.getEntry().setDouble(frontRight.autoCali());
-    //     BLAngle.getEntry().setDouble(backLeft.autoCali());
-    //     BRAngle.getEntry().setDouble(backRight.autoCali());
-    // }
-
-    // public void autoCaliZero(){
-    //     if (frontLeft.autoCali() != -2){
-    //         FLAngle.getEntry().setNumber(frontLeft.autoCaliZero());
-    //         FRAngle.getEntry().setNumber(frontRight.autoCaliZero());
-    //         BLAngle.getEntry().setNumber(backLeft.autoCaliZero());
-    //         BRAngle.getEntry().setNumber(backRight.autoCaliZero());
-    //     }
-    // }
 
     public void coast(){
         backRight.coast();

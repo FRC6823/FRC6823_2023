@@ -108,10 +108,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Back right module state
         SwerveModuleState frontLeftState = moduleStates[3];
 
-        backLeft.drive(backLeftState.speedMetersPerSecond * 7, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
-        backRight.drive(-backRightState.speedMetersPerSecond * 7, backRightState.angle.getDegrees());
-        frontLeft.drive(frontLeftState.speedMetersPerSecond * 7, frontLeftState.angle.getDegrees());
-        frontRight.drive(-frontRightState.speedMetersPerSecond * 7, frontRightState.angle.getDegrees());
+        backLeft.drive(backLeftState.speedMetersPerSecond * 5.5, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
+        backRight.drive(-backRightState.speedMetersPerSecond * 5.5, backRightState.angle.getDegrees());
+        frontLeft.drive(frontLeftState.speedMetersPerSecond * 5.5, frontLeftState.angle.getDegrees());
+        frontRight.drive(-frontRightState.speedMetersPerSecond * 5.5, frontRightState.angle.getDegrees());
     }
 
     public void stop() {

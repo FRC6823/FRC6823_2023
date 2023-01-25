@@ -7,18 +7,21 @@ package frc.robot;
 //import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.RobotSpaceDrive;
+import frc.robot.commands.SetIntakeState;
+import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
     // test commit
     public SwerveDriveSubsystem swerveDriveSubsystem;
+    public PneumaticSubsystem pneumaticSubsystem;
     public Pigeon2Handler pigeon;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
 
     private JoystickHandler joystickHandler3;
-    //private JoystickHandler joystickHandler4;
+    private JoystickHandler joystickHandler4;
 
     //private SendableChooser<String> autoSelect;
 
@@ -30,10 +33,15 @@ public class RobotContainer {
         return pigeon;
     }
 
+    public PneumaticSubsystem getPneumaticSubsystem() {
+        return pneumaticSubsystem;
+    }
+
     public RobotContainer() {
         swerveDriveSubsystem = new SwerveDriveSubsystem();
+        pneumaticSubsystem = new PneumaticSubsystem();
         joystickHandler3 = new JoystickHandler(3);
-        //joystickHandler4 = new JoystickHandler(4);
+        joystickHandler4 = new JoystickHandler(4);
 
         pigeon = new Pigeon2Handler(); // pigeon2 input
 
@@ -65,6 +73,7 @@ public class RobotContainer {
         pigeon.setInitialAngle();
         fieldSpaceDriveCommand.zero();
 
+
         configureButtonBindings();
     }
 
@@ -79,10 +88,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         //RotateToAngle.setInitialAngle(navX.getAngleRad());
         //RotateToZero.setInitialAngle(navX.getAngleRad());
-        // Hold button 8 to set the swerve just forward, this is for calibration
-        // purposes
-        
-        //      joystickHandler3.button(8).whileTrue(swerveDriveSubsystem.drive(0, 0.1, 0));
+
+        // Toggles intake state
+        joystickHandler4.button(1).onTrue(new SetIntakeState(pneumaticSubsystem));
 
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);

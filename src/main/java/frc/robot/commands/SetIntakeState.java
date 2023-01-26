@@ -8,21 +8,25 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class SetIntakeState extends CommandBase {
 
     PneumaticSubsystem pneumatic;
+    int state;
 
 
-    public SetIntakeState(PneumaticSubsystem pneumatic) 
+    public SetIntakeState(PneumaticSubsystem pneumaticSubsystem, int state) 
     {
-        this.pneumatic = pneumatic;
+        this.pneumatic = pneumaticSubsystem;
+        this.state = state;
     }
     
     @Override
     public void initialize()
     {
-        pneumatic.togglePneumaticState();
+        
     }
 
     @Override
-    public void execute(){}
+    public void execute(){
+        pneumatic.setPneumaticState(state);
+    }
 
     @Override
     public void end(boolean interrupted) {}
@@ -31,4 +35,5 @@ public class SetIntakeState extends CommandBase {
     public boolean isFinished() {
       return false;
     }
+
 }

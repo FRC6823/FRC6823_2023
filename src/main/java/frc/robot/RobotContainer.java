@@ -5,50 +5,55 @@ package frc.robot;
 //import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.commands.FieldSpaceDrive;
-import frc.robot.commands.RobotSpaceDrive;
+//import frc.robot.commands.FieldSpaceDrive;
+//import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.subsystems.PneumaticSubsystem;
-import frc.robot.subsystems.SwerveDriveSubsystem;
+//import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
     // test commit
-    public SwerveDriveSubsystem swerveDriveSubsystem;
-    public PneumaticSubsystem pneumaticSubsystem;
-    public Pigeon2Handler pigeon;
+    //public SwerveDriveSubsystem swerveDriveSubsystem;
+    final public PneumaticSubsystem pneumaticSubsystem;
+    //public Pigeon2Handler pigeon;
 
-    private FieldSpaceDrive fieldSpaceDriveCommand;
-    private RobotSpaceDrive robotSpaceDriveCommand;
+    //private FieldSpaceDrive fieldSpaceDriveCommand;
+    //private RobotSpaceDrive robotSpaceDriveCommand;
 
-    private JoystickHandler joystickHandler3;
+    //private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
+    public SetIntakeState setIntakeStateOpen;
+    public SetIntakeState setIntakeStateClosed;
+    public SetIntakeState hold;
 
     //private SendableChooser<String> autoSelect;
 
-    public SwerveDriveSubsystem getSwervedriveSubsystem() {
-        return swerveDriveSubsystem;
-    }
+    //public SwerveDriveSubsystem getSwervedriveSubsystem() {
+        //return swerveDriveSubsystem;
+    //}
 
-    public Pigeon2Handler getPigeon2Handler() {
-        return pigeon;
-    }
+    //public Pigeon2Handler getPigeon2Handler() {
+        //return pigeon;
+    //}
 
     public PneumaticSubsystem getPneumaticSubsystem() {
         return pneumaticSubsystem;
     }
 
     public RobotContainer() {
-        swerveDriveSubsystem = new SwerveDriveSubsystem();
+        //swerveDriveSubsystem = new SwerveDriveSubsystem();
         pneumaticSubsystem = new PneumaticSubsystem();
-        joystickHandler3 = new JoystickHandler(3);
+        //joystickHandler3 = new JoystickHandler(3);
         joystickHandler4 = new JoystickHandler(4);
-
-        pigeon = new Pigeon2Handler(); // pigeon2 input
+        setIntakeStateOpen = new SetIntakeState(pneumaticSubsystem, 1);
+        setIntakeStateClosed = new SetIntakeState(pneumaticSubsystem, 0);
+        hold = new SetIntakeState(pneumaticSubsystem, 2);
+        //pigeon = new Pigeon2Handler(); // pigeon2 input
 
         // Field space uses pigeon2 to get its angle
-        fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
-        robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
-        swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
+        //fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
+        //robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
+        //swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
 
         /*autoSelect = new SendableChooser<String>();
@@ -70,8 +75,8 @@ public class RobotContainer {
         */
         //limeLightSubsystem.setServoAngle(35);
         //RotateToZero.setInitialAngle(navX.getAngleRad());
-        pigeon.setInitialAngle();
-        fieldSpaceDriveCommand.zero();
+        //pigeon.setInitialAngle();
+        //fieldSpaceDriveCommand.zero();
 
 
         configureButtonBindings();
@@ -90,12 +95,14 @@ public class RobotContainer {
         //RotateToZero.setInitialAngle(navX.getAngleRad());
 
         // Toggles intake state
-        joystickHandler4.button(1).onTrue(new SetIntakeState(pneumaticSubsystem));
+        joystickHandler4.button(3).whileTrue(setIntakeStateOpen);
+        joystickHandler4.button(2).whileTrue(setIntakeStateClosed);
+        joystickHandler4.button(1).whileTrue(hold);
 
         // This will set the current orientation to be "forward" for field drive
-        joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);
+        //joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);
 
         // Holding 7 will enable robot space drive, instead of field space
-        joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
+        //joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
     }
 }

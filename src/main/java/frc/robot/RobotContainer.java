@@ -80,7 +80,7 @@ public class RobotContainer {
     public RobotContainer() {
         swerveDriveSubsystem = new SwerveDriveSubsystem();
         shooterSubsystem = new ShooterSubsystem();
-        joystickHandler3 = new JoystickHandler(3);
+        joystickHandler3 = new JoystickHandler(0);
         joystickHandler4 = new JoystickHandler(4);
         limeLightSubsystem = new LimeLightSubsystem(8);
         photonVisionSubsystem = new PhotonVisionSubsystem();

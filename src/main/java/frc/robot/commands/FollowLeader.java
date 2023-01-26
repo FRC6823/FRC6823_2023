@@ -26,7 +26,7 @@ public class FollowLeader extends CommandBase {
         this.photonVisionSubsystem = photonVisionSubsystem;
         addRequirements(swerveDriveSubsystem,photonVisionSubsystem);
         xPid = new PIDController(0, 0, 0);
-        yPid = new PIDController(0, 0, 0);
+        yPid = new PIDController(0.1, 0, 0);
         RPid = new PIDController(0, 0, 0);
         camera = photonVisionSubsystem.getCamera();
 
@@ -35,21 +35,21 @@ public class FollowLeader extends CommandBase {
         
         
 
+        Shuffleboard.getTab("Preferences").add("transform","transformedTarget.toString()");
         
         xPid.setSetpoint(0);
         yPid.setSetpoint(5);
-        RPid.setSetpoint(0);
+        RPid.setSetpoint(180);
         PhotonPipelineResult latestResult = camera.getLatestResult();
         if(latestResult.hasTargets()){
           List<PhotonTrackedTarget>  targets = latestResult.targets;
-        //   for(PhotonTrackedTarget target: targets){
-        //     if(target.getFiducialId() ==1){
-        //         // Transform3d transformedTarget = target.getBestCameraToTarget();
-        //         // Shuffleboard.getTab("Preferences").add("transform",transformedTarget.toString());
-        //         // swerveDriveSubsystem.drive(xPid.calculate(transformedTarget.getX()), yPid.calculate(transformedTarget.getY()), RPid.calculate(transformedTarget.getRotation().getAngle()));
-
-        //     }s
-        //   }
+          for(PhotonTrackedTarget target: targets){
+            if(target.getFiducialId() ==1){
+                Transform3d transformedTarget = target.getBestCameraToTarget();
+                Shuffleboard.getTab("Preferences").add("transform",transformedTarget.toString());
+                swerveDriveSubsystem.drive(xPid.calculate(transformedTarget.getX()), yPid.calculate(transformedTarget.getY()), RPid.calculate(transformedTarget.getRotation().getAngle()));
+            }
+          }
         }
 
     }

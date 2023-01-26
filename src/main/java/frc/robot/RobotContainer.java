@@ -1,5 +1,6 @@
 package frc.robot;
 
+
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -8,7 +9,9 @@ package frc.robot;
 //import frc.robot.commands.FieldSpaceDrive;
 //import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.commands.SetIntakeState;
+import frc.robot.commands.CompressorOff;
 import frc.robot.subsystems.PneumaticSubsystem;
+
 //import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
@@ -25,7 +28,7 @@ public class RobotContainer {
     public SetIntakeState setIntakeStateOpen;
     public SetIntakeState setIntakeStateClosed;
     public SetIntakeState hold;
-
+    public CompressorOff stopCompressor;
     //private SendableChooser<String> autoSelect;
 
     //public SwerveDriveSubsystem getSwervedriveSubsystem() {
@@ -48,6 +51,7 @@ public class RobotContainer {
         setIntakeStateOpen = new SetIntakeState(pneumaticSubsystem, 1);
         setIntakeStateClosed = new SetIntakeState(pneumaticSubsystem, 0);
         hold = new SetIntakeState(pneumaticSubsystem, 2);
+        stopCompressor = new CompressorOff(pneumaticSubsystem);
         //pigeon = new Pigeon2Handler(); // pigeon2 input
 
         // Field space uses pigeon2 to get its angle
@@ -98,7 +102,7 @@ public class RobotContainer {
         joystickHandler4.button(3).whileTrue(setIntakeStateOpen);
         joystickHandler4.button(2).whileTrue(setIntakeStateClosed);
         joystickHandler4.button(1).whileTrue(hold);
-
+        joystickHandler4.button(4).whileTrue(stopCompressor);
         // This will set the current orientation to be "forward" for field drive
         //joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);
 

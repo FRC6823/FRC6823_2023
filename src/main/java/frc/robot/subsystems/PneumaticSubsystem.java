@@ -10,22 +10,27 @@ public class PneumaticSubsystem {
     private Compressor compressor;
     private DoubleSolenoid intakeSolenoid;
     //private Solenoid closeSolenoid;
+    private boolean compressorState;
 
     public PneumaticSubsystem()
     {
         compressor = new Compressor(29, PneumaticsModuleType.REVPH);
         intakeSolenoid = new DoubleSolenoid(29, PneumaticsModuleType.REVPH, 0, 1);
         intakeSolenoid.set(Value.kOff);
+        compressorState = true;
         //openSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
         //closeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
     }
 
     public void periodic()
     {
-        compressor.enableDigital();
-
-        
-        
+        if (!compressorState){
+            compressor.disable();
+        }
+        else {
+            compressor.enableDigital();
+        }
+        compressorState = true;
     }
 
     public void setPneumaticState(int state)
@@ -38,8 +43,13 @@ public class PneumaticSubsystem {
         }
         else{
             intakeSolenoid.set(Value.kOff);
-            intakeSolenoid.close();
+            //intakeSolenoid.close();
         }
+    }
+    
+    public void setCompressorState(boolean state)
+    {
+        compressorState = state;
     }
 
     /*public void setIntakeState()

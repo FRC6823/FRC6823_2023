@@ -31,7 +31,7 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
-        swerveDriveSubsystem = new SwerveDriveSubsystem();
+        swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
         joystickHandler3 = new JoystickHandler(3);
         //joystickHandler4 = new JoystickHandler(4);
 

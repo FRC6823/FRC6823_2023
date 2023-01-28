@@ -11,6 +11,8 @@ import com.ctre.phoenix.sensors.CANCoder;
 //import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.MathUtil;
@@ -56,7 +58,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         //speedLim = Shuffleboard.getTab("Preferences").addPersistent("Speed Lim", 0.5)
         //.withWidget(BuiltInWidgets.kNumberSlider);;
         encoderOffset = offset;
-
     }
 
     public void drive(double speed, double angle) {
@@ -102,5 +103,10 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public void brake(){
         speedMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public SwerveModulePosition getSwerveModulePosition()
+    {
+        return new SwerveModulePosition(speedMotor.getSelectedSensorPosition(), new Rotation2d(getPosition()));
     }
 }

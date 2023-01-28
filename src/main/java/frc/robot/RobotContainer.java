@@ -83,7 +83,7 @@ public class RobotContainer {
         joystickHandler3 = new JoystickHandler(0);
         joystickHandler4 = new JoystickHandler(4);
         limeLightSubsystem = new LimeLightSubsystem(8);
-        photonVisionSubsystem = new PhotonVisionSubsystem();
+        //photonVisionSubsystem = new PhotonVisionSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         conveyorSubsystem = new ConveyorSubsystem();
         liftSubsystem = new LiftSubsystem();
@@ -96,7 +96,7 @@ public class RobotContainer {
         targetSpaceDriveCommand = new TargetSpaceDrive(swerveDriveSubsystem, joystickHandler3, limeLightSubsystem, navX);
         backLoad = new Load(shooterSubsystem, conveyorSubsystem);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
-        followLeaderCommand = new FollowLeader(swerveDriveSubsystem, photonVisionSubsystem);
+        followLeaderCommand = new FollowLeader(swerveDriveSubsystem);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
 
         shoot = new Shoot(shooterSubsystem, conveyorSubsystem, joystickHandler4);

@@ -12,25 +12,29 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class FollowLeader extends CommandBase {
     private SwerveDriveSubsystem swerveDriveSubsystem;    
-    private PhotonVisionSubsystem photonVisionSubsystem;
     private PIDController xPid,yPid,RPid;
     private PhotonCamera camera;
 
-    public FollowLeader(SwerveDriveSubsystem swerveDriveSubsystem, PhotonVisionSubsystem photonVisionSubsystem){
+    public FollowLeader(SwerveDriveSubsystem swerveDriveSubsystem){
         this.swerveDriveSubsystem = swerveDriveSubsystem;
-        this.photonVisionSubsystem = photonVisionSubsystem;
-        addRequirements(swerveDriveSubsystem,photonVisionSubsystem);
-        xPid = new PIDController(0, 0, 0);
-        yPid = new PIDController(0.1, 0, 0);
-        RPid = new PIDController(0, 0, 0);
-        camera = photonVisionSubsystem.getCamera();
+        addRequirements(swerveDriveSubsystem);
 
     }
+
+    @Override
+    public void initialize(){
+      xPid = new PIDController(0, 0, 0);
+      yPid = new PIDController(0.1, 0, 0);
+      RPid = new PIDController(0, 0, 0);
+      this.camera = new PhotonCamera("photonvision");
+
+    }
+
+    @Override
     public void execute(){
         
         

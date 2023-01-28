@@ -18,7 +18,7 @@ public class RobotContainer {
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
-    private ZeroFieldSpace zero;
+    //private ZeroFieldSpace zero;
     private ResetOdometry resetOdometry;
 
     private JoystickHandler joystickHandler3;
@@ -43,7 +43,7 @@ public class RobotContainer {
         // Field space uses pigeon2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
-        zero = new ZeroFieldSpace(fieldSpaceDriveCommand);
+        //zero = new ZeroFieldSpace(fieldSpaceDriveCommand);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         resetOdometry = new ResetOdometry(swerveDriveSubsystem);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
@@ -90,7 +90,7 @@ public class RobotContainer {
         //      joystickHandler3.button(8).whileTrue(swerveDriveSubsystem.drive(0, 0.1, 0));
 
         // This will set the current orientation to be "forward" for field drive
-        joystickHandler3.button(3).onTrue(zero);
+        joystickHandler3.button(3).whileTrue(new ZeroFieldSpace(fieldSpaceDriveCommand));
         // This will reset odometry for Swerve drive
         joystickHandler3.button(4).whileTrue(resetOdometry);
         // Holding 7 will enable robot space drive, instead of field space

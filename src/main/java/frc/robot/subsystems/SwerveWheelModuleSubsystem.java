@@ -58,6 +58,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         //speedLim = Shuffleboard.getTab("Preferences").addPersistent("Speed Lim", 0.5)
         //.withWidget(BuiltInWidgets.kNumberSlider);;
         encoderOffset = offset;
+        speedMotor.setSelectedSensorPosition(0);
     }
 
     public void drive(double speed, double angle) {
@@ -65,7 +66,13 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         int reverse = setAngle(angle, currentEncoderValue);
         setSpeed(speed * reverse);
         
-        SmartDashboard.putNumber("Encoder " + motorName, currentEncoderValue);
+        SmartDashboard.putNumber("Encoder " + motorName, getPosition());
+        if (motorName.equals("BR") || motorName.equals("FR")){
+            SmartDashboard.putNumber("Selected Sensor " + motorName, -speedMotor.getSelectedSensorPosition());
+        }
+        else{
+            SmartDashboard.putNumber("Selected Sensor " + motorName, speedMotor.getSelectedSensorPosition());
+        }
     }
 
     public int setAngle(double angle, double currentEncoderValue)
@@ -74,7 +81,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         int reverse = 1;
         angle += 90;
 
-        if (zeroTo360(angle) > zeroTo360(currentEncoderValue + 91) && zeroTo360(angle) < zeroTo360(currentEncoderValue - 91))
+        if (angle > zeroTo360(currentEncoderValue + 95) && angle < zeroTo360(currentEncoderValue + 265))
         {
             angle += 180;
             reverse = -1;
@@ -89,7 +96,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public double zeroTo360(double angle)
     {   
-        while (angle < 0 || angle > 360) {
             if (angle < 0)
             {
                 angle += 360;
@@ -98,7 +104,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
             {
                 angle -= 360;
             }
-        }
         return angle;
     }
 
@@ -131,8 +136,12 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         speedMotor.setNeutralMode(NeutralMode.Brake);
     }
 
+    //
     public SwerveModulePosition getSwerveModulePosition()
     {
+        if (motorName.equals("BR") || motorName.equals("FR")){
+            return new SwerveModulePosition(-speedMotor.getSelectedSensorPosition(), new Rotation2d(getPosition()));
+        }
         return new SwerveModulePosition(speedMotor.getSelectedSensorPosition(), new Rotation2d(getPosition()));
     }
 }

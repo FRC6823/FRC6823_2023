@@ -11,9 +11,15 @@ public class ZeroFieldSpace extends CommandBase{
         fieldSpaceDrive = field;
     }
 
+    @Override 
+    public void initialize()
+    {
+        fieldSpaceDrive.zero();
+    }
+    
     @Override
     public void execute()
     {
-        fieldSpaceDrive.zero();
+        
     }
 }

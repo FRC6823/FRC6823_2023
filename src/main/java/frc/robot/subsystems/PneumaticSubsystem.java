@@ -1,12 +1,15 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 //import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class PneumaticSubsystem {
+public class PneumaticSubsystem extends SubsystemBase{
     private Compressor compressor;
     private DoubleSolenoid intakeSolenoid;
     //private Solenoid closeSolenoid;
@@ -18,19 +21,21 @@ public class PneumaticSubsystem {
         intakeSolenoid = new DoubleSolenoid(29, PneumaticsModuleType.REVPH, 0, 1);
         intakeSolenoid.set(Value.kOff);
         compressorState = true;
+        //SendableRegistry.addChild(this, compressor);
+        SendableRegistry.addLW(this, "pressure");
         //openSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
         //closeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
     }
 
     public void periodic()
     {
-        if (!compressorState){
-            compressor.disable();
-        }
-        else {
+        //if (compressorState){
             compressor.enableDigital();
-        }
-        compressorState = true;
+        //}
+        //else {
+            //compressor.disable();
+        //}
+        //compressorState = true;
     }
 
     public void setPneumaticState(int state)
@@ -43,6 +48,7 @@ public class PneumaticSubsystem {
         }
         else{
             intakeSolenoid.set(Value.kOff);
+            SmartDashboard.putNumber("Pressure", compressor.getPressure());
             //intakeSolenoid.close();
         }
     }

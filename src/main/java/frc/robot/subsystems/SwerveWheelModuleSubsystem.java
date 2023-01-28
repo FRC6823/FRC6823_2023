@@ -62,23 +62,49 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public void drive(double speed, double angle) {
         double currentEncoderValue = angleEncoder.getAbsolutePosition() - encoderOffset;
-        setSpeed(speed);
-        setAngle(angle, currentEncoderValue);
+        int reverse = setAngle(angle, currentEncoderValue);
+        setSpeed(speed * reverse);
+        
         SmartDashboard.putNumber("Encoder " + motorName, currentEncoderValue);
     }
 
-    public void setAngle(double angle, double currentEncoderValue)
+    public int setAngle(double angle, double currentEncoderValue)
     {
         //angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
+        int reverse = 1;
         angle += 90;
+
+        if (zeroTo360(angle) > zeroTo360(currentEncoderValue + 91) && zeroTo360(angle) < zeroTo360(currentEncoderValue - 91))
+        {
+            angle += 180;
+            reverse = -1;
+        }
+        
         double pidOut = -pidController.calculate(currentEncoderValue, angle);
         
         angleMotor.set(ControlMode.PercentOutput, pidOut);
+
+        return reverse;
+    }
+
+    public double zeroTo360(double angle)
+    {   
+        while (angle < 0 || angle > 360) {
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+            if (angle > 360)
+            {
+                angle -= 360;
+            }
+        }
+        return angle;
     }
 
     public void setSpeed(double speed)
     {
-        speedMotor.set(ControlMode.PercentOutput, Math.min(speed, 0.9)); // sets motor speed //22150 units/100 ms at 12.4V
+        speedMotor.set(ControlMode.PercentOutput, Math.min(speed, 0.5)); // sets motor speed //22150 units/100 ms at 12.4V
     }
 
     // this method outputs position of the encoder to the smartDashBoard, useful for

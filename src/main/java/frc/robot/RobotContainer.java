@@ -8,6 +8,7 @@ package frc.robot;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.RobotSpaceDrive;
+import frc.robot.commands.ZeroFieldSpace;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
@@ -17,6 +18,7 @@ public class RobotContainer {
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
+    private ZeroFieldSpace zero;
     private ResetOdometry resetOdometry;
 
     private JoystickHandler joystickHandler3;
@@ -33,15 +35,15 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
+        pigeon = new Pigeon2Handler(); // pigeon2 input
         swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
         joystickHandler3 = new JoystickHandler(3);
         //joystickHandler4 = new JoystickHandler(4);
 
-        pigeon = new Pigeon2Handler(); // pigeon2 input
-
         // Field space uses pigeon2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
+        zero = new ZeroFieldSpace(fieldSpaceDriveCommand);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         resetOdometry = new ResetOdometry(swerveDriveSubsystem);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
@@ -88,7 +90,7 @@ public class RobotContainer {
         //      joystickHandler3.button(8).whileTrue(swerveDriveSubsystem.drive(0, 0.1, 0));
 
         // This will set the current orientation to be "forward" for field drive
-        joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);
+        joystickHandler3.button(3).onTrue(zero);
         // This will reset odometry for Swerve drive
         joystickHandler3.button(4).whileTrue(resetOdometry);
         // Holding 7 will enable robot space drive, instead of field space

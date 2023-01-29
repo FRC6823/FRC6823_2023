@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -85,7 +86,7 @@ public class RobotContainer {
         //      joystickHandler3.button(8).whileTrue(swerveDriveSubsystem.drive(0, 0.1, 0));
 
         // This will set the current orientation to be "forward" for field drive
-        joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);
+        joystickHandler3.button(3).onTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
 
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);

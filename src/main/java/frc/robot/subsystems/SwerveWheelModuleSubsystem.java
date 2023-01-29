@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.MathUtil;
+import frc.robot.util.Constants;
 
 public class SwerveWheelModuleSubsystem extends SubsystemBase {
     private final double P = .008;
@@ -67,12 +68,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         setSpeed(speed * reverse);
         
         SmartDashboard.putNumber("Encoder " + motorName, getPosition());
-        if (motorName.equals("BR") || motorName.equals("FR")){
-            SmartDashboard.putNumber("Selected Sensor " + motorName, -speedMotor.getSelectedSensorPosition());
-        }
-        else{
-            SmartDashboard.putNumber("Selected Sensor " + motorName, speedMotor.getSelectedSensorPosition());
-        }
+        SmartDashboard.putNumber("Selected Sensor " + motorName, getDistance());
     }
 
     public int setAngle(double angle, double currentEncoderValue)
@@ -81,7 +77,12 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         int reverse = 1;
         angle += 90;
 
-        if (angle > zeroTo360(currentEncoderValue + 95) && angle < zeroTo360(currentEncoderValue + 265))
+        if (angle > MathUtil.mod(currentEncoderValue + 178, 360) && angle < MathUtil.mod(currentEncoderValue + 182, 360))
+        {
+            angle += 180;
+            reverse = -1;
+        }
+        else if (angle > MathUtil.mod(currentEncoderValue + 95, 360) && angle < MathUtil.mod(currentEncoderValue + 265, 360))
         {
             angle += 180;
             reverse = -1;
@@ -94,19 +95,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         return reverse;
     }
 
-    public double zeroTo360(double angle)
-    {   
-            if (angle < 0)
-            {
-                angle += 360;
-            }
-            if (angle > 360)
-            {
-                angle -= 360;
-            }
-        return angle;
-    }
-
     public void setSpeed(double speed)
     {
         speedMotor.set(ControlMode.PercentOutput, Math.min(speed, 0.5)); // sets motor speed //22150 units/100 ms at 12.4V
@@ -116,6 +104,13 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     // calibrating the encoder offsets
     public double getPosition() {
         return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360);
+    }
+
+    public double getDistance() {
+        if (motorName.equals("BR") || motorName.equals("FR")) {
+            return -(speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(360 * Constants.L2_RATIO);
+        }
+        return (speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(360 * Constants.L2_RATIO);
     }
 
     public void stop() {
@@ -139,9 +134,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     //
     public SwerveModulePosition getSwerveModulePosition()
     {
-        if (motorName.equals("BR") || motorName.equals("FR")){
-            return new SwerveModulePosition(-speedMotor.getSelectedSensorPosition(), new Rotation2d(getPosition()));
-        }
-        return new SwerveModulePosition(speedMotor.getSelectedSensorPosition(), new Rotation2d(getPosition()));
+        return new SwerveModulePosition(getDistance(), new Rotation2d(getPosition()));
     }
 }

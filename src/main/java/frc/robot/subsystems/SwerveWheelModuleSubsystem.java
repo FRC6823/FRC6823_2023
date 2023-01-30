@@ -108,7 +108,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public double getDistance() {
         if (motorName.equals("BR") || motorName.equals("FR")) {
-            return -(speedMotor.getSelectedSensorPosition())/(4096 * Constants.L2_RATIO);
+            return -(speedMotor.getSelectedSensorPosition())/(2048 * Constants.L2_RATIO);
         }
         return (speedMotor.getSelectedSensorPosition())/(2048 * Constants.L2_RATIO);
     }

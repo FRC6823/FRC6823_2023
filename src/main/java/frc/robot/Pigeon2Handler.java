@@ -9,7 +9,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 public class Pigeon2Handler {
     private PigeonIMU pigeon;
-    private double initialAngle;
+    private double initialAngle = Math.PI/2.0;
 
     public double getInitialAngle() {
         return initialAngle;
@@ -54,7 +54,7 @@ public class Pigeon2Handler {
     }
 
     public double getAngleRad() {
-        return MathUtil.mod(pigeon.getYaw() * 2 * Math.PI / 360, Math.PI * 2);
+        return MathUtil.mod(((pigeon.getYaw()) * 2 * Math.PI) / 360, Math.PI * 2);
     }
 
     /*public double getAngle() {

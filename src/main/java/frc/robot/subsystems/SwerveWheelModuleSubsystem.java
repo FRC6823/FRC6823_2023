@@ -73,20 +73,14 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public int setAngle(double angle, double currentEncoderValue)
     {
-        //angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
+        angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
         int reverse = 1;
-        angle += 90;
+        //angle += 90;
 
-        if (angle > MathUtil.mod(currentEncoderValue + 178, 360) && angle < MathUtil.mod(currentEncoderValue + 182, 360))
-        {
-            angle += 180;
-            reverse = -1;
-        }
-        else if (angle > MathUtil.mod(currentEncoderValue + 95, 360) && angle < MathUtil.mod(currentEncoderValue + 265, 360))
-        {
-            angle += 180;
-            reverse = -1;
-        }
+        //if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 90)
+        //{
+            //reverse = -1;
+        //}
         
         double pidOut = -pidController.calculate(currentEncoderValue, angle);
         
@@ -108,9 +102,9 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public double getDistance() {
         if (motorName.equals("BR") || motorName.equals("FR")) {
-            return -(speedMotor.getSelectedSensorPosition())/(2048 * Constants.L2_RATIO);
+            return -(speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO);
         }
-        return (speedMotor.getSelectedSensorPosition())/(2048 * Constants.L2_RATIO);
+        return (speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO);
     }
 
     public void stop() {

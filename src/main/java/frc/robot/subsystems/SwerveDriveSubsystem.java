@@ -75,7 +75,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry
                     (kinematics, 
 
-                    new Rotation2d(-pigeon.getAngleRad()), 
+                    new Rotation2d(pigeon.getAngleRad()), 
 
                     new SwerveModulePosition[] {
                         backRight.getSwerveModulePosition(), 
@@ -93,7 +93,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void periodic() {
         // Convert to module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-        //SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, 5.5);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, 5.5);
         // Front left module state
         SwerveModuleState backRightState = moduleStates[0];
 
@@ -111,7 +111,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
         frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
 
-        odometry.update(new Rotation2d(-pigeon.getAngleRad()), 
+        odometry.update(new Rotation2d(pigeon.getAngleRad()), 
                         new SwerveModulePosition[] {
                             backRight.getSwerveModulePosition(), 
                             backLeft.getSwerveModulePosition(),
@@ -153,7 +153,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void resetPose()
     {
-        odometry.resetPosition(new Rotation2d(-pigeon.getAngleRad()), 
+        odometry.resetPosition(new Rotation2d(pigeon.getAngleRad()), 
                                 new SwerveModulePosition[] {
                                     backRight.getSwerveModulePosition(), 
                                     backLeft.getSwerveModulePosition(),

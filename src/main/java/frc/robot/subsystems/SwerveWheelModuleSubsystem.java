@@ -59,7 +59,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         //speedLim = Shuffleboard.getTab("Preferences").addPersistent("Speed Lim", 0.5)
         //.withWidget(BuiltInWidgets.kNumberSlider);;
         encoderOffset = offset;
-        speedMotor.setSelectedSensorPosition(0);
+        resetSensor();
     }
 
     public void drive(double speed, double angle) {
@@ -108,9 +108,9 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public double getDistance() {
         if (motorName.equals("BR") || motorName.equals("FR")) {
-            return -(speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(360 * Constants.L2_RATIO);
+            return -(speedMotor.getSelectedSensorPosition())/(4096 * Constants.L2_RATIO);
         }
-        return (speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(360 * Constants.L2_RATIO);
+        return (speedMotor.getSelectedSensorPosition())/(2048 * Constants.L2_RATIO);
     }
 
     public void stop() {
@@ -129,6 +129,11 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public void brake(){
         speedMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public void resetSensor()
+    {
+        speedMotor.setSelectedSensorPosition(0);
     }
 
     //

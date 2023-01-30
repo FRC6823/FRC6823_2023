@@ -159,5 +159,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                                     frontLeft.getSwerveModulePosition()},
                                 new Pose2d(0, 0, new Rotation2d(pigeon.getAngleRad())));
     }
+
+    public void resetSensors()
+    {
+        backLeft.resetSensor();
+        backRight.resetSensor();
+        frontLeft.resetSensor();
+        frontRight.resetSensor();
+    }
 }
 

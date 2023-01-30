@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -8,7 +9,6 @@ package frc.robot;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.RobotSpaceDrive;
-import frc.robot.commands.ZeroFieldSpace;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
@@ -90,10 +90,12 @@ public class RobotContainer {
         //      joystickHandler3.button(8).whileTrue(swerveDriveSubsystem.drive(0, 0.1, 0));
 
         // This will set the current orientation to be "forward" for field drive
-        joystickHandler3.button(3).whileTrue(new ZeroFieldSpace(fieldSpaceDriveCommand));
+        joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
         // This will reset odometry for Swerve drive
         joystickHandler3.button(4).whileTrue(resetOdometry);
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
+
+        joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
     }
 }

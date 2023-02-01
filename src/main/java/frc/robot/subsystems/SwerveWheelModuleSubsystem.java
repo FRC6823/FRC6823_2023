@@ -63,12 +63,13 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     }
 
     public void drive(double speed, double angle) {
-        double currentEncoderValue = angleEncoder.getAbsolutePosition() - encoderOffset;
+        double currentEncoderValue = getPosition();
         int reverse = setAngle(angle, currentEncoderValue);
         setSpeed(speed * reverse);
         
         SmartDashboard.putNumber("Encoder " + motorName, getPosition());
-        SmartDashboard.putNumber("Selected Sensor " + motorName, getDistance());
+        SmartDashboard.putNumber("Distance " + motorName, getDistance());
+        SmartDashboard.putNumber("Rotation " + motorName, getPosition());
     }
 
     public int setAngle(double angle, double currentEncoderValue)

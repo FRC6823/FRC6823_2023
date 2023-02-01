@@ -53,19 +53,16 @@ public class FieldSpaceDrive extends CommandBase {
         double yval = Math.max(Math.min(joystickHandler.getAxis1() * -speedRate, 1), -1);
         double spinval = Math.max(Math.min(joystickHandler.getAxis5() * turnRate, 1), -1);
 
-        double robotAngle = getRobotAngle();
-
         // mapping field space to robot space
         //double txval = getTransX(xval, yval, robotAngle);
         //double tyval = getTransY(xval, yval, robotAngle);
 
-        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, new Rotation2d(robotAngle)));
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, getRobotAngle()));
     }
 
-    public double getRobotAngle()
+    public Rotation2d getRobotAngle()
     {
-        double robotAngle = pigeon2Handler.getAngleRad();
-        return robotAngle;
+        return pigeon2Handler.getAngleDeg();
     }
 
     public void zero() { //Zeroes direction

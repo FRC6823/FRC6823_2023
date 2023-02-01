@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 //import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -75,7 +75,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry
                     (kinematics, 
 
-                    new Rotation2d(pigeon.getAngleRad()), 
+                    pigeon.getAngleDeg(), 
 
                     new SwerveModulePosition[] {
                         backRight.getSwerveModulePosition(), 
@@ -111,7 +111,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
         frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
 
-        odometry.update(new Rotation2d(pigeon.getAngleRad()), 
+        odometry.update(pigeon.getAngleDeg(), 
                         new SwerveModulePosition[] {
                             backRight.getSwerveModulePosition(), 
                             backLeft.getSwerveModulePosition(),
@@ -120,8 +120,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("PoseX", odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("Pose Y", odometry.getPoseMeters().getY());
-        SmartDashboard.putNumber("Pose Theta", odometry.getPoseMeters().getRotation().getRadians());
-        SmartDashboard.putNumber("Pigeon Readings", pigeon.getAngleRad());
+        SmartDashboard.putNumber("Pose Theta", odometry.getPoseMeters().getRotation().getDegrees());
+        SmartDashboard.putNumber("Pigeon Readings", pigeon.getAngleDeg().getDegrees());
     }
 
     public void stop() {
@@ -145,21 +145,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         frontLeft.brake();
     }
 
-    public double getRobotAngle()
-    {
-        double robotAngle = pigeon.getAngleRad();
-        return robotAngle;
-    }
+    //public Rotation2d getRobotAngle()
+    //{
+        //return pigeon.getAngleDeg();
+    //}
 
     public void resetPose()
     {
-        odometry.resetPosition(new Rotation2d(pigeon.getAngleRad()), 
+        odometry.resetPosition(pigeon.getAngleDeg(), 
                                 new SwerveModulePosition[] {
                                     backRight.getSwerveModulePosition(), 
                                     backLeft.getSwerveModulePosition(),
                                     frontRight.getSwerveModulePosition(),
                                     frontLeft.getSwerveModulePosition()},
-                                new Pose2d(0, 0, new Rotation2d(pigeon.getAngleRad())));
+                                new Pose2d(0, 0, pigeon.getAngleRad()));
     }
 
     public void resetSensors()

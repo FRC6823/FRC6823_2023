@@ -67,7 +67,8 @@ public class RobotContainer {
         */
         //limeLightSubsystem.setServoAngle(35);
         //RotateToZero.setInitialAngle(navX.getAngleRad());
-        pigeon.setInitialAngle();
+        //pigeon.setInitialAngle();
+        //pigeon.zeroYaw();
         fieldSpaceDriveCommand.zero();
 
         configureButtonBindings();

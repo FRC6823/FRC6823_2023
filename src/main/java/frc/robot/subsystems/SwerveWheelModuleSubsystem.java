@@ -79,7 +79,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         //     speed *= -1;
         //     angle = (angle + 180) % 360;
         // }
-
+        speed = Math.max(Math.min(speed, 1.0), -1);
         speedMotor.set(ControlMode.PercentOutput, speed); // sets motor speed //22150 units/100 ms at 12.4V
         //SmartDashboard.putNumber("Speed " + angleEncoderChannel, speed);
 
@@ -106,7 +106,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     // this method outputs position of the encoder to the smartDashBoard, useful for
     // calibrating the encoder offsets
     public double getPosition() {
-        return MathUtil.mod(angleEncoder.getAbsolutePosition() * 180 - encoderOffset, 360);
+        return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360); // *180
     }
 
     public void stop() {

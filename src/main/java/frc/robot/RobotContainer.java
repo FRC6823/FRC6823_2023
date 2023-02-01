@@ -149,7 +149,7 @@ public class RobotContainer {
 
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
-        joystickHandler3.button(5).whileTrue(followLeaderCommand).onFalse(()->swerveDriveSubsystem.drive(0, 0, 0));
+        joystickHandler4.button(10).whileTrue(followLeaderCommand).onFalse(()->swerveDriveSubsystem.drive(0, 0, 0));// switch back to handler 3 button 5
         joystickHandler3.button(4).whileTrue(targetSpaceDriveCommand);
 
         joystickHandler4.button(6).whileTrue(backLoad);

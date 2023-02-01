@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 //import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 //import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -75,7 +76,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry
                     (kinematics, 
 
-                    pigeon.getAngleDeg(), 
+                    pigeon.getAngleRad(), 
 
                     new SwerveModulePosition[] {
                         backRight.getSwerveModulePosition(), 
@@ -111,7 +112,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
         frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
 
-        odometry.update(pigeon.getAngleDeg(), 
+        odometry.update(pigeon.getAngleRad(), 
                         new SwerveModulePosition[] {
                             backRight.getSwerveModulePosition(), 
                             backLeft.getSwerveModulePosition(),
@@ -152,7 +153,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void resetPose()
     {
-        odometry.resetPosition(pigeon.getAngleDeg(), 
+        odometry.resetPosition(pigeon.getAngleRad(), 
                                 new SwerveModulePosition[] {
                                     backRight.getSwerveModulePosition(), 
                                     backLeft.getSwerveModulePosition(),

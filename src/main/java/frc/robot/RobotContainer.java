@@ -83,7 +83,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         
-        joystickHandler3.button(2).whileTrue(followLeader);
+        joystickHandler3.button(1).whileTrue(followLeader);
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
         // This will set the current orientation to be "forward" for field drive

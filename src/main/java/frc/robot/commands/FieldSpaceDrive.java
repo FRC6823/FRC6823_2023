@@ -21,8 +21,6 @@ public class FieldSpaceDrive extends CommandBase {
     private SimpleWidget speedRateWidget;
     private SimpleWidget turnRateWidget;
 
-    private double fieldAngle = 0; //Angle of away from driver from zero
-
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
         //Instantiate subsystem, Joystick Handler, pigeon2
@@ -51,13 +49,20 @@ public class FieldSpaceDrive extends CommandBase {
         // }
 
         //Set xval, yval, spinval to the scaled values from the joystick, bounded on [-1, 1]
-        double xval = Math.max(Math.min(joystickHandler.getAxis0() * -speedRate, 1), -1);
-        double yval = Math.max(Math.min(joystickHandler.getAxis1() * speedRate, 1), -1);
-        double spinval = Math.max(Math.min(joystickHandler.getAxis5() * turnRate, 1), -1);
+        double xval = Math.max(Math.min(joystickHandler.getAxis0() * speedRate, 1), -1);
+        double yval = Math.max(Math.min(joystickHandler.getAxis1() * -speedRate, 1), -1);
+        double spinval = Math.max(Math.min(joystickHandler.getAxis5() * -turnRate, 1), -1);
 
-        double robotAngle = pigeon2Handler.getAngleRad() - fieldAngle;
+        // mapping field space to robot space
+        //double txval = getTransX(xval, yval, robotAngle);
+        //double tyval = getTransY(xval, yval, robotAngle);
 
-        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, new Rotation2d(robotAngle)));
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, getRobotAngle()));
+    }
+
+    public Rotation2d getRobotAngle()
+    {
+        return pigeon2Handler.getAngleDeg();
     }
 
     public void zero() { //Zeroes direction

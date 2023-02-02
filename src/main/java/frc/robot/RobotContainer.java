@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.FieldSpaceDrive;
+import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
@@ -17,6 +18,8 @@ public class RobotContainer {
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
+    //private ZeroFieldSpace zero;
+    private ResetOdometry resetOdometry;
 
     private JoystickHandler joystickHandler3;
     //private JoystickHandler joystickHandler4;
@@ -32,16 +35,17 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
-        swerveDriveSubsystem = new SwerveDriveSubsystem();
+        pigeon = new Pigeon2Handler(); // pigeon2 input
+        swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
         joystickHandler3 = new JoystickHandler(3);
         //joystickHandler4 = new JoystickHandler(4);
-
-        pigeon = new Pigeon2Handler(); // pigeon2 input
 
         // Field space uses pigeon2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
+        //zero = new ZeroFieldSpace(fieldSpaceDriveCommand);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
+        resetOdometry = new ResetOdometry(swerveDriveSubsystem);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
 
         /*autoSelect = new SendableChooser<String>();
@@ -63,8 +67,10 @@ public class RobotContainer {
         */
         //limeLightSubsystem.setServoAngle(35);
         //RotateToZero.setInitialAngle(navX.getAngleRad());
-        pigeon.setInitialAngle();
-        fieldSpaceDriveCommand.zero();
+        //pigeon.setInitialAngle();
+        //pigeon.zeroYaw();
+        
+        //fieldSpaceDriveCommand.zero();
 
         configureButtonBindings();
     }
@@ -86,9 +92,12 @@ public class RobotContainer {
         //      joystickHandler3.button(8).whileTrue(swerveDriveSubsystem.drive(0, 0.1, 0));
 
         // This will set the current orientation to be "forward" for field drive
-        joystickHandler3.button(3).onTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
-
+        joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
+        // This will reset odometry for Swerve drive
+        joystickHandler3.button(4).whileTrue(resetOdometry);
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
+
+        joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
     }
 }

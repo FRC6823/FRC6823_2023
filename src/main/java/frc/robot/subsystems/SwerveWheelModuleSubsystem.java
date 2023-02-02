@@ -8,9 +8,12 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.MathUtil;
+import frc.robot.util.Constants;
 
 public class SwerveWheelModuleSubsystem extends SubsystemBase {
     private final double P = .008;
@@ -49,29 +52,30 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         SendableRegistry.addChild(this, angleEncoder);
         SendableRegistry.addLW(this, "Swerve Wheel Module");
         encoderOffset = offset;
-
+        resetSensor();
     }
 
     // angle is a value between -180 to 180
     public void drive(double speed, double angle) {
-        double currentEncoderValue = angleEncoder.getAbsolutePosition();
+        double currentEncoderValue = getPosition();
         int reverse = setAngle(angle, currentEncoderValue);
         setSpeed(speed, reverse);
-
+        
         SmartDashboard.putNumber("Encoder " + motorName, getPosition());
+        SmartDashboard.putNumber("Distance " + motorName, getDistance());
+        SmartDashboard.putNumber("Rotation " + motorName, getPositionRad());
     }
 
     public int setAngle(double angle, double currentEncoderValue)
     {
-        //angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
+        angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
         int reverse = 1;
-        angle += 90;
+        //angle += 90;
 
-        // if the setpoint is more than 90 degrees away form the current position, then just reverse the speed
-        if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 90) {
-            reverse = -1;
-            angle = (angle + 180) % 360;
-        }
+        //if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 90)
+        //{
+            //reverse = -1;
+        //}
         
         double pidOut = -pidController.calculate(currentEncoderValue, angle);
         
@@ -82,13 +86,24 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public void setSpeed(double speed, double reverse)
     {
-        speedMotor.set(ControlMode.PercentOutput, speed * reverse);
+        speedMotor.set(ControlMode.PercentOutput, Math.min(speed, 0.5)); // sets motor speed //22150 units/100 ms at 12.4V
     }
 
     // this method outputs position of the encoder to the smartDashBoard, useful for
     // calibrating the encoder offsets
     public double getPosition() {
-        return MathUtil.mod(angleEncoder.getAbsolutePosition() * 180 - encoderOffset, 360);
+        return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360);
+    }
+
+    public double getPositionRad() {
+        return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360) * Math.PI / 180;
+    }
+
+    public double getDistance() {
+        if (motorName.equals("BR") || motorName.equals("FR")) {
+            return -(speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO);
+        }
+        return (speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO);
     }
 
     public void stop() {
@@ -107,5 +122,16 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public void brake(){
         speedMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public void resetSensor()
+    {
+        speedMotor.setSelectedSensorPosition(0);
+    }
+
+    //
+    public SwerveModulePosition getSwerveModulePosition()
+    {
+        return new SwerveModulePosition(getDistance(), new Rotation2d(getPositionRad()));
     }
 }

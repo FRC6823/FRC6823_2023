@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.FieldSpaceDrive;
-import frc.robot.commands.ResetOdometry;
+import frc.robot.commands.FollowLeader;
 import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
@@ -18,8 +18,7 @@ public class RobotContainer {
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
-    //private ZeroFieldSpace zero;
-    private ResetOdometry resetOdometry;
+    private FollowLeader followLeader;
 
     private JoystickHandler joystickHandler3;
     //private JoystickHandler joystickHandler4;
@@ -43,10 +42,9 @@ public class RobotContainer {
         // Field space uses pigeon2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
-        //zero = new ZeroFieldSpace(fieldSpaceDriveCommand);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
-        resetOdometry = new ResetOdometry(swerveDriveSubsystem);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
+        followLeader = new FollowLeader(swerveDriveSubsystem);
 
         /*autoSelect = new SendableChooser<String>();
         autoSelect.setDefaultOption("1 Ball", "1Ball"); //Look into if default not working
@@ -84,19 +82,14 @@ public class RobotContainer {
     }*/
 
     private void configureButtonBindings() {
-        //RotateToAngle.setInitialAngle(navX.getAngleRad());
-        //RotateToZero.setInitialAngle(navX.getAngleRad());
-        // Hold button 8 to set the swerve just forward, this is for calibration
-        // purposes
         
-        //      joystickHandler3.button(8).whileTrue(swerveDriveSubsystem.drive(0, 0.1, 0));
-
+        joystickHandler3.button(2).whileTrue(followLeader);
+        // Holding 7 will enable robot space drive, instead of field space
+        joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
         // This will reset odometry for Swerve drive
-        joystickHandler3.button(4).whileTrue(resetOdometry);
-        // Holding 7 will enable robot space drive, instead of field space
-        joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
+        joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
 
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
     }

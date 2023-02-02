@@ -1,6 +1,6 @@
 package frc.robot;
 
-//import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.pigeon2.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
@@ -94,7 +94,7 @@ public class JoystickHandler {
 
     public void updateDeadZone(){
         if (!Preferences.containsKey("Dead Zone"))
-            Preferences.setDouble("Dead Zone", 0.05);
-        deadZone = Preferences.getDouble("Dead Zone", 0.05);
+            Preferences.setDouble("Dead Zone", 0.1);
+        deadZone = Preferences.getDouble("Dead Zone", 0.1);
     }
 }

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.JoystickHandler;
@@ -35,6 +36,6 @@ public class RobotSpaceDrive extends CommandBase {
         double yval = Math.max(Math.min(joystickHandler.getAxis0() * speedRate, 1), -1);
         double spinval = Math.max(Math.min(joystickHandler.getAxis5() * turnRate, 1), -1);
 
-        swerveDrive.drive(xval, yval, spinval);
+        swerveDrive.drive(new ChassisSpeeds(xval, yval, spinval));
     }
 }

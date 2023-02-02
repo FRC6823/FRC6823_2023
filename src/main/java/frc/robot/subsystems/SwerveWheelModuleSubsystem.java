@@ -3,12 +3,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-//import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 
-//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-//import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableRegistry;
@@ -23,13 +20,11 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     private TalonFX speedMotor;
     private PIDController pidController;
     private CANCoder angleEncoder;
-    //private boolean calibrateMode;
     private double encoderOffset;
     private String motorName;
-    private double speedLim;
 
     public SwerveWheelModuleSubsystem(int angleMotorChannel, int speedMotorChannel, int angleEncoderChannel,
-            String motorName, double offset, double limit) {
+            String motorName, double offset) {
         // We're using TalonFX motors on CAN.
         this.angleMotor = new TalonFX(angleMotorChannel);
         this.speedMotor = new TalonFX(speedMotorChannel);
@@ -41,7 +36,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         // Integral/Derivative control but increasing the P value will make
         // the motors more aggressive to changing to angles.
 
-        //angleEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+        angleEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
 
         // pidController.setTolerance(20); //sets tolerance, shouldn't be needed.
 
@@ -53,36 +48,47 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         SendableRegistry.addChild(this, speedMotor);
         SendableRegistry.addChild(this, angleEncoder);
         SendableRegistry.addLW(this, "Swerve Wheel Module");
-
-        speedLim = limit;
         encoderOffset = offset;
+
     }
 
+    // angle is a value between -180 to 180
     public void drive(double speed, double angle) {
-        double currentEncoderValue = angleEncoder.getAbsolutePosition() - encoderOffset;
-        setSpeed(speed);
-        setAngle(angle, currentEncoderValue);
-        SmartDashboard.putNumber("Encoder " + motorName, currentEncoderValue);
+        double currentEncoderValue = angleEncoder.getAbsolutePosition();
+        int reverse = setAngle(angle, currentEncoderValue);
+        setSpeed(speed, reverse);
+
+        SmartDashboard.putNumber("Encoder " + motorName, getPosition());
     }
 
-    public void setAngle(double angle, double currentEncoderValue)
+    public int setAngle(double angle, double currentEncoderValue)
     {
         //angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
+        int reverse = 1;
         angle += 90;
+
+        // if the setpoint is more than 90 degrees away form the current position, then just reverse the speed
+        if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 90) {
+            reverse = -1;
+            angle = (angle + 180) % 360;
+        }
+        
         double pidOut = -pidController.calculate(currentEncoderValue, angle);
         
         angleMotor.set(ControlMode.PercentOutput, pidOut);
+
+        return reverse;
     }
 
-    public void setSpeed(double speed)
+    public void setSpeed(double speed, double reverse)
     {
-        speedMotor.set(ControlMode.PercentOutput, Math.min(speed, speedLim)); // sets motor speed //22150 units/100 ms at 12.4V
+        speedMotor.set(ControlMode.PercentOutput, speed * reverse);
     }
 
     // this method outputs position of the encoder to the smartDashBoard, useful for
     // calibrating the encoder offsets
     public double getPosition() {
-        return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360);
+        return MathUtil.mod(angleEncoder.getAbsolutePosition() * 180 - encoderOffset, 360);
     }
 
     public void stop() {
@@ -92,7 +98,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //calibrateMode = calibrateState.getEntry().getBoolean(false);
+
     }
 
     public void coast(){

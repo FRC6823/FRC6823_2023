@@ -40,7 +40,6 @@ public class FieldSpaceDrive extends CommandBase {
     public void execute() {
         pigeon2Handler.printEverything();
         joystickHandler.updateDeadZone();
-        joystickHandler.setDeadZone(0.2);
 
         //Set speed and turn rates for full throttle and not full throttle
         double speedRate = speedRateWidget.getEntry().getDouble(0.5);
@@ -54,13 +53,9 @@ public class FieldSpaceDrive extends CommandBase {
         //Set xval, yval, spinval to the scaled values from the joystick, bounded on [-1, 1]
         double xval = Math.max(Math.min(joystickHandler.getAxis0() * -speedRate, 1), -1);
         double yval = Math.max(Math.min(joystickHandler.getAxis1() * speedRate, 1), -1);
-        double spinval = Math.max(Math.min(joystickHandler.getAxis5() * turnRate, 1), -1) * Math.PI / 180;
+        double spinval = Math.max(Math.min(joystickHandler.getAxis5() * turnRate, 1), -1);
 
         double robotAngle = pigeon2Handler.getAngleRad() - fieldAngle;
-
-        // mapping field space to robot space
-        //double txval = getTransX(xval, yval, robotAngle);
-        //double tyval = getTransY(xval, yval, robotAngle);
 
         swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, new Rotation2d(robotAngle)));
     }

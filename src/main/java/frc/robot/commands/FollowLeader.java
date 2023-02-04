@@ -41,9 +41,9 @@ public class FollowLeader extends CommandBase {
 
   @Override
   public void initialize() {
-    xPid = new PIDController(0.08, 0, 0); //0.05
-    yPid = new PIDController(0.05, 0, 0);
-    RPid = new PIDController(0.1, 0, 0);
+    xPid = new PIDController(0.1, 0, 0);
+    yPid = new PIDController(0.1, 0, 0);
+    RPid = new PIDController(0.2, 0, 0);
     this.camera = new PhotonCamera("photonvision");
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
@@ -66,15 +66,12 @@ public class FollowLeader extends CommandBase {
 
   @Override
   public void execute() {
-
-    
     //Shuffleboard.getTab("Preferences").add("transform", "transformedTarget.toString()");
     
-    xPid.setSetpoint(0);
+    xPid.setSetpoint(0.7);
     yPid.setSetpoint(0);
     RPid.setSetpoint(Math.PI);
     PhotonPipelineResult latestResult = camera.getLatestResult();
-    SmartDashboard.putBoolean("Target?", latestResult.hasTargets());
     if (latestResult.hasTargets()) {
       List<PhotonTrackedTarget> targets = latestResult.targets;
       for (PhotonTrackedTarget target : targets) {
@@ -85,9 +82,14 @@ public class FollowLeader extends CommandBase {
           SmartDashboard.putNumber("Target Pitch", target.getPitch());
           SmartDashboard.putNumber("Target Ambiguity", target.getPoseAmbiguity());
           //Shuffleboard.getTab("Preferences").add("transform", transformedTarget.toString());
+          if (xPid.calculate(transformedTarget.getX()) >= -0.1){
+            swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
+            swerveDriveSubsystem.brake();
+          }
+          else {
           swerveDriveSubsystem.drive(new ChassisSpeeds(-xPid.calculate(transformedTarget.getX()), -yPid.calculate(transformedTarget.getY()),
               RPid.calculate(transformedTarget.getRotation().getAngle())));
-          
+          }
         }
       }
     }

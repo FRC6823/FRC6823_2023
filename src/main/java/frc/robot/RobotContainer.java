@@ -17,7 +17,6 @@ public class RobotContainer {
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
-    //private ZeroFieldSpace zero;
 
     private JoystickHandler joystickHandler3;
     //private JoystickHandler joystickHandler4;
@@ -89,5 +88,7 @@ public class RobotContainer {
         joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
         // This will reset motor positions
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
+
+        joystickHandler3.button(1).whileTrue(new InstantCommand(() -> {swerveDriveSubsystem.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
     }
 }

@@ -57,25 +57,26 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     // angle is a value between -180 to 180
     public void drive(double speed, double angle) {
-        double currentEncoderValue = getPosition();
-        int reverse = setAngle(angle, currentEncoderValue);
-        setSpeed(speed, reverse);
+        int reverse = setAngle(angle);
+        setSpeed(speed * reverse);
         
         SmartDashboard.putNumber("Encoder " + motorName, getPosition());
         SmartDashboard.putNumber("Distance " + motorName, getDistance());
         SmartDashboard.putNumber("Rotation " + motorName, getPositionRad());
     }
 
-    public int setAngle(double angle, double currentEncoderValue)
+    public int setAngle(double angle)
     {
+        double currentEncoderValue = getPosition();
         angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
         int reverse = 1;
         //angle += 90;
 
-        //if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 90)
-        //{
-            //reverse = -1;
-        //}
+        if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 85)
+        {
+            reverse = -1;
+            angle += 180;
+        }
         
         double pidOut = -pidController.calculate(currentEncoderValue, angle);
         
@@ -84,9 +85,9 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         return reverse;
     }
 
-    public void setSpeed(double speed, double reverse)
+    public void setSpeed(double speed)
     {
-        speedMotor.set(ControlMode.PercentOutput, Math.min(speed, 0.5)); // sets motor speed //22150 units/100 ms at 12.4V
+        speedMotor.set(ControlMode.PercentOutput, speed); // sets motor speed //22150 units/100 ms at 12.4V
     }
 
     // this method outputs position of the encoder to the smartDashBoard, useful for

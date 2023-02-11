@@ -20,6 +20,7 @@ public class FieldSpaceDrive extends CommandBase {
     private Pigeon2Handler pigeon2Handler;
     private SimpleWidget speedRateWidget;
     private SimpleWidget turnRateWidget;
+    private boolean drive;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
@@ -32,6 +33,7 @@ public class FieldSpaceDrive extends CommandBase {
         this.turnRateWidget = Shuffleboard.getTab("Preferences").addPersistent("Turn Rate", 0.5)
         .withWidget(BuiltInWidgets.kNumberSlider);
         addRequirements(swerveDrive);
+        drive = true;
     }
 
     @Override
@@ -49,15 +51,16 @@ public class FieldSpaceDrive extends CommandBase {
         // }
 
         //Set xval, yval, spinval to the scaled values from the joystick, bounded on [-1, 1]
-        double xval = Math.max(Math.min(joystickHandler.getAxis0() * speedRate, 1), -1);
-        double yval = Math.max(Math.min(joystickHandler.getAxis1() * -speedRate, 1), -1);
+        double xval = Math.max(Math.min(joystickHandler.getAxis1() * -speedRate, 1), -1);
+        double yval = Math.max(Math.min(joystickHandler.getAxis0() * -speedRate, 1), -1);
         double spinval = Math.max(Math.min(joystickHandler.getAxis5() * -turnRate, 1), -1);
 
         // mapping field space to robot space
         //double txval = getTransX(xval, yval, robotAngle);
         //double tyval = getTransY(xval, yval, robotAngle);
-
-        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, getRobotAngle()));
+        if (drive){
+            swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, getRobotAngle()));
+        }
     }
 
     public Rotation2d getRobotAngle()
@@ -68,5 +71,8 @@ public class FieldSpaceDrive extends CommandBase {
     public void zero() { //Zeroes direction
         pigeon2Handler.zeroYaw();
     }
-
+    public void drive(boolean drive)
+    {
+        this.drive = drive;
+    }
 }

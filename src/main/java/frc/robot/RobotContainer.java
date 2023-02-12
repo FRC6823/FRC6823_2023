@@ -7,19 +7,27 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.FieldSpaceDrive;
+import frc.robot.commands.PositionHandler;
 import frc.robot.commands.RobotSpaceDrive;
+import frc.robot.subsystems.GripperAngleSubsystem;
+import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
     // test commit
     public SwerveDriveSubsystem swerveDriveSubsystem;
     public Pigeon2Handler pigeon;
+    public LiftSubsystem liftSubsystem;
+    public PulleySubsystem pulleySubsystem;
+    public GripperAngleSubsystem gripperAngleSubsystem;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
+    private PositionHandler positionHandler;
 
     private JoystickHandler joystickHandler3;
-    //private JoystickHandler joystickHandler4;
+    private JoystickHandler joystickHandler4;
 
     //private SendableChooser<String> autoSelect;
 
@@ -34,15 +42,20 @@ public class RobotContainer {
     public RobotContainer() {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
+        liftSubsystem = new LiftSubsystem();
+        pulleySubsystem = new PulleySubsystem();
+        gripperAngleSubsystem = new GripperAngleSubsystem();
+
         joystickHandler3 = new JoystickHandler(3);
-        //joystickHandler4 = new JoystickHandler(4);
+        joystickHandler4 = new JoystickHandler(4);
 
         // Field space uses pigeon2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
-        //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
 
+        positionHandler = new PositionHandler(liftSubsystem, pulleySubsystem, gripperAngleSubsystem);
+        liftSubsystem.setDefaultCommand(positionHandler);
         /*autoSelect = new SendableChooser<String>();
         autoSelect.setDefaultOption("1 Ball", "1Ball"); //Look into if default not working
         autoSelect.addOption("Taxi", "Taxi");
@@ -89,6 +102,34 @@ public class RobotContainer {
         // This will reset motor positions
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
 
-        joystickHandler3.button(1).whileTrue(new InstantCommand(() -> {swerveDriveSubsystem.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+
+        joystickHandler3.button(1)
+
+        .whileTrue(new InstantCommand(() -> {swerveDriveSubsystem.brake();
+                                            fieldSpaceDriveCommand.drive(false);}))
+                                                                                    
+        .onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+
+
+
+        joystickHandler4.button(5)
+        
+        .whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false); 
+                                            pulleySubsystem.setSetPoint(joystickHandler4.getAxis5());
+                                            liftSubsystem.setMode(false); 
+                                            liftSubsystem.setSetPoint(joystickHandler4.getAxis1());}))    
+
+        .onFalse(new InstantCommand(() -> {pulleySubsystem.setMode(true); 
+                                            pulleySubsystem.setSetPoint(0);
+                                            liftSubsystem.setMode(true); 
+                                            liftSubsystem.setSetPoint(0);}));
+        
+
+        joystickHandler4.button(6)
+        .whileTrue(new InstantCommand(() -> {positionHandler.setState(true); 
+                                            positionHandler.capturePose();}))
+        .onFalse(new InstantCommand(() -> positionHandler.setState(false)));
+
+
     }
 }

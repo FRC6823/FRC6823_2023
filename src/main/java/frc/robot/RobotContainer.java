@@ -11,6 +11,7 @@ import frc.robot.commands.PositionHandler;
 import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
@@ -18,6 +19,7 @@ public class RobotContainer {
     // test commit
     public SwerveDriveSubsystem swerveDriveSubsystem;
     public Pigeon2Handler pigeon;
+    public PneumaticSubsystem pneumaticSubsystem;
     public LiftSubsystem liftSubsystem;
     public PulleySubsystem pulleySubsystem;
     public GripperAngleSubsystem gripperAngleSubsystem;
@@ -42,9 +44,11 @@ public class RobotContainer {
     public RobotContainer() {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
+        pneumaticSubsystem = new PneumaticSubsystem();
         liftSubsystem = new LiftSubsystem();
         pulleySubsystem = new PulleySubsystem();
         gripperAngleSubsystem = new GripperAngleSubsystem();
+
 
         joystickHandler3 = new JoystickHandler(3);
         joystickHandler4 = new JoystickHandler(4);
@@ -95,12 +99,19 @@ public class RobotContainer {
         
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand).onFalse(fieldSpaceDriveCommand);
+
+
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
+
+
         // This will reset odometry for Swerve drive
         joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
+
+
         // This will reset motor positions
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
+
 
 
         joystickHandler3.button(1)
@@ -109,6 +120,16 @@ public class RobotContainer {
                                             fieldSpaceDriveCommand.drive(false);}))
                                                                                     
         .onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+
+        
+
+        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1)))
+                                                .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
+        
+
+
+        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1)))
+                                                .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
 
 
 
@@ -125,9 +146,12 @@ public class RobotContainer {
                                             liftSubsystem.setSetPoint(0);}));
         
 
+
         joystickHandler4.button(6)
+
         .whileTrue(new InstantCommand(() -> {positionHandler.setState(true); 
                                             positionHandler.capturePose();}))
+
         .onFalse(new InstantCommand(() -> positionHandler.setState(false)));
 
 

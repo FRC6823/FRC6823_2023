@@ -1,6 +1,7 @@
 package frc.robot;
 
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -8,8 +9,6 @@ package frc.robot;
 //import edu.wpi.first.wpilibj2.command.RunCommand;
 //import frc.robot.commands.FieldSpaceDrive;
 //import frc.robot.commands.RobotSpaceDrive;
-import frc.robot.commands.SetIntakeState;
-import frc.robot.commands.CompressorOff;
 import frc.robot.subsystems.PneumaticSubsystem;
 
 //import frc.robot.subsystems.SwerveDriveSubsystem;
@@ -25,10 +24,6 @@ public class RobotContainer {
 
     //private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
-    public SetIntakeState setIntakeStateOpen;
-    public SetIntakeState setIntakeStateClosed;
-    public SetIntakeState hold;
-    public CompressorOff stopCompressor;
     //private SendableChooser<String> autoSelect;
 
     //public SwerveDriveSubsystem getSwervedriveSubsystem() {
@@ -48,10 +43,6 @@ public class RobotContainer {
         pneumaticSubsystem = new PneumaticSubsystem();
         //joystickHandler3 = new JoystickHandler(3);
         joystickHandler4 = new JoystickHandler(4);
-        setIntakeStateOpen = new SetIntakeState(pneumaticSubsystem, 1);
-        setIntakeStateClosed = new SetIntakeState(pneumaticSubsystem, 0);
-        hold = new SetIntakeState(pneumaticSubsystem, 2);
-        stopCompressor = new CompressorOff(pneumaticSubsystem);
         //pigeon = new Pigeon2Handler(); // pigeon2 input
 
         // Field space uses pigeon2 to get its angle
@@ -99,10 +90,8 @@ public class RobotContainer {
         //RotateToZero.setInitialAngle(navX.getAngleRad());
 
         // Toggles intake state
-        joystickHandler4.button(3).whileTrue(setIntakeStateOpen);
-        joystickHandler4.button(2).whileTrue(setIntakeStateClosed);
-        joystickHandler4.button(1).whileTrue(hold);
-        joystickHandler4.button(4).whileTrue(stopCompressor);
+        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1))).onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
+        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(0))).onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
         // This will set the current orientation to be "forward" for field drive
         //joystickHandler3.button(3).onTrue(fieldSpaceDriveCommand);
 

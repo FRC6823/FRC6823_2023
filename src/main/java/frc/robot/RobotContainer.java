@@ -1,6 +1,19 @@
 package frc.robot;
 
+import java.util.*;
+
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -9,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.util.Constants;
 
 public class RobotContainer {
     // test commit
@@ -96,5 +110,28 @@ public class RobotContainer {
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
 
         joystickHandler3.button(1).whileTrue(new InstantCommand(() -> {swerveDriveSubsystem.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+    }
+
+    public Command getAutonomousCommand(){
+        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(2, .1);
+
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory
+            (new Pose2d(0, 0, new Rotation2d(0.0)), 
+            List.of(
+                new Translation2d(0.5, 0)), 
+             new Pose2d(1, 0, new Rotation2d(0.0)), trajectoryConfig);
+        
+        PIDController xController = new PIDController(0.1, 0, 0);
+        PIDController yController = new PIDController(0.1, 0, 0);
+        ProfiledPIDController turnController = new ProfiledPIDController(0.01, 0, 0, Constants.kTurnControlConstraints);
+        turnController.enableContinuousInput(Math.PI, Math.PI);
+
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(trajectory, swerveDriveSubsystem::getRobotPose, swerveDriveSubsystem.getKinematics(), xController, yController, turnController, swerveDriveSubsystem::setSwerveModuleStates, swerveDriveSubsystem);
+
+        return new SequentialCommandGroup (
+            new InstantCommand(() -> swerveDriveSubsystem.resetPose()),
+            swerveControllerCommand,
+            new InstantCommand(() -> {swerveDriveSubsystem.stop(); swerveDriveSubsystem.brake();})
+        );
     }
 }

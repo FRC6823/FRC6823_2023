@@ -94,5 +94,7 @@ public class RobotContainer {
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
 
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
+
+        joystickHandler3.button(1).whileTrue(new InstantCommand(() -> {swerveDriveSubsystem.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
     }
 }

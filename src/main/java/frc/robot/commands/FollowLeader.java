@@ -71,30 +71,39 @@ public class FollowLeader extends CommandBase {
     xPid.setSetpoint(0.7);
     yPid.setSetpoint(0);
     RPid.setSetpoint(Math.PI);
+    boolean hasReachedSetPoint = false;
+    
+    while (!hasReachedSetPoint){
     PhotonPipelineResult latestResult = camera.getLatestResult();
+    
     if (latestResult.hasTargets()) {
       List<PhotonTrackedTarget> targets = latestResult.targets;
+      
       for (PhotonTrackedTarget target : targets) {
         if (target.getFiducialId() == 1) {
           Transform3d transformedTarget = target.getBestCameraToTarget();
+          
           //SmartDashboard.putString("Photon Transform String", transformedTarget.toString());
           SmartDashboard.putNumber("Target Yaw", target.getYaw());
           SmartDashboard.putNumber("Target Pitch", target.getPitch());
           SmartDashboard.putNumber("Target Ambiguity", target.getPoseAmbiguity());
           //Shuffleboard.getTab("Preferences").add("transform", transformedTarget.toString());
+          
           if (xPid.calculate(transformedTarget.getX()) >= -0.1){
             swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
             swerveDriveSubsystem.brake();
+            hasReachedSetPoint = true;
           }
+          
           else {
           swerveDriveSubsystem.drive(new ChassisSpeeds(-xPid.calculate(transformedTarget.getX()), -yPid.calculate(transformedTarget.getY()),
               RPid.calculate(transformedTarget.getRotation().getAngle())));
           }
+          
         }
       }
     }
-    else {
-    }
+  }
 
   }
 }

@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 public class Constants {
     public static final double degToRad = Math.PI / 180;
     public static final double radToDeg = 180 / Math.PI;
@@ -16,4 +18,5 @@ public class Constants {
 
     public static final double kMaxSpeed = 5.5;
     public static final double kMaxAccel = 5.5;
+    public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(kMaxSpeed, kMaxAccel);
 }

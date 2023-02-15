@@ -1,6 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoScoreMvt;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -19,9 +22,14 @@ public class RobotContainer {
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
     private FollowLeader followLeader;
+    private AutoScoreMvt autoScoreLeft;
+    private AutoScoreMvt autoScoreRight;
 
     private JoystickHandler joystickHandler3;
-    //private JoystickHandler joystickHandler4;
+    private JoystickHandler joystickHandler4;
+
+    private SequentialCommandGroup scoreLeft;
+    private SequentialCommandGroup scoreRight;
 
     //private SendableChooser<String> autoSelect;
 
@@ -37,7 +45,7 @@ public class RobotContainer {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
         joystickHandler3 = new JoystickHandler(3);
-        //joystickHandler4 = new JoystickHandler(4);
+        joystickHandler4 = new JoystickHandler(4);
 
         // Field space uses pigeon2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
@@ -45,6 +53,16 @@ public class RobotContainer {
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
         followLeader = new FollowLeader(swerveDriveSubsystem);
+        autoScoreLeft = new AutoScoreMvt(swerveDriveSubsystem, false);
+        autoScoreRight = new AutoScoreMvt(swerveDriveSubsystem, true);
+
+        scoreLeft = new SequentialCommandGroup(
+            followLeader,
+            new InstantCommand(() -> autoScoreLeft.getMvt()));
+
+        scoreRight = new SequentialCommandGroup(
+            followLeader,
+            new InstantCommand(() -> autoScoreRight.getMvt()));
 
         /*autoSelect = new SendableChooser<String>();
         autoSelect.setDefaultOption("1 Ball", "1Ball"); //Look into if default not working
@@ -92,5 +110,9 @@ public class RobotContainer {
         joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
 
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
+
+        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.brake())).onFalse(scoreLeft);
+
+        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.brake())).onFalse(scoreRight);
     }
 }

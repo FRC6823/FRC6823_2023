@@ -113,17 +113,17 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand(){
-        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(2, .1);
+        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(Constants.kMaxSpeed, Constants.kMaxAccel);
+        //trajectoryConfig.setReversed(true);
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory
             (new Pose2d(0, 0, new Rotation2d(0.0)), 
-            List.of(
-                new Translation2d(0.5, 0)), 
+            List.of(new Translation2d(3,0)), 
              new Pose2d(1, 0, new Rotation2d(0.0)), trajectoryConfig);
         
-        PIDController xController = new PIDController(0.1, 0, 0);
-        PIDController yController = new PIDController(0.1, 0, 0);
-        ProfiledPIDController turnController = new ProfiledPIDController(0.01, 0, 0, Constants.kTurnControlConstraints);
+        PIDController xController = new PIDController(.5, 0.00001, 0);
+        PIDController yController = new PIDController(.5, 0.00001, 0);
+        ProfiledPIDController turnController = new ProfiledPIDController(0.1, 0, 0, Constants.kTurnControlConstraints);
         turnController.enableContinuousInput(Math.PI, Math.PI);
 
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(trajectory, swerveDriveSubsystem::getRobotPose, swerveDriveSubsystem.getKinematics(), xController, yController, turnController, swerveDriveSubsystem::setSwerveModuleStates, swerveDriveSubsystem);
@@ -131,7 +131,7 @@ public class RobotContainer {
         return new SequentialCommandGroup (
             new InstantCommand(() -> swerveDriveSubsystem.resetPose()),
             swerveControllerCommand,
-            new InstantCommand(() -> {swerveDriveSubsystem.stop(); swerveDriveSubsystem.brake();})
+            new InstantCommand(() -> {swerveDriveSubsystem.brake();})
         );
     }
 }

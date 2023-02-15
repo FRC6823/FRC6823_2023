@@ -18,5 +18,7 @@ public class Constants {
     public static final double WHEEL_CIRCUMFERENCE = 0.31918581324; // Wheel circumference in meters, measure this later
 
     //Drive Constants to be used in path planning (WIP)
-    public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(1, 0.1);
+    public static final double kMaxSpeed = .1;
+    public static final double kMaxAccel = 0.05;
+    public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(kMaxSpeed, kMaxAccel);
 }

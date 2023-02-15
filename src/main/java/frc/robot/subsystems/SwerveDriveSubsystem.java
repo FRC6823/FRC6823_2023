@@ -90,27 +90,32 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         speeds = chassisSpeeds;
     }
 
-    // @Override
-    public void periodic() {
-        // Convert to module states
-        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, 5.5);
+    public void setSwerveModuleStates(SwerveModuleState[] states)
+    {
         // Front left module state
-        SwerveModuleState backRightState = moduleStates[0];
+        SwerveModuleState backRightState = states[0];
 
         // Front right module state
-        SwerveModuleState backLeftState = moduleStates[1];
+        SwerveModuleState backLeftState = states[1];
 
         // Back left module state
-        SwerveModuleState frontRightState = moduleStates[2];
+        SwerveModuleState frontRightState = states[2];
 
         // Back right module state
-        SwerveModuleState frontLeftState = moduleStates[3];
+        SwerveModuleState frontLeftState = states[3];
 
         backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
         backRight.drive(-backRightState.speedMetersPerSecond, backRightState.angle.getDegrees());
         frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
         frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
+    }
+
+    // @Override
+    public void periodic() {
+        // Convert to module states
+        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, 5.5);
+        setSwerveModuleStates(moduleStates);
 
         odometry.update(pigeon.getAngleRad(), 
                         new SwerveModulePosition[] {
@@ -168,6 +173,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         backRight.resetSensor();
         frontLeft.resetSensor();
         frontRight.resetSensor();
+    }
+
+    public SwerveDriveKinematics getKinematics() {
+        return kinematics;
+    }
+
+    public Pose2d getRobotPose()
+    {
+        return odometry.getPoseMeters();
     }
 }
 

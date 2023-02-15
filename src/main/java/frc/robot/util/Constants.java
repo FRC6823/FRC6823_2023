@@ -13,4 +13,7 @@ public class Constants {
     public static final double L3_RATIO = 6.12;
     public static final double STEER_RATIO = 150.0/7.0;
     public static final double WHEEL_CIRCUMFERENCE = 0.31918581324; // Wheel circumference in meters, measure this later
+
+    public static final double kMaxSpeed = 5.5;
+    public static final double kMaxAccel = 5.5;
 }

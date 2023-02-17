@@ -37,7 +37,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         this.angleMotor = new TalonFX(angleMotorChannel);
         this.speedMotor = new TalonFX(speedMotorChannel);
         this.angleEncoder = new CANCoder(angleEncoderChannel); // CANCoder Encoder
-        this.speedMotor.setNeutralMode(NeutralMode.Coast);
+        this.speedMotor.setNeutralMode(NeutralMode.Brake);
         this.motorName = motorName;
         this.pidController = new PIDController(P, I, 0); // This is the PID constant,
         // we're not using any

@@ -16,7 +16,7 @@ public class Constants {
     public static final double STEER_RATIO = 150.0/7.0;
     public static final double WHEEL_CIRCUMFERENCE = 0.31918581324; // Wheel circumference in meters, measure this later
 
-    public static final double kMaxSpeed = 5.5;
-    public static final double kMaxAccel = 5.5;
-    public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(kMaxSpeed, kMaxAccel);
+    public static final double kMaxVelocity = 1;
+    public static final double kMaxAccel = 2.5;
+    public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAccel);
 }

@@ -3,12 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.AutoScoreMvt;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-//import edu.wpi.first.wpilibj2.command.Command;
-//import edu.wpi.first.wpilibj2.command.Command;
-//import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.FollowLeader;
 import frc.robot.commands.RobotSpaceDrive;
@@ -22,15 +16,10 @@ public class RobotContainer {
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
     private FollowLeader followLeader;
-    private AutoScoreMvt autoScoreLeft;
-    private AutoScoreMvt autoScoreRight;
+    public PathHandler pathHandler;
 
     private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
-
-    private SequentialCommandGroup scoreLeft;
-    private SequentialCommandGroup scoreRight;
-
     //private SendableChooser<String> autoSelect;
 
     public SwerveDriveSubsystem getSwervedriveSubsystem() {
@@ -53,16 +42,8 @@ public class RobotContainer {
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
         followLeader = new FollowLeader(swerveDriveSubsystem);
-        autoScoreLeft = new AutoScoreMvt(swerveDriveSubsystem, false);
-        autoScoreRight = new AutoScoreMvt(swerveDriveSubsystem, true);
+        pathHandler = new PathHandler(swerveDriveSubsystem);
 
-        scoreLeft = new SequentialCommandGroup(
-            followLeader,
-            new InstantCommand(() -> autoScoreLeft.getMvt()));
-
-        scoreRight = new SequentialCommandGroup(
-            followLeader,
-            new InstantCommand(() -> autoScoreRight.getMvt()));
 
         /*autoSelect = new SendableChooser<String>();
         autoSelect.setDefaultOption("1 Ball", "1Ball"); //Look into if default not working
@@ -111,8 +92,6 @@ public class RobotContainer {
 
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
 
-        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.brake())).onFalse(scoreLeft);
-
-        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.brake())).onFalse(scoreRight);
+        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.brake())).onFalse(pathHandler.simpleAuto());
     }
 }

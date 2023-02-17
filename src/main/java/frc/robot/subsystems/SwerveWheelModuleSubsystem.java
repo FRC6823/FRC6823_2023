@@ -78,7 +78,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         int reverse = 1;
         //angle += 90;
 
-        if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 60)
+        if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 70)
         {
             reverse = -1;
             angle += 180;

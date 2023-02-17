@@ -38,20 +38,20 @@ public class PathHandler {
             trajectoryConfig.setReversed(true);
         }
 
-        double x = swerveDriveSubsystem.getRobotPose().getX();
+        /*double x = swerveDriveSubsystem.getRobotPose().getX();
         double y = swerveDriveSubsystem.getRobotPose().getY();
-        Rotation2d heading = swerveDriveSubsystem.getRobotPose().getRotation();
+        Rotation2d heading = swerveDriveSubsystem.getRobotPose().getRotation();*/
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory
-            (new Pose2d(x, y, heading), 
+            (new Pose2d(0, 0, new Rotation2d(0)), 
 
             List.of(), 
 
-             new Pose2d(x + 0.47, y, heading), trajectoryConfig);
+             new Pose2d(0.47, 0, new Rotation2d(0)), trajectoryConfig);
         
-        PIDController xController = new PIDController(.1, 0.000, 0);
-        PIDController yController = new PIDController(.1, 0.000, 0);
-        ProfiledPIDController turnController = new ProfiledPIDController(0.05, 0, 0, Constants.kTurnControlConstraints);
+        PIDController xController = new PIDController(Constants.kP, 0.000, 0);
+        PIDController yController = new PIDController(Constants.kP, 0.000, 0);
+        ProfiledPIDController turnController = new ProfiledPIDController(Constants.kPThetaController, Constants.kIThetaController, Constants.kDThetaController, Constants.kTurnControlConstraints);
         turnController.enableContinuousInput(Math.PI, Math.PI);
      
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
@@ -68,27 +68,33 @@ public class PathHandler {
     public Command simpleAuto(){
         PathPlannerTrajectory path = PathPlanner.loadPath("Simple Auto", constraints);
         
-        return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
+        return PPSwerveControlCommand(path, false).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
+    }
+
+    public Command balanceAuto(){
+        PathPlannerTrajectory path = PathPlanner.loadPath("Balance Auto", constraints);
+        
+        return PPSwerveControlCommand(path, false).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(1.88, 3.27, 0)));
     }
 
 
     public Command PPSwerveControlCommand(PathPlannerTrajectory path, boolean stopAtEnd){
 
-        PIDController xController = new PIDController(.1, 0, 0);
-        PIDController yController = new PIDController(.1, 0, 0);
-        PIDController turnController = new PIDController(0.1, 0, 0);
+        PIDController xController = new PIDController(Constants.kP, 0, 0);
+        PIDController yController = new PIDController(Constants.kP, 0, 0);
+        PIDController turnController = new PIDController(Constants.kPThetaController, Constants.kIThetaController, Constants.kDThetaController);
         turnController.enableContinuousInput(Math.PI, Math.PI);
 
-        Command swerveControllerCommand = new PPSwerveControllerCommand(
+        Command PPswerveControllerCommand = new PPSwerveControllerCommand(
             path, swerveDriveSubsystem::getRobotPose, swerveDriveSubsystem.getKinematics(),
             xController, yController, turnController, 
             swerveDriveSubsystem::setSwerveModuleStates, swerveDriveSubsystem);
         
         if (stopAtEnd){
-            swerveControllerCommand = swerveControllerCommand.andThen(new InstantCommand(() -> swerveDriveSubsystem.brake()));
+            PPswerveControllerCommand = PPswerveControllerCommand.andThen(new InstantCommand(() -> swerveDriveSubsystem.brake()));
         }
 
-        return swerveControllerCommand;
+        return PPswerveControllerCommand;
     }
 
 }

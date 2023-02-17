@@ -72,13 +72,9 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    /*public AutoCommandGroup getAutoCommandGroup() {
-        if (autoSelect.getSelected() != null)
-            auton = new AutoCommandGroup(this, autoSelect.getSelected());
-        else
-            auton = new AutoCommandGroup(this, "None");
-        return auton;
-    }*/
+    public Command getAutoCommandGroup() {
+        return pathHandler.balanceAuto();
+    }
 
     private void configureButtonBindings() {
         
@@ -92,6 +88,8 @@ public class RobotContainer {
 
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
 
-        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.brake())).onFalse(pathHandler.simpleAuto());
+        joystickHandler4.button(2).onFalse(pathHandler.simpleAuto());
+
+        //joystickHandler4.button(3).whileTrue(pathHandler.TeleopScore(false));
     }
 }

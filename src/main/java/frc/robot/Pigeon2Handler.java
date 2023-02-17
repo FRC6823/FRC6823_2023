@@ -71,6 +71,16 @@ public class Pigeon2Handler {
         pigeon.setAccumZAngle(0);
     }
 
+    public double getPitch(){
+        return pigeon.getPitch();
+    }
+
+    public double getRoll(){
+        return pigeon.getRoll();
+    }
+
+
+
     /*public double getVelocity() {
         return Math.sqrt(Math.pow(ahrs.getVelocityX(), 2) + Math.pow(ahrs.getVelocityY(), 2));
     }*/

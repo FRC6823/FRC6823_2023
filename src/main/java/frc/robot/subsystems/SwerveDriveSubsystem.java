@@ -1,9 +1,10 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.MathUtil;
+//import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.math.geometry.Rotation2d;
 //import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -26,11 +27,8 @@ import frc.robot.util.Constants;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
 
-    public final double L = 0.5334 / 2;
-    public final double W = 0.6858 / 2;
-    //public final double L = 21;
-    //public final double W = 27; // These are from the Length and Width between wheels.
-    // CHANGE THESE IF THE ROBOT IS NOT A SQUARE
+    public final double W = Constants.DRIVE_TRAIN_WIDTH / 2;
+    public final double L = Constants.DRIVE_TRAIN_LENGTH / 2;
 
     private SwerveWheelModuleSubsystem backRight;
     private SwerveWheelModuleSubsystem backLeft;
@@ -53,7 +51,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         backLeft = new SwerveWheelModuleSubsystem(3, 2, 27, "BL", Constants.bLOffset);
         frontRight = new SwerveWheelModuleSubsystem(5, 4, 28, "FR", Constants.fROffset);
         frontLeft = new SwerveWheelModuleSubsystem(7, 6, 25, "FL", Constants.fLOffset);// The order is angle, speed,
-                                                                                   // encoder
+                                                                                   // encoder, calibrateWidget
         SendableRegistry.addChild(this, backRight);
         SendableRegistry.addChild(this, backLeft);
         SendableRegistry.addChild(this, frontRight);
@@ -65,10 +63,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         angleController.enableContinuousInput(0, Math.PI * 2);
         angleController.setSetpoint(0);
         
-        Translation2d backRightLocation = new Translation2d(-W, -L);
-        Translation2d backLeftLocation = new Translation2d(-W, L);
-        Translation2d frontRightLocation = new Translation2d(W, -L);
-        Translation2d frontLeftLocation = new Translation2d(W, L);
+        Translation2d backRightLocation = new Translation2d(-L, -W);
+        Translation2d backLeftLocation = new Translation2d(-L, W);
+        Translation2d frontRightLocation = new Translation2d(L, -W);
+        Translation2d frontLeftLocation = new Translation2d(L, W);
 
         kinematics = new SwerveDriveKinematics(backRightLocation, backLeftLocation, frontRightLocation, frontLeftLocation);
         speeds = new ChassisSpeeds(0, 0, 0);
@@ -90,27 +88,33 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         speeds = chassisSpeeds;
     }
 
-    // @Override
-    public void periodic() {
-        // Convert to module states
-        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, 5.5);
+    public void setSwerveModuleStates(SwerveModuleState[] states)
+    {
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, 5);
+        //SwerveDriveKinematics.desaturateWheelSpeeds(states, speeds, 5, Constants.kMaxVelocity, Constants.kMaxAngularVelocity);
         // Front left module state
-        SwerveModuleState backRightState = moduleStates[0];
+        SwerveModuleState backRightState = states[0];
 
         // Front right module state
-        SwerveModuleState backLeftState = moduleStates[1];
+        SwerveModuleState backLeftState = states[1];
 
         // Back left module state
-        SwerveModuleState frontRightState = moduleStates[2];
+        SwerveModuleState frontRightState = states[2];
 
         // Back right module state
-        SwerveModuleState frontLeftState = moduleStates[3];
+        SwerveModuleState frontLeftState = states[3];
 
         backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
         backRight.drive(-backRightState.speedMetersPerSecond, backRightState.angle.getDegrees());
         frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
         frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
+    }
+
+    // @Override
+    public void periodic() {
+        // Convert to module states
+        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
+        setSwerveModuleStates(moduleStates);
 
         odometry.update(pigeon.getAngleRad(), 
                         new SwerveModulePosition[] {
@@ -140,7 +144,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public void brake(){
-        speeds = new ChassisSpeeds(0,0,0.0001);
         backRight.brake();
         backLeft.brake();
         frontRight.brake();
@@ -163,6 +166,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                                 new Pose2d(0, 0, pigeon.getAngleRad()));
     }
 
+    public void setPose(double x, double y, double heading)
+    {
+        odometry.resetPosition(pigeon.getAngleRad(), 
+                                new SwerveModulePosition[] {
+                                    backRight.getSwerveModulePosition(), 
+                                    backLeft.getSwerveModulePosition(),
+                                    frontRight.getSwerveModulePosition(),
+                                    frontLeft.getSwerveModulePosition()},
+                                new Pose2d(x, y, new Rotation2d(heading)));
+    }
+
     public void resetSensors()
     {
         backLeft.resetSensor();
@@ -170,5 +184,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         frontLeft.resetSensor();
         frontRight.resetSensor();
     }
-}
 
+    public SwerveDriveKinematics getKinematics() {
+        return kinematics;
+    }
+
+    public Pose2d getRobotPose()
+    {
+        return odometry.getPoseMeters();
+    }
+}

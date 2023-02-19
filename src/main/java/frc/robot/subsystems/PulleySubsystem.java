@@ -27,7 +27,7 @@ public class PulleySubsystem extends SubsystemBase{
         
         angleMotor.setIdleMode(IdleMode.kBrake);
         SendableRegistry.addLW(this, "Pulley");
-        setPoint = 600;
+        setPoint = 0;
 
         // PID coefficients
         kP = .1; //5e-5

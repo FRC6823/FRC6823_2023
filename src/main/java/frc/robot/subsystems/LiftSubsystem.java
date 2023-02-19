@@ -25,7 +25,7 @@ public class LiftSubsystem extends SubsystemBase{
         encoder = angleMotor.getEncoder();
         angleMotor.setIdleMode(IdleMode.kBrake);
         SendableRegistry.addLW(this, "Lift Extension");
-        setPoint = -10;
+        setPoint = -5;
         // PID coefficients
         kP = .1; //5e-5
         kI = 1e-4;

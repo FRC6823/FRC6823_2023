@@ -114,7 +114,7 @@
         },
         {
             "groupId": "com.ctre.phoenixpro.sim",
-            "artifactId": "simPigeonIMU",
+            "artifactId": "simnavXIMU",
             "version": "23.0.1",
             "isJar": false,
             "skipInvalidPlatforms": true,
@@ -166,7 +166,7 @@
         },
         {
             "groupId": "com.ctre.phoenixpro.sim",
-            "artifactId": "simProPigeon2",
+            "artifactId": "simPronavX2",
             "version": "23.0.1",
             "isJar": false,
             "skipInvalidPlatforms": true,
@@ -346,9 +346,9 @@
         },
         {
             "groupId": "com.ctre.phoenixpro.sim",
-            "artifactId": "simPigeonIMU",
+            "artifactId": "simnavXIMU",
             "version": "23.0.1",
-            "libName": "CTRE_SimPigeonIMU",
+            "libName": "CTRE_SimnavXIMU",
             "headerClassifier": "headers",
             "sharedLibrary": true,
             "skipInvalidPlatforms": true,
@@ -406,9 +406,9 @@
         },
         {
             "groupId": "com.ctre.phoenixpro.sim",
-            "artifactId": "simProPigeon2",
+            "artifactId": "simPronavX2",
             "version": "23.0.1",
-            "libName": "CTRE_SimProPigeon2",
+            "libName": "CTRE_SimPronavX2",
             "headerClassifier": "headers",
             "sharedLibrary": true,
             "skipInvalidPlatforms": true,

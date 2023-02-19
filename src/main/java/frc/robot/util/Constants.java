@@ -10,10 +10,10 @@ public class Constants {
 
     public static final double degToRad = Math.PI / 180;
     public static final double radToDeg = 180 / Math.PI;
-    public static final double fLOffset = 307.1777083352208;
-    public static final double fROffset = 119.61913048475981;
-    public static final double bLOffset = 336.6210652142763;
-    public static final double bROffset = 28.388669468462467;
+    public static final double fLOffset = 174.0234375;
+    public static final double fROffset = 92.197265625;
+    public static final double bLOffset = 302.6953125;
+    public static final double bROffset = 170.68359375;
 
     public static final double L1_RATIO = 8.14;
     public static final double L2_RATIO = 6.75;

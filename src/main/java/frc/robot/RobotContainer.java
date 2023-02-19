@@ -11,7 +11,7 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 public class RobotContainer {
     // test commit
     public SwerveDriveSubsystem swerveDriveSubsystem;
-    public Pigeon2Handler pigeon;
+    public NavXHandler navX;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
@@ -26,18 +26,18 @@ public class RobotContainer {
         return swerveDriveSubsystem;
     }
 
-    public Pigeon2Handler getPigeon2Handler() {
-        return pigeon;
+    public NavXHandler getnavX2Handler() {
+        return navX;
     }
 
     public RobotContainer() {
-        pigeon = new Pigeon2Handler(); // pigeon2 input
-        swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
+        navX = new NavXHandler(); // navX2 input
+        swerveDriveSubsystem = new SwerveDriveSubsystem(navX);
         joystickHandler3 = new JoystickHandler(3);
         joystickHandler4 = new JoystickHandler(4);
 
-        // Field space uses pigeon2 to get its angle
-        fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, pigeon);
+        // Field space uses navX2 to get its angle
+        fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, navX);
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
@@ -56,7 +56,7 @@ public class RobotContainer {
         autoSelect.addOption("Ball 10", "Ball 10");
         autoSelect.addOption("4 Ball Red", "4 Red");
         autoSelect.addOption("4 Ball Blue", "4 Blue");
-        autoSelect.addOption("pigeon2", "Nav");
+        autoSelect.addOption("navX2", "Nav");
         autoSelect.addOption("None", "None");
             
         Shuffleboard.getTab("Preferences").add("Auto Select", autoSelect);
@@ -64,8 +64,8 @@ public class RobotContainer {
         */
         //limeLightSubsystem.setServoAngle(35);
         //RotateToZero.setInitialAngle(navX.getAngleRad());
-        //pigeon.setInitialAngle();
-        //pigeon.zeroYaw();
+        //navX.setInitialAngle();
+        //navX.zeroYaw();
         
         //fieldSpaceDriveCommand.zero();
 

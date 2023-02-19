@@ -107,6 +107,14 @@ public class JoystickHandler {
     public POVButton povLeft(){
         return new POVButton(joystick, 270);
     }
+
+    public POVButton povUp(){
+        return new POVButton(joystick, 0);
+    }
+
+    public POVButton povDown(){
+        return new POVButton(joystick, 180);
+    }
     
     public void updateDeadZone(){
         if (!Preferences.containsKey("Dead Zone"))

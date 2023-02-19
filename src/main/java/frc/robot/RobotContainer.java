@@ -144,6 +144,8 @@ public class RobotContainer {
 
         joystickHandler4.button(2).whileTrue(new InstantCommand(() -> liftSubsystem.minusSetPoint()));
         joystickHandler4.button(3).whileTrue(new InstantCommand(() -> liftSubsystem.plusSetPoint()));
+
+        
         //Driver control lift/arm state
         //joystickHandler4.button(5)
         
@@ -157,14 +159,23 @@ public class RobotContainer {
                                             
                                             //liftSubsystem.setSetPoint(0);}));
 
-        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> pulleySubsystem.minusSetPoint(-joystickHandler4.getAxis2())));
-        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> pulleySubsystem.plusSetPoint(joystickHandler4.getAxis3())));
-        //Records current position of lift/arm system
-        //joystickHandler4.button(6)
 
-        //.whileTrue(new InstantCommand(() -> {positionHandler.setState(true); 
-                                            //positionHandler.capturePose();}))
+        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> pulleySubsystem.minusSetPoint(-joystickHandler4.getAxis2())));
+
+
+        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> pulleySubsystem.plusSetPoint(joystickHandler4.getAxis3())));
+
+
+        //Records current position of lift/arm system
+        joystickHandler4.button(10)
+
+        .whileTrue(new InstantCommand(() -> {positionHandler.capturePose();}));
 
         //.onFalse(new InstantCommand(() -> positionHandler.setState(false)));
+
+        joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).onFalse(positionHandler);
+
+
+        joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).onFalse(positionHandler);
     }
 }

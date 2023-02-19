@@ -10,10 +10,10 @@ public class Constants {
 
     public static final double degToRad = Math.PI / 180;
     public static final double radToDeg = 180 / Math.PI;
-    public static final double fLOffset = 305.7714584544301;
-    public static final double fROffset = 120.32225542515516;
-    public static final double bLOffset = 337.0605183020234;
-    public static final double bROffset = 27.509763292968273;
+    public static final double fLOffset = 307.1777083352208;
+    public static final double fROffset = 119.61913048475981;
+    public static final double bLOffset = 336.6210652142763;
+    public static final double bROffset = 28.388669468462467;
 
     public static final double L1_RATIO = 8.14;
     public static final double L2_RATIO = 6.75;
@@ -21,8 +21,8 @@ public class Constants {
     public static final double STEER_RATIO = 150.0/7.0;
     public static final double WHEEL_CIRCUMFERENCE = 0.31918581324; 
 
-    public static final double DRIVE_TRAIN_WIDTH = 0.5334; // left to right size of drivetrain
-    public static final double DRIVE_TRAIN_LENGTH = 0.6858; // front to back size of drivetrain
+    public static final double DRIVE_TRAIN_WIDTH = .737; // left to right size of drivetrain
+    public static final double DRIVE_TRAIN_LENGTH = .737; // front to back size of drivetrain
 
     public static final double kMaxVelocity = 6380 * WHEEL_CIRCUMFERENCE / (60.0 * L2_RATIO);
     public static final double kMaxAccel = kMaxVelocity;

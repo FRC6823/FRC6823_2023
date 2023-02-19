@@ -10,10 +10,10 @@ public class Constants {
 
     public static final double degToRad = Math.PI / 180;
     public static final double radToDeg = 180 / Math.PI;
-    public static final double fLOffset = 174.0234375;
-    public static final double fROffset = 92.197265625;
-    public static final double bLOffset = 302.6953125;
-    public static final double bROffset = 170.68359375;
+    public static final double fLOffset = 305.7714584544301;
+    public static final double fROffset = 120.32225542515516;
+    public static final double bLOffset = 337.0605183020234;
+    public static final double bROffset = 27.509763292968273;
 
     public static final double L1_RATIO = 8.14;
     public static final double L2_RATIO = 6.75;
@@ -21,10 +21,10 @@ public class Constants {
     public static final double STEER_RATIO = 150.0/7.0;
     public static final double WHEEL_CIRCUMFERENCE = 0.31918581324; 
 
-    public static final double DRIVE_TRAIN_WIDTH = .737; // left to right size of drivetrain
-    public static final double DRIVE_TRAIN_LENGTH = .737; // front to back size of drivetrain
+    public static final double DRIVE_TRAIN_WIDTH = 0.5334; // left to right size of drivetrain
+    public static final double DRIVE_TRAIN_LENGTH = 0.6858; // front to back size of drivetrain
 
-    public static final double kMaxVelocity = 2;
+    public static final double kMaxVelocity = 5;
     public static final double kMaxAccel = kMaxVelocity;
     public static final double kMaxAngularVelocity = kMaxVelocity / Math.hypot(DRIVE_TRAIN_LENGTH / 2.0, DRIVE_TRAIN_WIDTH / 2.0);
     public static final double kMaxAngularAccel = kMaxAngularVelocity;
@@ -32,14 +32,16 @@ public class Constants {
     
     //PID taken from Sonic Squirrels
     //Re-test with full bot
-    public static final double kP = 1;
+    public static final double kP = 2.2941;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kA = 0.435;
     public static final double kV = 2.344;
     public static final double kS = 0.628;
 
-    public static final double kPThetaController = 5.0; //1.5;
+    public static final double kPThetaController = 2.0; //1.5;
     public static final double kIThetaController = 0.0;
     public static final double kDThetaController = 0.0;
 }
+
+

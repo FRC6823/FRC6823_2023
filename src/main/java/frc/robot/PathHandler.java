@@ -32,39 +32,6 @@ public class PathHandler {
         constraints = new PathConstraints(Constants.kMaxVelocity, Constants.kMaxAccel);
     }
 
-    public Command TeleopScore(boolean dir){
-        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(Constants.kMaxVelocity, Constants.kMaxAccel);
-        if(dir){
-            trajectoryConfig.setReversed(true);
-        }
-
-        /*double x = swerveDriveSubsystem.getRobotPose().getX();
-        double y = swerveDriveSubsystem.getRobotPose().getY();
-        Rotation2d heading = swerveDriveSubsystem.getRobotPose().getRotation();*/
-
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory
-            (new Pose2d(0, 0, new Rotation2d(0)), 
-
-            List.of(), 
-
-             new Pose2d(0.47, 0, new Rotation2d(0)), trajectoryConfig);
-        
-        PIDController xController = new PIDController(Constants.kP, 0.000, 0);
-        PIDController yController = new PIDController(Constants.kP, 0.000, 0);
-        ProfiledPIDController turnController = new ProfiledPIDController(Constants.kPThetaController, Constants.kIThetaController, Constants.kDThetaController, Constants.kTurnControlConstraints);
-        turnController.enableContinuousInput(Math.PI, Math.PI);
-     
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            trajectory, 
-            swerveDriveSubsystem::getRobotPose, 
-            swerveDriveSubsystem.getKinematics(), 
-            xController, yController, turnController, 
-            swerveDriveSubsystem::setSwerveModuleStates, 
-            swerveDriveSubsystem);
-
-        return new SequentialCommandGroup(new InstantCommand(() -> swerveDriveSubsystem.resetPose()), swerveControllerCommand, new InstantCommand(() -> swerveDriveSubsystem.brake()));
-    }
-
     public Command simpleAuto(){
         PathPlannerTrajectory path = PathPlanner.loadPath("Simple Auto", constraints);
         

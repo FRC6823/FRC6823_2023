@@ -14,7 +14,7 @@ public class RobotContainer {
     public NavXHandler navX;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
-    private RobotSpaceDrive robotSpaceDriveCommand;
+    //private RobotSpaceDrive robotSpaceDriveCommand;
     //private FollowLeader followLeader;
     public PathHandler pathHandler;
 
@@ -38,7 +38,7 @@ public class RobotContainer {
 
         // Field space uses navX2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDriveSubsystem, joystickHandler3, navX);
-        robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
+        //robotSpaceDriveCommand = new RobotSpaceDrive(swerveDriveSubsystem, joystickHandler3);
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
         //followLeader = new FollowLeader(swerveDriveSubsystem);
@@ -80,7 +80,7 @@ public class RobotContainer {
         
         //joystickHandler3.button(1).whileTrue(followLeader);
         // Holding 7 will enable robot space drive, instead of field space
-        joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
+        //joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
         // This will reset odometry for Swerve drive

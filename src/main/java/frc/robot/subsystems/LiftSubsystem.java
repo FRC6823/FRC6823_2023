@@ -66,11 +66,11 @@ public class LiftSubsystem extends SubsystemBase{
     }
     public void plusSetPoint()
     {
-        this.setPoint--;
+        this.setPoint -= 5;
     }
     public void minusSetPoint()
     {
-        this.setPoint++;
+        this.setPoint +=5;
     }
 
     public double getPosition()

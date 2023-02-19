@@ -135,12 +135,12 @@ public class RobotContainer {
         
         
         //Close gripper
-        //joystickHandler4.button(2).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1)))
-                                                //.onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
+        joystickHandler4.button(5).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1)))
+                                                .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
         
         //Close gripper
-        //joystickHandler4.button(3).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(0)))
-                                                //.onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
+        joystickHandler4.button(6).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(0)))
+                                                .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
 
         joystickHandler4.button(2).whileTrue(new InstantCommand(() -> liftSubsystem.minusSetPoint()));
         joystickHandler4.button(3).whileTrue(new InstantCommand(() -> liftSubsystem.plusSetPoint()));
@@ -160,11 +160,11 @@ public class RobotContainer {
         joystickHandler4.button(1).whileTrue(new InstantCommand(() -> pulleySubsystem.minusSetPoint(-joystickHandler4.getAxis2())));
         joystickHandler4.button(4).whileTrue(new InstantCommand(() -> pulleySubsystem.plusSetPoint(joystickHandler4.getAxis3())));
         //Records current position of lift/arm system
-        joystickHandler4.button(6)
+        //joystickHandler4.button(6)
 
-        .whileTrue(new InstantCommand(() -> {positionHandler.setState(true); 
-                                            positionHandler.capturePose();}))
+        //.whileTrue(new InstantCommand(() -> {positionHandler.setState(true); 
+                                            //positionHandler.capturePose();}))
 
-        .onFalse(new InstantCommand(() -> positionHandler.setState(false)));
+        //.onFalse(new InstantCommand(() -> positionHandler.setState(false)));
     }
 }

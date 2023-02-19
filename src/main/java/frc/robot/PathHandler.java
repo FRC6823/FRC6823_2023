@@ -22,6 +22,8 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.util.Constants;
 
 public class PathHandler {
+
+    //path handler implementation heavily "influenced" by 2930 Sonic Squirrels
     private SwerveDriveSubsystem swerveDriveSubsystem;
     private PathConstraints constraints;
 

@@ -66,12 +66,12 @@ public class PulleySubsystem extends SubsystemBase{
 
     public void plusSetPoint(double setPoint)
     {
-        this.setPoint-= 100;
+        this.setPoint-= 10;
         
     }
     public void minusSetPoint(double setPoint)
     {
-        this.setPoint += 100;
+        this.setPoint += 10;
     }
 
     public void setSetPoint(double setPoint)

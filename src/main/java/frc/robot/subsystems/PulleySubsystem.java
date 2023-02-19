@@ -2,39 +2,45 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PulleySubsystem extends SubsystemBase{
+    private double setPoint;
     private CANSparkMax angleMotor;
     private SparkMaxPIDController pidController;
     private RelativeEncoder encoder;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr; //heavily "inspired" by Rev example code
-    private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)
-    private double setPoint;
+    //private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)                                                                              z 
     
     public PulleySubsystem () {
-        angleMotor = new CANSparkMax(0, MotorType.kBrushless);
+        angleMotor = new CANSparkMax(10, MotorType.kBrushless);
         angleMotor.restoreFactoryDefaults();
-        pidController = angleMotor.getPIDController();
         encoder = angleMotor.getEncoder();
-        angleMotor.setIdleMode(IdleMode.kBrake);
+        pidController = angleMotor.getPIDController();
         
+        angleMotor.setIdleMode(IdleMode.kBrake);
+        SendableRegistry.addLW(this, "Pulley");
+        setPoint = 600;
+
         // PID coefficients
-        kP = 5e-5; 
-        kI = 1e-6;
-        kD = 0; 
+        kP = .1; //5e-5
+        kI = 0; //1e-4
+        kD = 1; 
         kIz = 0; 
-        kFF = 0.000156; 
+        kFF = 0; 
         kMaxOutput = 1; 
         kMinOutput = -1;
-        maxRPM = 5700;
+        //maxRPM = 5700;
 
-        maxVel = 2000; // values in rpm
-        maxAcc = 1500;
+        //maxVel = 2000; // values in rpm
+        //maxAcc = 1500;
 
         pidController.setP(kP);
         pidController.setI(kI);
@@ -43,18 +49,29 @@ public class PulleySubsystem extends SubsystemBase{
         pidController.setFF(kFF);
         pidController.setOutputRange(kMinOutput, kMaxOutput);
 
-        int smartMotionSlot = 0;
-        pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-        pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-        pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-        pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+        //int smartMotionSlot = 0;
+        //pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
+        //pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
+        //pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
+        //pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
         
-        mode = true;
+        //mode = true;
     }
 
-    public void setMode(boolean mode)
+
+    //public void setMode(boolean mode)
+    //{
+        //this.mode = mode;
+    //}
+
+    public void plusSetPoint(double setPoint)
     {
-        this.mode = mode;
+        this.setPoint-= 100;
+        
+    }
+    public void minusSetPoint(double setPoint)
+    {
+        this.setPoint += 100;
     }
 
     public void setSetPoint(double setPoint)
@@ -75,10 +92,11 @@ public class PulleySubsystem extends SubsystemBase{
     @Override
     public void periodic()
     {
-        if(mode) {
-            pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
-          } else {
-            pidController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
-          }
+        //if(!mode) {
+            SmartDashboard.putNumber("Pulley Position", setPoint);
+            pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+          //} else {
+            //pidController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
+          //}
     }
 }

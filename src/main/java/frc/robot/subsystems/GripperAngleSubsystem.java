@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GripperAngleSubsystem extends SubsystemBase{
-    private CANSparkMax angleMotor;
+    /*private CANSparkMax angleMotor;
     private SparkMaxPIDController pidController;
     private RelativeEncoder encoder;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr; //heavily "inspired" by Rev example code
@@ -73,6 +73,6 @@ public class GripperAngleSubsystem extends SubsystemBase{
           } else {
             pidController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
           }
-    }
+    }*/
 }
 

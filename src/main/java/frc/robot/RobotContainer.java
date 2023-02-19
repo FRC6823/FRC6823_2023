@@ -27,6 +27,7 @@ public class RobotContainer {
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
     private PositionHandler positionHandler;
+    private PathHandler pathHandler;
 
     private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
@@ -59,7 +60,8 @@ public class RobotContainer {
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
 
         positionHandler = new PositionHandler(liftSubsystem, pulleySubsystem, gripperAngleSubsystem);
-        liftSubsystem.setDefaultCommand(positionHandler);
+        pathHandler = new PathHandler(swerveDriveSubsystem);
+        //liftSubsystem.setDefaultCommand(positionHandler);
         /*autoSelect = new SendableChooser<String>();
         autoSelect.setDefaultOption("1 Ball", "1Ball"); //Look into if default not working
         autoSelect.addOption("Taxi", "Taxi");
@@ -96,64 +98,76 @@ public class RobotContainer {
     }*/
 
     private void configureButtonBindings() {
+
+        //Snow plow break
+        joystickHandler3.button(1)
+
+        .whileTrue(new InstantCommand(() -> {swerveDriveSubsystem.brake();
+                                            fieldSpaceDriveCommand.drive(false);})) 
+
+        .onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
         
         // Holding 7 will enable robot space drive, instead of field space
-        joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand).onFalse(fieldSpaceDriveCommand);
-
+        //joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand).onFalse(fieldSpaceDriveCommand);
 
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
 
-
         // This will reset odometry for Swerve drive
         joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
-
 
         // This will reset motor positions
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
 
+        //Move to score -1 node
+        //joystickHandler3.povLeft().whileTrue(new InstantCommand(() -> swerveDriveSubsystem.brake()))
+                                    //.onFalse(pathHandler.scoreLeft());                      
+
+        //Move to score +1 node
+        //joystickHandler3.povRight().whileTrue(new InstantCommand(() -> swerveDriveSubsystem.brake()))
+                                    //.onFalse(pathHandler.scoreLeft());
 
 
-        joystickHandler3.button(1)
 
-        .whileTrue(new InstantCommand(() -> {swerveDriveSubsystem.brake();
-                                            fieldSpaceDriveCommand.drive(false);}))
-                                                                                    
-        .onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+
+
+
+
+
 
         
-
-        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1)))
-                                                .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
         
-
-
-        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1)))
-                                                .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
-
-
-
-        joystickHandler4.button(5)
+        //Close gripper
+        //joystickHandler4.button(2).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1)))
+                                                //.onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
         
-        .whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false); 
-                                            pulleySubsystem.setSetPoint(joystickHandler4.getAxis5());
-                                            liftSubsystem.setMode(false); 
-                                            liftSubsystem.setSetPoint(joystickHandler4.getAxis1());}))    
+        //Close gripper
+        //joystickHandler4.button(3).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(0)))
+                                                //.onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
 
-        .onFalse(new InstantCommand(() -> {pulleySubsystem.setMode(true); 
-                                            pulleySubsystem.setSetPoint(0);
-                                            liftSubsystem.setMode(true); 
-                                            liftSubsystem.setSetPoint(0);}));
+        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> liftSubsystem.minusSetPoint()));
+        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> liftSubsystem.plusSetPoint()));
+        //Driver control lift/arm state
+        //joystickHandler4.button(5)
         
+        //.whileTrue(new InstantCommand(() -> {
+                                            
+                                            
+                                            //liftSubsystem.setSetPoint(joystickHandler4.getAxis1());}))    
 
+        //.onFalse(new InstantCommand(() -> {
+                                            //pulleySubsystem.setSetPoint(0);
+                                            
+                                            //liftSubsystem.setSetPoint(0);}));
 
+        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> pulleySubsystem.minusSetPoint(-joystickHandler4.getAxis2())));
+        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> pulleySubsystem.plusSetPoint(joystickHandler4.getAxis3())));
+        //Records current position of lift/arm system
         joystickHandler4.button(6)
 
         .whileTrue(new InstantCommand(() -> {positionHandler.setState(true); 
                                             positionHandler.capturePose();}))
 
         .onFalse(new InstantCommand(() -> positionHandler.setState(false)));
-
-
     }
 }

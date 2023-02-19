@@ -16,7 +16,7 @@ public class PositionHandler extends CommandBase{
 
     private LiftSubsystem liftSubsystem;
     private PulleySubsystem pulleySubsystem;
-    private GripperAngleSubsystem gripperAngleSubsystem;
+    //private GripperAngleSubsystem gripperAngleSubsystem;
 
     public PositionHandler (LiftSubsystem liftSubsystem, PulleySubsystem pulleySubsystem, GripperAngleSubsystem gripperAngleSubsystem){
         index = 0;
@@ -25,7 +25,7 @@ public class PositionHandler extends CommandBase{
 
         this.liftSubsystem = liftSubsystem;
         this.pulleySubsystem = pulleySubsystem;
-        this.gripperAngleSubsystem = gripperAngleSubsystem;
+        //this.gripperAngleSubsystem = gripperAngleSubsystem;
 
         calibrate = false;
     }
@@ -49,7 +49,7 @@ public class PositionHandler extends CommandBase{
             double[] temp = new double[3];
             temp[0] = liftSubsystem.getPosition();
             temp[1] = pulleySubsystem.getPosition();
-            temp[2] = gripperAngleSubsystem.getPosition(); //will be gripper angle
+            //temp[2] = gripperAngleSubsystem.getPosition(); //will be gripper angle
             positions.add(index + 1, temp);
         }
     }

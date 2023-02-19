@@ -38,7 +38,7 @@ public class PneumaticSubsystem extends SubsystemBase{
         }
         else{
             intakeSolenoid.set(Value.kOff);
-            SmartDashboard.putNumber("Pressure", compressor.getPressure());
+            //SmartDashboard.putNumber("Pressure", compressor.getPressure());
         }
     }
 }

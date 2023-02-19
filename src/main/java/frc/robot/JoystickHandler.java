@@ -4,14 +4,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.event.EventLoop;
 //import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.util.MathUtil;
 
 public class JoystickHandler {
 
     private Joystick joystick;
     private double deadZone;
+    private EventLoop loop;
 
     public JoystickHandler(int joyNum) {
         this.joystick = new Joystick(joyNum); //Joystick is on port 3;
@@ -95,6 +98,14 @@ public class JoystickHandler {
     public void setDeadZone(double deadZone)
     {
         this.deadZone = deadZone;
+    }
+
+    public POVButton povRight(){
+        return new POVButton(joystick, 90);
+    }
+
+    public POVButton povLeft(){
+        return new POVButton(joystick, 270);
     }
     
     public void updateDeadZone(){

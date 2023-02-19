@@ -144,6 +144,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public void brake(){
+        speeds = new ChassisSpeeds(0,0,0.00000001);
         backRight.brake();
         backLeft.brake();
         frontRight.brake();

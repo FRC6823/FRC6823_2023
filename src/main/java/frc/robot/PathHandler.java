@@ -65,16 +65,22 @@ public class PathHandler {
         return new SequentialCommandGroup(new InstantCommand(() -> swerveDriveSubsystem.resetPose()), swerveControllerCommand, new InstantCommand(() -> swerveDriveSubsystem.brake()));
     }
 
-    public Command simpleAuto(){
-        PathPlannerTrajectory path = PathPlanner.loadPath("Simple Auto", constraints);
+    public Command scoreLeft(){
+        PathPlannerTrajectory path = PathPlanner.loadPath("Score Left", constraints);
         
-        return PPSwerveControlCommand(path, false).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
+        return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
+    }
+
+    public Command scoreRight(){
+        PathPlannerTrajectory path = PathPlanner.loadPath("Score Right", constraints);
+        
+        return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
     }
 
     public Command balanceAuto(){
         PathPlannerTrajectory path = PathPlanner.loadPath("Balance Auto", constraints);
         
-        return PPSwerveControlCommand(path, false).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(1.88, 3.27, 0)));
+        return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(1.88, 3.27, 0)));
     }
 
 

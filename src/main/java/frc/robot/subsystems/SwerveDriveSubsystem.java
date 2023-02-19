@@ -144,11 +144,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public void brake(){
-        speeds = new ChassisSpeeds(0,0,0.00000001);
+        speeds = new ChassisSpeeds(0,0,0.0001);
         backRight.brake();
         backLeft.brake();
         frontRight.brake();
         frontLeft.brake();
+        
     }
 
     //public Rotation2d getRobotAngle()

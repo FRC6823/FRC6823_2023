@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.util.MathUtil;
 
 public class LineUp extends CommandBase{
     private SwerveDriveSubsystem swerveDriveSubsystem;
@@ -23,14 +24,14 @@ public class LineUp extends CommandBase{
     this.limeLightSubsystem = limeLightSubsystem;
     addRequirements(swerveDriveSubsystem);
     SendableRegistry.addLW(this, "LineUp");
-    rPose = new double[3];
+    rPose = new double[]{0,0,0};
   }
 
   @Override
   public void initialize() {
-    xPid = new PIDController(0.1, 0, 0);
-    txPid = new PIDController(0.1, 0, 0);
-    distPid = new PIDController(0.2, 0, 0);
+    xPid = new PIDController(0.00, 0, 0);
+    txPid = new PIDController(0.01, 0, 0);
+    distPid = new PIDController(0.07, 0, 0);
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
       //  var alliance = DriverStation.getAlliance();
@@ -49,8 +50,9 @@ public class LineUp extends CommandBase{
     //Shuffleboard.getTab("Preferences").add("transform", "transformedTarget.toString()");
     
     xPid.setSetpoint(0);
-    distPid.setSetpoint(1);
     txPid.setSetpoint(0);
+    distPid.setSetpoint(-20);
+
     SmartDashboard.putBoolean("target?", limeLightSubsystem.hasValidTarget());
     //if (limeLightSubsystem.hasValidTarget()) {
         
@@ -59,18 +61,21 @@ public class LineUp extends CommandBase{
         SmartDashboard.putNumber("Z", rPose[1]);
         SmartDashboard.putNumber("Tx", rPose[2]);
         //SmartDashboard.putNumber("ty", limeLightSubsystem.getTy());
-        if (distPid.calculate(rPose[1]) >= 0.1){
+        if (distPid.calculate(limeLightSubsystem.getTy()) >= 0.1){
+          if (MathUtil.clipToZero(xPid.calculate(limeLightSubsystem.getTx()), 0.1) != 0 && MathUtil.clipToZero(txPid.calculate(limeLightSubsystem.getTx()), 0.1) != 0)
+          {
+            swerveDriveSubsystem.drive(new ChassisSpeeds(0, -xPid.calculate(limeLightSubsystem.getTx()),
+            txPid.calculate(limeLightSubsystem.getTx())));
+          }
+          else{
           swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
           swerveDriveSubsystem.brake();
-        }
-
-        if (limeLightSubsystem.getTy() < -16){
-          rPose[1] = 1;
+          }
         }
 
         else {
-            //swerveDriveSubsystem.drive(new ChassisSpeeds(distPid.calculate(rPose[1]), -xPid.calculate(rPose[0]),
-            //txPid.calculate(rPose[2])));
+            swerveDriveSubsystem.drive(new ChassisSpeeds(-distPid.calculate(limeLightSubsystem.getTy()), -xPid.calculate(limeLightSubsystem.getTx()),
+            txPid.calculate(limeLightSubsystem.getTx())));
         }
     //}
   }

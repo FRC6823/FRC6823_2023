@@ -23,10 +23,11 @@ public class LimeLightSubsystem extends SubsystemBase{
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
         //ta = table.getEntry("ta");
-        //b_t = table.getEntry("camerapose_robotspace");
+        b_t = table.getEntry("robotpose_targetspace");
         //id = table.getEntry("tid");
         //lastKnownX_Z_Tx = new double[3];
         SendableRegistry.addLW(this, "LimeLight");
+        lastKnownX_Z_Tx = new double[]{0,0,0};
     }
 
     public void setPipeline(int pipeline){
@@ -51,7 +52,7 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
 
     public double[] getB_T() {
-        return b_t.getDoubleArray(new double[6]);
+        return b_t.getDoubleArray(new double[]{0,0,0,0,0,0});
     }
 
     public boolean hasValidTarget(){
@@ -61,6 +62,7 @@ public class LimeLightSubsystem extends SubsystemBase{
 
 
     public double[] getX_Z_Tx() {
+
         lastKnownX_Z_Tx[0] = getB_T()[0]; //Side to side offset from tag
         lastKnownX_Z_Tx[1] = -getB_T()[1]; //Distance from target
         lastKnownX_Z_Tx[2] = getB_T()[3]; //Horizontal rotation relative to target

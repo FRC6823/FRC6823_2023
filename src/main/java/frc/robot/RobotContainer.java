@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.FollowLeader;
+import frc.robot.commands.LineUp;
 import frc.robot.commands.RobotSpaceDrive;
+import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
@@ -19,8 +21,10 @@ public class RobotContainer {
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
     private FollowLeader followLeader;
+    private LineUp lineUp;
 
     private JoystickHandler joystickHandler3;
+    private LimeLightSubsystem limeLight;
     //private JoystickHandler joystickHandler4;
 
     //private SendableChooser<String> autoSelect;
@@ -36,6 +40,10 @@ public class RobotContainer {
     public RobotContainer() {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
+
+        limeLight = new LimeLightSubsystem();
+        limeLight.setPipeline(0);
+
         joystickHandler3 = new JoystickHandler(3);
         //joystickHandler4 = new JoystickHandler(4);
 
@@ -45,6 +53,7 @@ public class RobotContainer {
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
         followLeader = new FollowLeader(swerveDriveSubsystem);
+        lineUp = new LineUp(swerveDriveSubsystem, limeLight);
 
         /*autoSelect = new SendableChooser<String>();
         autoSelect.setDefaultOption("1 Ball", "1Ball"); //Look into if default not working
@@ -83,7 +92,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         
-        joystickHandler3.button(1).whileTrue(followLeader);
+        joystickHandler3.button(1).whileTrue(lineUp);
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
         // This will set the current orientation to be "forward" for field drive

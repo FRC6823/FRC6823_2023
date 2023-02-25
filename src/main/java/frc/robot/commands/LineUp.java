@@ -12,22 +12,24 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class LineUp extends CommandBase{
     private SwerveDriveSubsystem swerveDriveSubsystem;
-    private PIDController xPid, txPid, tyPid;
+    private PIDController xPid, txPid, distPid;
     private LimeLightSubsystem limeLightSubsystem;
     private AprilTagFieldLayout atfl;
+    private double[] rPose;
 
   public LineUp(SwerveDriveSubsystem swerveDriveSubsystem, LimeLightSubsystem limeLightSubsystem) {
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.limeLightSubsystem = limeLightSubsystem;
     addRequirements(swerveDriveSubsystem);
     SendableRegistry.addLW(this, "Follow Leader");
+    rPose = new double[3];
   }
 
   @Override
   public void initialize() {
     xPid = new PIDController(0.1, 0, 0);
     txPid = new PIDController(0.1, 0, 0);
-    tyPid = new PIDController(0.2, 0, 0);
+    distPid = new PIDController(0.2, 0, 0);
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
       //  var alliance = DriverStation.getAlliance();
@@ -45,17 +47,24 @@ public class LineUp extends CommandBase{
   public void execute() {
     //Shuffleboard.getTab("Preferences").add("transform", "transformedTarget.toString()");
     
-    xPid.setSetpoint(0.7);
+    xPid.setSetpoint(0);
+    distPid.setSetpoint(1);
     txPid.setSetpoint(0);
-    tyPid.setSetpoint(-Math.PI/4.0);
     if (limeLightSubsystem.hasValidTarget()) {
-        if (tyPid.calculate(limeLightSubsystem.getTy()) >= -0.1){
-            swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
-            swerveDriveSubsystem.brake();
+        rPose = limeLightSubsystem.getX_Z_Tx();
+
+        if (distPid.calculate(rPose[1]) >= 0.1){
+          swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
+          swerveDriveSubsystem.brake();
         }
+        
+        if (limeLightSubsystem.getTy() < -20){
+          rPose[1] = 1;
+        }
+
         else {
-            swerveDriveSubsystem.drive(new ChassisSpeeds(-tyPid.calculate(limeLightSubsystem.getTy()), -xPid.calculate(limeLightSubsystem.getXYZ()[0]),
-            txPid.calculate(limeLightSubsystem.getTx())));
+            swerveDriveSubsystem.drive(new ChassisSpeeds(distPid.calculate(rPose[1]), -xPid.calculate(rPose[0]),
+            txPid.calculate(rPose[2])));
         }
     }
   }

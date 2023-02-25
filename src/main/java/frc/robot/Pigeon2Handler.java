@@ -31,7 +31,7 @@ public class Pigeon2Handler {
              * http://pigeon2-mxp.kauailabs.com/guidance/selecting-an-interface.
              ***********************************************************************/
             pigeon = new WPI_Pigeon2(18);
-            pigeon.configMountPose(0,0, 0 ,100);
+            pigeon.configMountPose(90,0, 0 ,100);
         } catch (RuntimeException ex) {
             DriverStation.reportError("Error instantiating pigeon:  " + ex.getMessage(), true);
         }

@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
@@ -21,7 +22,7 @@ public class LineUp extends CommandBase{
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.limeLightSubsystem = limeLightSubsystem;
     addRequirements(swerveDriveSubsystem);
-    SendableRegistry.addLW(this, "Follow Leader");
+    SendableRegistry.addLW(this, "LineUp");
     rPose = new double[3];
   }
 
@@ -50,23 +51,28 @@ public class LineUp extends CommandBase{
     xPid.setSetpoint(0);
     distPid.setSetpoint(1);
     txPid.setSetpoint(0);
-    if (limeLightSubsystem.hasValidTarget()) {
+    SmartDashboard.putBoolean("target?", limeLightSubsystem.hasValidTarget());
+    //if (limeLightSubsystem.hasValidTarget()) {
+        
         rPose = limeLightSubsystem.getX_Z_Tx();
-
+        SmartDashboard.putNumber("X", rPose[0]);
+        SmartDashboard.putNumber("Z", rPose[1]);
+        SmartDashboard.putNumber("Tx", rPose[2]);
+        //SmartDashboard.putNumber("ty", limeLightSubsystem.getTy());
         if (distPid.calculate(rPose[1]) >= 0.1){
           swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
           swerveDriveSubsystem.brake();
         }
-        
-        if (limeLightSubsystem.getTy() < -20){
+
+        if (limeLightSubsystem.getTy() < -16){
           rPose[1] = 1;
         }
 
         else {
-            swerveDriveSubsystem.drive(new ChassisSpeeds(distPid.calculate(rPose[1]), -xPid.calculate(rPose[0]),
-            txPid.calculate(rPose[2])));
+            //swerveDriveSubsystem.drive(new ChassisSpeeds(distPid.calculate(rPose[1]), -xPid.calculate(rPose[0]),
+            //txPid.calculate(rPose[2])));
         }
-    }
+    //}
   }
 }
 

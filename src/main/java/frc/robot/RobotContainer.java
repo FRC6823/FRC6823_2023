@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -42,7 +43,7 @@ public class RobotContainer {
         swerveDriveSubsystem = new SwerveDriveSubsystem(pigeon);
 
         limeLight = new LimeLightSubsystem();
-        limeLight.setPipeline(0);
+        //limeLight.setPipeline(0);
 
         joystickHandler3 = new JoystickHandler(3);
         //joystickHandler4 = new JoystickHandler(4);
@@ -92,7 +93,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         
-        joystickHandler3.button(1).whileTrue(lineUp);
+        joystickHandler3.button(1).whileTrue(new RepeatCommand(lineUp));
         // Holding 7 will enable robot space drive, instead of field space
         joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand);
         // This will set the current orientation to be "forward" for field drive

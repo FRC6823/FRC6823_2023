@@ -22,10 +22,10 @@ public class LimeLightSubsystem extends SubsystemBase{
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
-        ta = table.getEntry("ta");
-        b_t = table.getEntry("botpose_targetspace");
-        id = table.getEntry("tid");
-        lastKnownX_Z_Tx = new double[3];
+        //ta = table.getEntry("ta");
+        //b_t = table.getEntry("camerapose_robotspace");
+        //id = table.getEntry("tid");
+        //lastKnownX_Z_Tx = new double[3];
         SendableRegistry.addLW(this, "LimeLight");
     }
 
@@ -51,28 +51,27 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
 
     public double[] getB_T() {
-        return b_t.getDoubleArray(new double[] {0,0,0,0,0,0});
+        return b_t.getDoubleArray(new double[6]);
     }
 
     public boolean hasValidTarget(){
-        return table.getEntry("tv").getDouble(0) == 1 && getB_T()[1] == 0.36;
+        return //table.getEntry("tv").getDouble(0) == 1; && 
+            getB_T()[1] > 0;
     }
 
 
     public double[] getX_Z_Tx() {
-        if (hasValidTarget()) //Checking if ll has target && checking if target is reliable
-        {
-            lastKnownX_Z_Tx[0] = getB_T()[0]; //Side to side offset from tag
-            lastKnownX_Z_Tx[1] = -getB_T()[1]; //Distance from target
-            lastKnownX_Z_Tx[2] = getB_T()[3]; //Horizontal rotation relative to target
-        }
+        lastKnownX_Z_Tx[0] = getB_T()[0]; //Side to side offset from tag
+        lastKnownX_Z_Tx[1] = -getB_T()[1]; //Distance from target
+        lastKnownX_Z_Tx[2] = getB_T()[3]; //Horizontal rotation relative to target
+
         return lastKnownX_Z_Tx;
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("tx", tx.getDouble(0));
-        SmartDashboard.putNumber("ty", ty.getDouble(0));
-        SmartDashboard.putNumber("ta", ta.getDouble(0));
+        //SmartDashboard.putNumber("tx", tx.getDouble(0));
+        SmartDashboard.putNumber("ty", ty.getDouble(0.0));
+        //SmartDashboard.putNumber("ta", ta.getDouble(0));
         SmartDashboard.putNumber("pipeline", table.getEntry("pipeline").getDouble(0));
     }
 }

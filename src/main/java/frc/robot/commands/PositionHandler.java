@@ -36,7 +36,10 @@ public class PositionHandler extends CommandBase{
     }
 
     public void decreaseIndex() {
-        index--;
+        if (index >= 1)
+            index--;
+        else
+            index = positions.size();
         index %= positions.size();
     }
 
@@ -54,8 +57,7 @@ public class PositionHandler extends CommandBase{
         }
     }
 
-    @Override
-    public void execute() {
+    public void setPose() {
         liftSubsystem.setSetPoint(positions.get(index)[0]);
         pulleySubsystem.setSetPoint(positions.get(index)[1]);
     }

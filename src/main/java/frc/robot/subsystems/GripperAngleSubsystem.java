@@ -8,18 +8,18 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GripperAngleSubsystem extends SubsystemBase{
-    /*private CANSparkMax angleMotor;
+    private CANSparkMax angleMotor;
     private SparkMaxPIDController pidController;
-    private RelativeEncoder encoder;
+    //private RelativeEncoder encoder;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr; //heavily "inspired" by Rev example code
-    private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)
+    //private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)
     private double setPoint;
     
     public GripperAngleSubsystem () {
-        angleMotor = new CANSparkMax(0, MotorType.kBrushless);
+        angleMotor = new CANSparkMax(11, MotorType.kBrushed);
         angleMotor.restoreFactoryDefaults();
         pidController = angleMotor.getPIDController();
-        encoder = angleMotor.getEncoder();
+        //encoder = angleMotor.getEncoder();
 
         // PID coefficients
         kP = 5e-5; 
@@ -47,32 +47,33 @@ public class GripperAngleSubsystem extends SubsystemBase{
         pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
         pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
         
-        mode = true;
+        //mode = true;
     }
 
-    public void setMode(boolean mode)
+    /*public void setMode(boolean mode)
     {
         this.mode = mode;
-    }
+    }*/
 
     public void setSetPoint(double setPoint)
     {
         this.setPoint = setPoint;
     }
 
-    public double getPosition()
+    /*public double getPosition()
     {
         return encoder.getPosition();
-    }
+    }*/
 
     @Override
     public void periodic()
     {
-        if(mode) {
-            pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
-          } else {
-            pidController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
-          }
-    }*/
+        angleMotor.set(setPoint);
+        //if(mode) {
+            //pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
+          //} else {
+            //pidController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
+          //}
+    }
 }
 

@@ -147,30 +147,26 @@ public class RobotContainer {
                                                 .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
 
 
-        //Manual control for lift - to be changed
-        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> liftSubsystem.minusSetPoint()));
+        //Manual control for lift 
+        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> {liftSubsystem.setSpeed(0.5); 
+                                                                                    liftSubsystem.setMode(false);}))
+                                                .onFalse(new InstantCommand(() -> {liftSubsystem.setSpeed(0); 
+                                                                                    liftSubsystem.setMode(true);}));
 
-        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> liftSubsystem.plusSetPoint()));
+        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> {liftSubsystem.setSpeed(-0.5); 
+                                                                                    liftSubsystem.setMode(false);}))
+                                                .onFalse(new InstantCommand(() -> {liftSubsystem.setSpeed(0); 
+                                                                                    liftSubsystem.setMode(true);}));
 
-        
-        //Driver control lift/arm state
-        //joystickHandler4.button(5)
-        
-        //.whileTrue(new InstantCommand(() -> {
-                                            
-                                            
-                                            //liftSubsystem.setSetPoint(joystickHandler4.getAxis1());}))    
+        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> {pulleySubsystem.setSpeed(1); 
+                                                                                    pulleySubsystem.setMode(false);}))
+                                                .onFalse(new InstantCommand(() -> {pulleySubsystem.setSpeed(0); 
+                                                                                    pulleySubsystem.setMode(true);}));
 
-        //.onFalse(new InstantCommand(() -> {
-                                            //pulleySubsystem.setSetPoint(0);
-                                            
-                                            //liftSubsystem.setSetPoint(0);}));
-
-
-        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> pulleySubsystem.minusSetPoint()));
-
-
-        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> pulleySubsystem.plusSetPoint()));
+        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> {pulleySubsystem.setSpeed(-1); 
+                                                                                        pulleySubsystem.setMode(false);}))
+                                                    .onFalse(new InstantCommand(() -> {pulleySubsystem.setSpeed(0); 
+                                                                                        pulleySubsystem.setMode(true);}));
 
 
         //Records current position of lift/arm system
@@ -179,11 +175,13 @@ public class RobotContainer {
         //.onFalse(new InstantCommand(() -> positionHandler.setState(false)));
 
         //Cycling system through presets
-        joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).onFalse(positionHandler);
+        joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
 
-        joystickHandler4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).onFalse(positionHandler);
+        joystickHandler4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
 
 
+        joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> gripperAngleSubsystem.setSetPoint(1))).onFalse(new InstantCommand(() -> gripperAngleSubsystem.setSetPoint(0)));
+        joystickHandler4.povRight().whileTrue(new InstantCommand(() -> gripperAngleSubsystem.setSetPoint(-1))).onFalse(new InstantCommand(() -> gripperAngleSubsystem.setSetPoint(0)));
         //New manual control commands - to be tested
         //joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false);
                                                                         //pulleySubsystem.setSetPoint(1);}))

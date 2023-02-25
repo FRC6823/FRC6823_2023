@@ -24,6 +24,7 @@ public class PulleySubsystem extends SubsystemBase{
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr; //heavily "inspired" by Rev example code
     //private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)                                                                              z 
     private boolean mode;
+    private double speed;
     
     public PulleySubsystem () {
         angleMotor = new CANSparkMax(10, MotorType.kBrushless);
@@ -34,6 +35,7 @@ public class PulleySubsystem extends SubsystemBase{
         pidController.setFeedbackDevice(encoder);
         angleMotor.setIdleMode(IdleMode.kBrake);
         SendableRegistry.addLW(this, "Pulley");
+        speed = 0;
         setPoint = 0;
 
         // PID coefficients
@@ -71,13 +73,9 @@ public class PulleySubsystem extends SubsystemBase{
         //this.mode = mode;
     //}
 
-    public void plusSetPoint()
+    public void setSpeed(double speed)
     {
-        this.setPoint -= 0.01;
-    }
-    public void minusSetPoint()
-    {
-        this.setPoint += 0.01;
+        this.speed = speed;
     }
 
     public void setSetPoint(double setPoint)
@@ -103,8 +101,15 @@ public class PulleySubsystem extends SubsystemBase{
             SmartDashboard.putNumber("Pulley Position", setPoint);
             SmartDashboard.putNumber("Relative Encoder", encoder.getPosition());
             pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
-        }//} else {
-            //pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
-          //}
+        } else {
+            if (getPosition() >= Constants.ELEVATOR_MAX){
+                speed = Math.min(speed, 0);
+            }
+            if (getPosition() <= Constants.ELEVATOR_MIN){
+                speed = Math.max(speed, 0);
+            }
+            setPoint = getPosition();
+            angleMotor.set(speed);
+        }
     }
 }

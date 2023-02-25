@@ -1,17 +1,20 @@
 package frc.robot;
 
-//import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.pigeon2.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.event.EventLoop;
 //import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.util.MathUtil;
 
 public class JoystickHandler {
 
     private Joystick joystick;
     private double deadZone;
+    private EventLoop loop;
 
     public JoystickHandler(int joyNum) {
         this.joystick = new Joystick(joyNum); //Joystick is on port 3;
@@ -92,9 +95,30 @@ public class JoystickHandler {
         return getAxis0() != 0 || getAxis1() != 0 || getAxis5() != 0;
     }
 
+    public void setDeadZone(double deadZone)
+    {
+        this.deadZone = deadZone;
+    }
+
+    public POVButton povRight(){
+        return new POVButton(joystick, 90);
+    }
+
+    public POVButton povLeft(){
+        return new POVButton(joystick, 270);
+    }
+
+    public POVButton povUp(){
+        return new POVButton(joystick, 0);
+    }
+
+    public POVButton povDown(){
+        return new POVButton(joystick, 180);
+    }
+    
     public void updateDeadZone(){
         if (!Preferences.containsKey("Dead Zone"))
-            Preferences.setDouble("Dead Zone", 0.05);
-        deadZone = Preferences.getDouble("Dead Zone", 0.05);
+            Preferences.setDouble("Dead Zone", 0.1);
+        deadZone = Preferences.getDouble("Dead Zone", 0.1);
     }
 }

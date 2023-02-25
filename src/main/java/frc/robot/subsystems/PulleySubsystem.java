@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -11,28 +13,35 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
-public class LiftSubsystem extends SubsystemBase{
+public class PulleySubsystem extends SubsystemBase{
+    private final SparkMaxAlternateEncoder.Type kType;
+    private final int kCPR = 8192;
+
+    private double setPoint;
     private CANSparkMax angleMotor;
     private SparkMaxPIDController pidController;
     private RelativeEncoder encoder;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr; //heavily "inspired" by Rev example code
-    private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)
-    private double setPoint;
+    //private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)                                                                              z 
+    private boolean mode;
     private double speed;
     
-    public LiftSubsystem () {
-        angleMotor = new CANSparkMax(9, MotorType.kBrushless);
+    public PulleySubsystem () {
+        angleMotor = new CANSparkMax(10, MotorType.kBrushless);
         angleMotor.restoreFactoryDefaults();
+        kType = SparkMaxAlternateEncoder.Type.kQuadrature;
+        encoder = angleMotor.getAlternateEncoder(kType, kCPR);
         pidController = angleMotor.getPIDController();
-        encoder = angleMotor.getEncoder();
+        pidController.setFeedbackDevice(encoder);
         angleMotor.setIdleMode(IdleMode.kBrake);
-        SendableRegistry.addLW(this, "Lift Extension");
-        setPoint = 0;
+        SendableRegistry.addLW(this, "Pulley");
         speed = 0;
+        setPoint = 0;
+
         // PID coefficients
-        kP = .1; //5e-5
-        kI = 1e-4;
-        kD = 0; 
+        kP = 100; //5e-5
+        kI = 0; //1e-4
+        kD = 1; 
         kIz = 0; 
         kFF = 0; 
         kMaxOutput = 1; 
@@ -58,9 +67,15 @@ public class LiftSubsystem extends SubsystemBase{
         mode = true;
     }
 
-    public void setMode(boolean mode)
+
+    //public void setMode(boolean mode)
+    //{
+        //this.mode = mode;
+    //}
+
+    public void setSpeed(double speed)
     {
-        this.mode = mode;
+        this.speed = speed;
     }
 
     public void setSetPoint(double setPoint)
@@ -68,9 +83,8 @@ public class LiftSubsystem extends SubsystemBase{
         this.setPoint = setPoint;
     }
 
-    public void setSpeed(double speed)
-    {
-        this.speed = speed;
+    public void setMode(boolean mode){
+        this.mode = mode;
     }
 
     public double getPosition()
@@ -82,20 +96,20 @@ public class LiftSubsystem extends SubsystemBase{
     public void periodic()
     {
         if(mode) {
-            setPoint = Math.min(setPoint, Constants.EXTENSION_MIN);
-            setPoint = Math.max(setPoint , Constants.EXTENSION_MAX);
-            SmartDashboard.putNumber("Lift Extension", setPoint);
-            SmartDashboard.putNumber("Lift Encoder", getPosition());
+            setPoint = Math.min(setPoint, Constants.ELEVATOR_MAX);
+            setPoint = Math.max(setPoint , Constants.ELEVATOR_MIN);
+            SmartDashboard.putNumber("Pulley Position", setPoint);
+            SmartDashboard.putNumber("Relative Encoder", encoder.getPosition());
             pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
-          } else {
-            if (getPosition() >= Constants.EXTENSION_MIN){
+        } else {
+            if (getPosition() >= Constants.ELEVATOR_MAX){
                 speed = Math.min(speed, 0);
             }
-            if (getPosition() <= Constants.EXTENSION_MAX){
+            if (getPosition() <= Constants.ELEVATOR_MIN){
                 speed = Math.max(speed, 0);
             }
             setPoint = getPosition();
             angleMotor.set(speed);
-          }
+        }
     }
 }

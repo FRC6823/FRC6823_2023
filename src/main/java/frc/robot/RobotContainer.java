@@ -1,7 +1,10 @@
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -138,11 +141,15 @@ public class RobotContainer {
         joystickHandler4.button(5).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(1)))
                                                 .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
         
+
         //Close gripper
         joystickHandler4.button(6).whileTrue(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(0)))
                                                 .onFalse(new InstantCommand(() -> pneumaticSubsystem.setPneumaticState(2)));
 
+
+        //Manual control for lift - to be changed
         joystickHandler4.button(2).whileTrue(new InstantCommand(() -> liftSubsystem.minusSetPoint()));
+
         joystickHandler4.button(3).whileTrue(new InstantCommand(() -> liftSubsystem.plusSetPoint()));
 
         
@@ -160,22 +167,42 @@ public class RobotContainer {
                                             //liftSubsystem.setSetPoint(0);}));
 
 
-        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> pulleySubsystem.minusSetPoint(-joystickHandler4.getAxis2())));
+        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> pulleySubsystem.minusSetPoint()));
 
 
-        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> pulleySubsystem.plusSetPoint(joystickHandler4.getAxis3())));
+        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> pulleySubsystem.plusSetPoint()));
 
 
         //Records current position of lift/arm system
-        joystickHandler4.button(10)
-
-        .whileTrue(new InstantCommand(() -> {positionHandler.capturePose();}));
+        joystickHandler4.button(10).whileTrue(new InstantCommand(() -> {positionHandler.capturePose();}));
 
         //.onFalse(new InstantCommand(() -> positionHandler.setState(false)));
 
+        //Cycling system through presets
         joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).onFalse(positionHandler);
 
+        joystickHandler4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).onFalse(positionHandler);
 
-        joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).onFalse(positionHandler);
+
+        //New manual control commands - to be tested
+        //joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false);
+                                                                        //pulleySubsystem.setSetPoint(1);}))
+                                    
+                                        //.onFalse(new InstantCommand(() -> {pulleySubsystem.setMode(true);
+                                                                            //pulleySubsystem.setSetPoint(pulleySubsystem.getPosition());}));
+
+
+
+        //joystickHandler4.povRight().whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false);
+                                                                        //pulleySubsystem.setSetPoint(-1);}))
+
+                                    //.onFalse(new InstantCommand(() -> {pulleySubsystem.setMode(true);
+                                                                        //pulleySubsystem.setSetPoint(pulleySubsystem.getPosition());}));
+
+        //joystickHandler4.povRight().whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false);
+                                                                            //new RepeatCommand(new InstantCommand(() -> pulleySubsystem.setSetPoint(joystickHandler4.getAxis5())));}))
+    
+                                        //.onFalse(new InstantCommand(() -> {pulleySubsystem.setMode(true);
+                                                                            //pulleySubsystem.setSetPoint(pulleySubsystem.getPosition());}));
     }
 }

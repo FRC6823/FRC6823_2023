@@ -21,7 +21,6 @@ public class FieldSpaceDrive extends CommandBase {
     private Pigeon2Handler pigeon2Handler;
     private SimpleWidget speedRateWidget;
     private SimpleWidget turnRateWidget;
-    private int drive = 0;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
@@ -38,8 +37,6 @@ public class FieldSpaceDrive extends CommandBase {
 
     @Override
     public void execute() {
-        drive++;
-        SmartDashboard.putNumber("field space", drive);
         pigeon2Handler.printEverything();
         joystickHandler.updateDeadZone();
 

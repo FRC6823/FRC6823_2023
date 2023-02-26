@@ -23,7 +23,7 @@ public class LimeLightSubsystem extends SubsystemBase{
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
         //ta = table.getEntry("ta");
-        b_t = table.getEntry("robotpose_targetspace");
+        b_t = table.getEntry("camPose");
         //id = table.getEntry("tid");
         //lastKnownX_Z_Tx = new double[3];
         SendableRegistry.addLW(this, "LimeLight");

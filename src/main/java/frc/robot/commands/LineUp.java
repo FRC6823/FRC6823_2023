@@ -30,8 +30,8 @@ public class LineUp extends CommandBase{
   @Override
   public void initialize() {
     xPid = new PIDController(0.00, 0, 0);
-    txPid = new PIDController(0.01, 0, 0);
-    distPid = new PIDController(0.07, 0, 0);
+    txPid = new PIDController(0.01, 0.00001, 0);
+    distPid = new PIDController(0.14, 0, 0);
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
       //  var alliance = DriverStation.getAlliance();
@@ -53,29 +53,22 @@ public class LineUp extends CommandBase{
     txPid.setSetpoint(0);
     distPid.setSetpoint(-20);
     boolean aligned = false;
-    int running = 0;
-    int driving = 0;
-    while (!aligned) {
+    if (!aligned) {
         rPose = limeLightSubsystem.getX_Z_Tx();
-        running++;
-        SmartDashboard.putNumber("is running?", running);
         
-        if (distPid.calculate(limeLightSubsystem.getTy()) >= 0.1){
-          //if (MathUtil.clipToZero(xPid.calculate(limeLightSubsystem.getTx()), 0.1) != 0 && MathUtil.clipToZero(txPid.calculate(limeLightSubsystem.getTx()), 0.1) != 0)
-          //{
+        if (limeLightSubsystem.getTy() <= -19 || limeLightSubsystem.getTy() == 0){
+          if (limeLightSubsystem.getTx() != 0)
+          {
             swerveDriveSubsystem.drive(new ChassisSpeeds(0, -xPid.calculate(limeLightSubsystem.getTx()),
-            txPid.calculate(limeLightSubsystem.getTx())));
-          //}
-          //else{
-          aligned = true;
-          swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
-          swerveDriveSubsystem.brake();
-          //}
+                                        txPid.calculate(limeLightSubsystem.getTx()) * 2));
+          }
+          else{
+            aligned = true;
+            swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
+            swerveDriveSubsystem.brake();
+          }
         }
         else {
-            driving++;
-            SmartDashboard.putNumber("driving", driving);
-            SmartDashboard.putNumber("Drive value", -distPid.calculate(limeLightSubsystem.getTy()));
             swerveDriveSubsystem.drive(new ChassisSpeeds(-distPid.calculate(limeLightSubsystem.getTy()), -xPid.calculate(limeLightSubsystem.getTx()),
             txPid.calculate(limeLightSubsystem.getTx())));
         }

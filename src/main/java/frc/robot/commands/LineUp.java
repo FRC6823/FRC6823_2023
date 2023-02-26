@@ -52,32 +52,34 @@ public class LineUp extends CommandBase{
     xPid.setSetpoint(0);
     txPid.setSetpoint(0);
     distPid.setSetpoint(-20);
-
-    SmartDashboard.putBoolean("target?", limeLightSubsystem.hasValidTarget());
-    //if (limeLightSubsystem.hasValidTarget()) {
-        
+    boolean aligned = false;
+    int running = 0;
+    int driving = 0;
+    while (!aligned) {
         rPose = limeLightSubsystem.getX_Z_Tx();
-        SmartDashboard.putNumber("X", rPose[0]);
-        SmartDashboard.putNumber("Z", rPose[1]);
-        SmartDashboard.putNumber("Tx", rPose[2]);
-        //SmartDashboard.putNumber("ty", limeLightSubsystem.getTy());
+        running++;
+        SmartDashboard.putNumber("is running?", running);
+        
         if (distPid.calculate(limeLightSubsystem.getTy()) >= 0.1){
-          if (MathUtil.clipToZero(xPid.calculate(limeLightSubsystem.getTx()), 0.1) != 0 && MathUtil.clipToZero(txPid.calculate(limeLightSubsystem.getTx()), 0.1) != 0)
-          {
+          //if (MathUtil.clipToZero(xPid.calculate(limeLightSubsystem.getTx()), 0.1) != 0 && MathUtil.clipToZero(txPid.calculate(limeLightSubsystem.getTx()), 0.1) != 0)
+          //{
             swerveDriveSubsystem.drive(new ChassisSpeeds(0, -xPid.calculate(limeLightSubsystem.getTx()),
             txPid.calculate(limeLightSubsystem.getTx())));
-          }
-          else{
+          //}
+          //else{
+          aligned = true;
           swerveDriveSubsystem.drive(new ChassisSpeeds(0, 0, 0));
           swerveDriveSubsystem.brake();
-          }
+          //}
         }
-
         else {
+            driving++;
+            SmartDashboard.putNumber("driving", driving);
+            SmartDashboard.putNumber("Drive value", -distPid.calculate(limeLightSubsystem.getTy()));
             swerveDriveSubsystem.drive(new ChassisSpeeds(-distPid.calculate(limeLightSubsystem.getTy()), -xPid.calculate(limeLightSubsystem.getTx()),
             txPid.calculate(limeLightSubsystem.getTx())));
         }
-    //}
+    }
   }
 }
 

@@ -56,8 +56,7 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
 
     public boolean hasValidTarget(){
-        return //table.getEntry("tv").getDouble(0) == 1; && 
-            getB_T()[1] > 0;
+        return table.getEntry("tv").getDouble(0) == 1;  
     }
 
 

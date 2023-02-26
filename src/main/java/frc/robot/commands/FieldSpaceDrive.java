@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj2.command.Subsystem;
 //import java.util.HashSet;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.JoystickHandler;
 import frc.robot.Pigeon2Handler;
@@ -20,6 +21,7 @@ public class FieldSpaceDrive extends CommandBase {
     private Pigeon2Handler pigeon2Handler;
     private SimpleWidget speedRateWidget;
     private SimpleWidget turnRateWidget;
+    private int drive = 0;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
@@ -36,6 +38,8 @@ public class FieldSpaceDrive extends CommandBase {
 
     @Override
     public void execute() {
+        drive++;
+        SmartDashboard.putNumber("field space", drive);
         pigeon2Handler.printEverything();
         joystickHandler.updateDeadZone();
 
@@ -49,7 +53,7 @@ public class FieldSpaceDrive extends CommandBase {
         // }
 
         //Set xval, yval, spinval to the scaled values from the joystick, bounded on [-1, 1]
-        double xval = Math.max(Math.min(joystickHandler.getAxis1() * speedRate, 1), -1);
+        double xval = Math.max(Math.min(joystickHandler.getAxis1() * -speedRate, 1), -1);
         double yval = Math.max(Math.min(joystickHandler.getAxis0() * -speedRate, 1), -1);
         double spinval = Math.max(Math.min(joystickHandler.getAxis5() * -turnRate, 1), -1);
 

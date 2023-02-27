@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import java.util.*;
 
 public class Constants {
     // Default units: Meters (m/s, m/s/s), Degrees 
@@ -28,6 +29,11 @@ public class Constants {
     public static final double ELEVATOR_MAX = .20;
     public static final double EXTENSION_MIN = -0.5;
     public static final double EXTENSION_MAX = -90;
+
+    public static final double LIFT_MAX_HORIZONTAL = 1.2192;
+    public static final double LIFT_MAX_VERTICAL = 1.981;
+    public static final double LIFT_PIVOT_FROM_FLOOR = 0.2667;
+    public static final double LIFT_PIVOT_FROM_FRONT = 0.5842;
 
     public static final double kMaxVelocity = 6380 * WHEEL_CIRCUMFERENCE / (60.0 * L2_RATIO);
     public static final double kMaxAccel = kMaxVelocity;

@@ -17,20 +17,18 @@ public class LineUp extends CommandBase{
     private PIDController xPid, txPid, distPid;
     private LimeLightSubsystem limeLightSubsystem;
     private AprilTagFieldLayout atfl;
-    private double[] rPose;
 
   public LineUp(SwerveDriveSubsystem swerveDriveSubsystem, LimeLightSubsystem limeLightSubsystem) {
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.limeLightSubsystem = limeLightSubsystem;
     addRequirements(swerveDriveSubsystem);
     SendableRegistry.addLW(this, "LineUp");
-    rPose = new double[]{0,0,0};
   }
 
   @Override
   public void initialize() {
-    xPid = new PIDController(0.00, 0, 0);
-    txPid = new PIDController(0.01, 0.00001, 0);
+    xPid = new PIDController(0.2, 0, 0);
+    txPid = new PIDController(0.02, 0.000, 0);
     distPid = new PIDController(0.14, 0, 0);
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
@@ -49,18 +47,17 @@ public class LineUp extends CommandBase{
   public void execute() {
     //Shuffleboard.getTab("Preferences").add("transform", "transformedTarget.toString()");
     
-    xPid.setSetpoint(0);
+    xPid.setSetpoint(.7);
     txPid.setSetpoint(0);
-    distPid.setSetpoint(-20);
+    distPid.setSetpoint(-17);
     boolean aligned = false;
     if (!aligned) {
-        rPose = limeLightSubsystem.getX_Z_Tx();
         
         if (limeLightSubsystem.getTy() <= -19 || limeLightSubsystem.getTy() == 0){
-          if (limeLightSubsystem.getTx() != 0)
+          if (limeLightSubsystem.getTx() != 0 || limeLightSubsystem.get3dTX() != 0)
           {
-            swerveDriveSubsystem.drive(new ChassisSpeeds(0, -xPid.calculate(limeLightSubsystem.getTx()),
-                                        txPid.calculate(limeLightSubsystem.getTx()) * 2));
+            swerveDriveSubsystem.drive(new ChassisSpeeds(0, -xPid.calculate(limeLightSubsystem.get3dTX()) * 3,
+                                        -txPid.calculate(limeLightSubsystem.get3dRY())));
           }
           else{
             aligned = true;
@@ -69,8 +66,8 @@ public class LineUp extends CommandBase{
           }
         }
         else {
-            swerveDriveSubsystem.drive(new ChassisSpeeds(-distPid.calculate(limeLightSubsystem.getTy()), -xPid.calculate(limeLightSubsystem.getTx()),
-            txPid.calculate(limeLightSubsystem.getTx())));
+            swerveDriveSubsystem.drive(new ChassisSpeeds(-distPid.calculate(limeLightSubsystem.getTy()), -xPid.calculate(limeLightSubsystem.get3dTX()),
+            -txPid.calculate(limeLightSubsystem.get3dRY())));
         }
     }
   }

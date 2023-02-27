@@ -23,7 +23,8 @@ public class LimeLightSubsystem extends SubsystemBase{
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
         //ta = table.getEntry("ta");
-        b_t = table.getEntry("camPose");
+        // b_t = table.getEntry("camPose");
+        b_t = table.getEntry("botpose_targetspace");
         //id = table.getEntry("tid");
         //lastKnownX_Z_Tx = new double[3];
         SendableRegistry.addLW(this, "LimeLight");
@@ -60,18 +61,19 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
 
 
-    public double[] getX_Z_Tx() {
+    public double get3dTX() {
+        return getB_T()[0];
+    }
 
-        lastKnownX_Z_Tx[0] = getB_T()[0]; //Side to side offset from tag
-        lastKnownX_Z_Tx[1] = -getB_T()[1]; //Distance from target
-        lastKnownX_Z_Tx[2] = getB_T()[3]; //Horizontal rotation relative to target
-
-        return lastKnownX_Z_Tx;
+    public double get3dRY() {
+        return getB_T()[4];
     }
 
     public void periodic() {
         //SmartDashboard.putNumber("tx", tx.getDouble(0));
+        SmartDashboard.putNumber("tx", tx.getDouble(0.0));
         SmartDashboard.putNumber("ty", ty.getDouble(0.0));
+        SmartDashboard.putNumber("TX", b_t.getDoubleArray(new double[]{0,0,0,0,0,0})[0]);
         //SmartDashboard.putNumber("ta", ta.getDouble(0));
         SmartDashboard.putNumber("pipeline", table.getEntry("pipeline").getDouble(0));
     }

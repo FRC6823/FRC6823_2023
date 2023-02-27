@@ -30,8 +30,8 @@ public class LiftSubsystem extends SubsystemBase{
         setPoint = 0;
         speed = 0;
         // PID coefficients
-        kP = .1; //5e-5
-        kI = 1e-4;
+        kP = .05; //5e-5
+        kI = 5e-5;
         kD = 0; 
         kIz = 0; 
         kFF = 0; 

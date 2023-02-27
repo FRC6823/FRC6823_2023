@@ -39,8 +39,8 @@ public class PulleySubsystem extends SubsystemBase{
         setPoint = 0;
 
         // PID coefficients
-        kP = 100; //5e-5
-        kI = 0; //1e-4
+        kP = 150; //5e-5
+        kI = 1e-5; //1e-4
         kD = 1; 
         kIz = 0; 
         kFF = 0; 

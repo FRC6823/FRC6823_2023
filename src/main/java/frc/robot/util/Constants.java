@@ -27,7 +27,7 @@ public class Constants {
     public static final double ELEVATOR_MIN = 0.005;
     public static final double ELEVATOR_MAX = .20;
     public static final double EXTENSION_MIN = -0.5;
-    public static final double EXTENSION_MAX = -95;
+    public static final double EXTENSION_MAX = -90;
 
     public static final double kMaxVelocity = 6380 * WHEEL_CIRCUMFERENCE / (60.0 * L2_RATIO);
     public static final double kMaxAccel = kMaxVelocity;

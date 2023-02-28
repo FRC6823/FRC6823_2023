@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 //import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -36,6 +37,11 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         // We're using TalonFX motors on CAN.
         this.angleMotor = new TalonFX(angleMotorChannel);
         this.speedMotor = new TalonFX(speedMotorChannel);
+
+        SupplyCurrentLimitConfiguration driveCurrentLimit = new SupplyCurrentLimitConfiguration(true, 20, 20, 0);
+        speedMotor.configSupplyCurrentLimit(driveCurrentLimit);
+        angleMotor.configSupplyCurrentLimit(driveCurrentLimit);
+
         this.angleEncoder = new CANCoder(angleEncoderChannel); // CANCoder Encoder
         this.speedMotor.setNeutralMode(NeutralMode.Coast);
         this.motorName = motorName;

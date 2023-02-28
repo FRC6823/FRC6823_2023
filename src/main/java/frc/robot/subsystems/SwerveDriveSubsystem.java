@@ -41,6 +41,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private PIDController angleController;
     private Pigeon2Handler pigeon;
     private SwerveDriveOdometry odometry;
+    private double maxSpd = 5;
     
     public SwerveDriveSubsystem(Pigeon2Handler pigeon) {
         //calibrateWidget = Shuffleboard.getTab("Preferences").addPersistent("Calibrate?", false)
@@ -90,9 +91,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         speeds = chassisSpeeds;
     }
 
+    public void setMaxSpd(double max){
+        maxSpd = max;
+    }
+
     public void setSwerveModuleStates(SwerveModuleState[] moduleStates){
         //SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, 5.5);
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, speeds, 5, 5, 5);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, maxSpd);
         // Front left module state
         SwerveModuleState backRightState = moduleStates[0];
 

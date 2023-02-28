@@ -49,11 +49,12 @@ public class LineUp extends CommandBase{
     
     xPid.setSetpoint(.7);
     txPid.setSetpoint(0);
-    distPid.setSetpoint(-17);
+    distPid.setSetpoint(3);
     boolean aligned = false;
     if (!aligned) {
-        
-        if (limeLightSubsystem.getTy() <= -19 || limeLightSubsystem.getTy() == 0){
+      
+        swerveDriveSubsystem.setMaxSpd(3);
+        if (limeLightSubsystem.getTy() <= 3 || limeLightSubsystem.getTy() == 0){
           if (limeLightSubsystem.getTx() != 0 || limeLightSubsystem.get3dTX() != 0)
           {
             swerveDriveSubsystem.drive(new ChassisSpeeds(0, -xPid.calculate(limeLightSubsystem.get3dTX()) * 3,

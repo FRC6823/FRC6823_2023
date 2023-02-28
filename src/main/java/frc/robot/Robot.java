@@ -8,6 +8,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.Constants;
 
 public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
@@ -35,12 +36,13 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         //robotContainer.getAutoCommandGroup().schedule();
         // robotContainer.getMoreCommands().schedule();
-
+        Constants.isTeleop = false;
     }
 
     @Override
     public void teleopInit() {
         //robotContainer.getAutoCommandGroup().cancel();
+        Constants.isTeleop = true;
     }
 
 }

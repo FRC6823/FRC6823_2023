@@ -57,7 +57,7 @@ public class FieldSpaceDrive extends CommandBase {
         // mapping field space to robot space
         //double txval = getTransX(xval, yval, robotAngle);
         //double tyval = getTransY(xval, yval, robotAngle);
-
+        swerveDrive.setMaxSpd(5);
         swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xval, yval, spinval, getRobotAngle()));
     }
 

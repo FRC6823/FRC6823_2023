@@ -38,7 +38,10 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         this.speedMotor = new TalonFX(speedMotorChannel);
         this.angleEncoder = new CANCoder(angleEncoderChannel); // CANCoder Encoder
         this.speedMotor.setNeutralMode(NeutralMode.Brake);
+        angleMotor.configSupplyCurrentLimit(Constants.kdriveCurrentLimit);
+        speedMotor.configSupplyCurrentLimit(Constants.kdriveCurrentLimit);
         this.motorName = motorName;
+
         this.pidController = new PIDController(P, I, 0); // This is the PID constant,
         // we're not using any
         // Integral/Derivative control but increasing the P value will make

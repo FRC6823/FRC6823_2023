@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class Constants {
@@ -34,6 +36,7 @@ public class Constants {
     public static final double kMaxAngularVelocity = kMaxVelocity / Math.hypot(DRIVE_TRAIN_LENGTH / 2.0, DRIVE_TRAIN_WIDTH / 2.0);
     public static final double kMaxAngularAccel = kMaxAngularVelocity;
     public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(kMaxAngularVelocity, kMaxAngularAccel);
+    public static final SupplyCurrentLimitConfiguration kdriveCurrentLimit = new SupplyCurrentLimitConfiguration(true, 20, 20, 0);
     
     //PID taken from Sonic Squirrels
     //Re-test with full bot
@@ -48,5 +51,9 @@ public class Constants {
     public static final double kIThetaController = 0.0;
     public static final double kDThetaController = 0.0;
 
-    
+    //PID setpoint constants for LineUp
+    private static final double[] leftScore = new double[]{3, 0.7, 0};
+    private static final double[] rightScore = new double[]{3, -0.7, 0};
+    private static final double[] centerScore = new double[]{3, 0, 0};
+    private static final double[] pickup = new double[]{2, 0.3, 0};
 }

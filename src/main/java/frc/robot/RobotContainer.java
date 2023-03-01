@@ -181,26 +181,7 @@ public class RobotContainer {
 
 
         joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> gripperAngleSubsystem.setSetPoint(1))).onFalse(new InstantCommand(() -> gripperAngleSubsystem.setSetPoint(0)));
+
         joystickHandler4.povRight().whileTrue(new InstantCommand(() -> gripperAngleSubsystem.setSetPoint(-1))).onFalse(new InstantCommand(() -> gripperAngleSubsystem.setSetPoint(0)));
-        //New manual control commands - to be tested
-        //joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false);
-                                                                        //pulleySubsystem.setSetPoint(1);}))
-                                    
-                                        //.onFalse(new InstantCommand(() -> {pulleySubsystem.setMode(true);
-                                                                            //pulleySubsystem.setSetPoint(pulleySubsystem.getPosition());}));
-
-
-
-        //joystickHandler4.povRight().whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false);
-                                                                        //pulleySubsystem.setSetPoint(-1);}))
-
-                                    //.onFalse(new InstantCommand(() -> {pulleySubsystem.setMode(true);
-                                                                        //pulleySubsystem.setSetPoint(pulleySubsystem.getPosition());}));
-
-        //joystickHandler4.povRight().whileTrue(new InstantCommand(() -> {pulleySubsystem.setMode(false);
-                                                                            //new RepeatCommand(new InstantCommand(() -> pulleySubsystem.setSetPoint(joystickHandler4.getAxis5())));}))
-    
-                                        //.onFalse(new InstantCommand(() -> {pulleySubsystem.setMode(true);
-                                                                            //pulleySubsystem.setSetPoint(pulleySubsystem.getPosition());}));
     }
 }

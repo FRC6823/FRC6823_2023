@@ -52,8 +52,8 @@ public class Constants {
     public static final double kDThetaController = 0.0;
 
     //PID setpoint constants for LineUp
-    private static final double[] leftScore = new double[]{3, 0.7, 0};
-    private static final double[] rightScore = new double[]{3, -0.7, 0};
-    private static final double[] centerScore = new double[]{3, 0, 0};
-    private static final double[] pickup = new double[]{2, 0.3, 0};
+    public static final double[] leftScore = new double[]{3, 0.7, 0};
+    public static final double[] rightScore = new double[]{3, -0.7, 0};
+    public static final double[] centerScore = new double[]{3, 0, 0};
+    public static final double[] pickup = new double[]{2, 0.3, 0};
 }

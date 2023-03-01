@@ -78,8 +78,3 @@ public class LimeLightSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("pipeline", table.getEntry("pipeline").getDouble(0));
     }
 }
-package frc.robot.subsystems;
-
-public class LimeLightSubsystem {
-    
-}

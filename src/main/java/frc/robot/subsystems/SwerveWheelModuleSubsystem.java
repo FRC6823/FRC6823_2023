@@ -44,10 +44,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         // Integral/Derivative control but increasing the P value will make
         // the motors more aggressive to changing to angles.
 
-        //angleEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
-
-        // pidController.setTolerance(20); //sets tolerance, shouldn't be needed.
-
         pidController.enableContinuousInput(0, 360); // This makes the PID controller
         // understand the fact that for
         // our setup, 360 degrees is the same as 0 since the wheel loops.
@@ -56,8 +52,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         SendableRegistry.addChild(this, speedMotor);
         SendableRegistry.addChild(this, angleEncoder);
         SendableRegistry.addLW(this, "Swerve Wheel Module");
-        //speedLim = Shuffleboard.getTab("Preferences").addPersistent("Speed Lim", 0.5)
-        //.withWidget(BuiltInWidgets.kNumberSlider);;
+        
         encoderOffset = offset;
         resetSensor();
     }

@@ -1,11 +1,8 @@
 package frc.robot.subsystems;
 
-//import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-//import edu.wpi.first.math.geometry.Rotation2d;
-//import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -13,17 +10,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableRegistry;
-//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-//import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
-//import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Pigeon2Handler;
 import frc.robot.util.Constants;
-
-// import java.util.Map;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
 
@@ -41,10 +31,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private SwerveDriveOdometry odometry;
     
     public SwerveDriveSubsystem(Pigeon2Handler pigeon) {
-        //calibrateWidget = Shuffleboard.getTab("Preferences").addPersistent("Calibrate?", false)
-                //.withWidget(BuiltInWidgets.kToggleButton);
-        // invertWidget = Shuffleboard.getTab("Preferences").addPersistent("Invert?", false)
-        //         .withWidget(BuiltInWidgets.kToggleButton);
 
         backRight = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", Constants.bROffset);// These are the motors and encoder
                                                                 // CAN IDs for swerve drive
@@ -91,7 +77,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void setSwerveModuleStates(SwerveModuleState[] states)
     {
         SwerveDriveKinematics.desaturateWheelSpeeds(states, 5);
-        //SwerveDriveKinematics.desaturateWheelSpeeds(states, speeds, 5, Constants.kMaxVelocity, Constants.kMaxAngularVelocity);
+        
         // Front left module state
         SwerveModuleState backRightState = states[0];
 

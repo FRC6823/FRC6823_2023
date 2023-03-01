@@ -112,7 +112,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("PoseX", odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("Pose Y", odometry.getPoseMeters().getY());
         SmartDashboard.putNumber("Pose Theta", odometry.getPoseMeters().getRotation().getDegrees());
-        SmartDashboard.putNumber("Pigeon Readings", pigeon.getAngleDeg().getDegrees());
     }
 
     public void stop() {

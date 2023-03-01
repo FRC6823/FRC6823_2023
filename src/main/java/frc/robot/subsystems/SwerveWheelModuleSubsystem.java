@@ -66,8 +66,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         setSpeed(speed * reverse);
         
         SmartDashboard.putNumber("Encoder " + motorName, getPosition());
-        SmartDashboard.putNumber("Distance " + motorName, getDistance());
-        SmartDashboard.putNumber("Rotation " + motorName, getPositionRad());
     }
 
     public int setAngle(double angle, double currentEncoderValue)
@@ -101,7 +99,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     }
 
     public double getPositionRad() {
-        return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360) * Math.PI / 180;
+        return MathUtil.mod(angleEncoder.getAbsolutePosition() - (encoderOffset * Math.PI / 180.0), 360) * Math.PI / 180;
     }
 
     public double getDistance() {
@@ -118,7 +116,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //calibrateMode = calibrateState.getEntry().getBoolean(false);
     }
 
     public void coast(){
@@ -134,7 +131,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         speedMotor.setSelectedSensorPosition(0);
     }
 
-    //
     public SwerveModulePosition getSwerveModulePosition()
     {
         return new SwerveModulePosition(getDistance(), new Rotation2d(getPositionRad()));

@@ -13,22 +13,21 @@ public class LimeLightSubsystem extends SubsystemBase{
     private NetworkTableEntry tx;
     private NetworkTableEntry ty;
     private NetworkTableEntry ta;
+    private NetworkTableEntry tv;
     private NetworkTableEntry b_t; //Botpose relative to Target
     //private NetworkTableEntry B_F; //Botpose relative to Field
     private NetworkTableEntry id;
-    private double[] lastKnownX_Z_Tx;
 
     public LimeLightSubsystem(){
         table = NetworkTableInstance.getDefault().getTable("limelight");
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
-        //ta = table.getEntry("ta");
-        // b_t = table.getEntry("camPose");
+        ta = table.getEntry("ta");
+        tv = table.getEntry("tv");
         b_t = table.getEntry("botpose_targetspace");
-        //id = table.getEntry("tid");
-        //lastKnownX_Z_Tx = new double[3];
+        id = table.getEntry("tid");
+
         SendableRegistry.addLW(this, "LimeLight");
-        lastKnownX_Z_Tx = new double[]{0,0,0};
     }
 
     public void setPipeline(int pipeline){
@@ -47,6 +46,9 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
     public double getTa() {
         return ta.getDouble(0);
+    }
+    public double getTv(){
+        return tv.getDouble(0);
     }
     public double getId() {
         return id.getDouble(0);
@@ -71,10 +73,10 @@ public class LimeLightSubsystem extends SubsystemBase{
 
     public void periodic() {
         //SmartDashboard.putNumber("tx", tx.getDouble(0));
-        SmartDashboard.putNumber("tx", tx.getDouble(0.0));
-        SmartDashboard.putNumber("ty", ty.getDouble(0.0));
-        SmartDashboard.putNumber("TX", b_t.getDoubleArray(new double[]{0,0,0,0,0,0})[0]);
+        //SmartDashboard.putNumber("ty", ty.getDouble(0.0));
+        //SmartDashboard.putNumber("TX", b_t.getDoubleArray(new double[]{0,0,0,0,0,0})[0]);
         //SmartDashboard.putNumber("ta", ta.getDouble(0));
         SmartDashboard.putNumber("pipeline", table.getEntry("pipeline").getDouble(0));
+        SmartDashboard.putNumber("target?", getTv());
     }
 }

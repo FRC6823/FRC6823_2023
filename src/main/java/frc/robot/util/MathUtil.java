@@ -21,4 +21,10 @@ public class MathUtil {
     public static double clipToZero(double val, double min) { //Returns zero if val is in [-min, min], otherwise returns val
         return val > min || val < -min ? val : 0;
     }
+
+    public static double clipToRange(double val, double max) { //Clips val to [max, -max]
+        val = Math.min(val, max);
+        val = Math.max(val, -max);
+        return val;
+    }
 }

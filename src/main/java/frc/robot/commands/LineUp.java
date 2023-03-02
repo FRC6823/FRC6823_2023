@@ -70,8 +70,8 @@ public class LineUp extends CommandBase{
     if (!aligned) {
         if (MathUtil.clipToZero(txPid.calculate(limeLightSubsystem.get3dRY()), tolerance) != 0 || MathUtil.clipToZero(xPid.calculate(limeLightSubsystem.get3dTX()), tolerance) != 0 || MathUtil.clipToZero(tyPid.calculate(limeLightSubsystem.getTy()), tolerance) != 0){
           
-          swerveDriveSubsystem.drive(new ChassisSpeeds(-tyPid.calculate(limeLightSubsystem.getTy()), -xPid.calculate(limeLightSubsystem.get3dTX()),
-            -txPid.calculate(limeLightSubsystem.get3dRY())));
+          swerveDriveSubsystem.drive(new ChassisSpeeds(MathUtil.clipToRange(-tyPid.calculate(limeLightSubsystem.getTy()), 1), MathUtil.clipToRange(-xPid.calculate(limeLightSubsystem.get3dTX()), 1),
+            MathUtil.clipToRange(-txPid.calculate(limeLightSubsystem.get3dRY()), 1)));
         }
         else {
           aligned = true;
@@ -96,8 +96,8 @@ public class LineUp extends CommandBase{
       txPid.setSetpoint(0);
 
       if (MathUtil.clipToZero(limeLightSubsystem.getTy(), 0.2) != 0 || MathUtil.clipToZero(limeLightSubsystem.getTx(), 0.2) != 0){
-          swerveDriveSubsystem.drive(new ChassisSpeeds(-tyPid.calculate(limeLightSubsystem.getTy()), 0, 
-                                                          txPid.calculate(limeLightSubsystem.getTx())));
+          swerveDriveSubsystem.drive(new ChassisSpeeds(MathUtil.clipToRange(-tyPid.calculate(limeLightSubsystem.getTy()), 1), 0, 
+                                                          MathUtil.clipToRange(txPid.calculate(limeLightSubsystem.getTx()), 1)));
         
       }
       else if (limeLightSubsystem.getTv() != 0){

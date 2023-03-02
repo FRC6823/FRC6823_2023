@@ -80,7 +80,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
             angle += 180;
         }
         
-        double pidOut = -pidController.calculate(currentEncoderValue, angle);
+        double pidOut = -pidController.calculate(currentEncoderValue, 0);
         
         angleMotor.set(ControlMode.PercentOutput, pidOut);
 

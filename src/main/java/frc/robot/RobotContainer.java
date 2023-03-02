@@ -104,11 +104,11 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         //Snow plow break
-        joystickHandler3.button(1).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})) 
-                                                .onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+        //joystickHandler3.button(1).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})) 
+                                                //.onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
         
         // Holding 7 will enable robot space drive, instead of field space
-        joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand).onFalse(fieldSpaceDriveCommand);
+        //joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand).onFalse(fieldSpaceDriveCommand);
 
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
@@ -126,12 +126,12 @@ public class RobotContainer {
         joystickHandler3.povRight().whileTrue(new LineUp(swerveDrive, limeLight, "right"));
 
         //Move to score center node
-        joystickHandler3.povDown().whileTrue(new LineUp(swerveDrive, limeLight, "center"));
+        joystickHandler3.povUp().whileTrue(new LineUp(swerveDrive, limeLight, "center"));
 
         //Pickup
-        joystickHandler3.povUp().whileTrue(new LineUp(swerveDrive, limeLight, "pickup"));
+        joystickHandler3.button(10).whileTrue(new LineUp(swerveDrive, limeLight, "pickup"));
 
-
+        //button 1 gripper toggle
 
 
 

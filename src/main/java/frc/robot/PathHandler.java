@@ -96,21 +96,21 @@ public class PathHandler {
 
         PIDController xController = new PIDController(Constants.kP, 0, 0);
         PIDController yController = new PIDController(Constants.kP, 0, 0);
-        //PIDController turnController = new PIDController(Constants.kPThetaController, Constants.kIThetaController, Constants.kDThetaController);
+        PIDController thetaController = new PIDController(Constants.kPThetaController, Constants.kIThetaController, Constants.kDThetaController);
         
-        ProfiledPIDController thetaController = new ProfiledPIDController(Constants.kPThetaController, Constants.kIThetaController, Constants.kDThetaController, Constants.kTurnControlConstraints);
+        //ProfiledPIDController thetaController = new ProfiledPIDController(Constants.kPThetaController, Constants.kIThetaController, Constants.kDThetaController, Constants.kTurnControlConstraints);
         thetaController.enableContinuousInput(Math.PI, Math.PI);
 
-        Command swerveControllerCommand = new SwerveControllerCommand(
+        Command PPswerveControllerCommand = new PPSwerveControllerCommand(
             path, swerveDriveSubsystem::getRobotPose, swerveDriveSubsystem.getKinematics(),
             xController, yController, thetaController, 
             swerveDriveSubsystem::setSwerveModuleStates, swerveDriveSubsystem);
         
         if (stopAtEnd){
-            swerveControllerCommand = swerveControllerCommand.andThen(new InstantCommand(() -> swerveDriveSubsystem.brake()));
+            PPswerveControllerCommand = PPswerveControllerCommand.andThen(new InstantCommand(() -> swerveDriveSubsystem.brake()));
         }
 
-        return swerveControllerCommand;
+        return PPswerveControllerCommand;
     }
 
 }

@@ -76,7 +76,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void setSwerveModuleStates(SwerveModuleState[] states)
     {
-        //SwerveDriveKinematics.desaturateWheelSpeeds(states, 5);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, 5);
         
         // Front left module state
         SwerveModuleState frontLeftState = states[0];
@@ -92,10 +92,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Back right module state
         SwerveModuleState backRightState = states[3];
 
-        frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
-        frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
-        backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); 
-        backRight.drive(-backRightState.speedMetersPerSecond, backRightState.angle.getDegrees());
+        frontLeft.drive(frontLeftState.speedMetersPerSecond / 5, frontLeftState.angle.getDegrees());
+        frontRight.drive(-frontRightState.speedMetersPerSecond / 5, frontRightState.angle.getDegrees());
+        backLeft.drive(backLeftState.speedMetersPerSecond / 5, backLeftState.angle.getDegrees()); 
+        backRight.drive(-backRightState.speedMetersPerSecond / 5, backRightState.angle.getDegrees());
     }
 
     // @Override

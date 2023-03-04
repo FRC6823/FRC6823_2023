@@ -6,8 +6,10 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.Constants;
 
 public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
@@ -15,7 +17,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
-
         // rgb1 = new RGB(9);
         // rgb2 = new RGB(9);
         // rgb1.setPattern(0.67);
@@ -28,6 +29,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        Constants.alliance = DriverStation.getAlliance().toString();
         CommandScheduler.getInstance().run();
     }
 

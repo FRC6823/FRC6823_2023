@@ -54,7 +54,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         Translation2d frontRightLocation = new Translation2d(L, -W);
         Translation2d frontLeftLocation = new Translation2d(L, W);
 
-        kinematics = new SwerveDriveKinematics(backRightLocation, backLeftLocation, frontRightLocation, frontLeftLocation);
+        kinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
         speeds = new ChassisSpeeds(0, 0, 0);
         this.pigeon = pigeon;
         odometry = new SwerveDriveOdometry
@@ -79,21 +79,23 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(states, 5);
         
         // Front left module state
-        SwerveModuleState backRightState = states[0];
+        SwerveModuleState frontLeftState = states[0];
+        
 
         // Front right module state
-        SwerveModuleState backLeftState = states[1];
+        SwerveModuleState frontRightState = states[1];
+        
 
         // Back left module state
-        SwerveModuleState frontRightState = states[2];
+        SwerveModuleState backLeftState = states[2];
 
         // Back right module state
-        SwerveModuleState frontLeftState = states[3];
+        SwerveModuleState backRightState = states[3];
 
-        backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
-        backRight.drive(-backRightState.speedMetersPerSecond, backRightState.angle.getDegrees());
         frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
         frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
+        backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); 
+        backRight.drive(-backRightState.speedMetersPerSecond, backRightState.angle.getDegrees());
     }
 
     // @Override
@@ -104,10 +106,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         odometry.update(pigeon.getAngleRad(), 
                         new SwerveModulePosition[] {
-                            backRight.getSwerveModulePosition(), 
-                            backLeft.getSwerveModulePosition(),
+                            frontLeft.getSwerveModulePosition(),
                             frontRight.getSwerveModulePosition(),
-                            frontLeft.getSwerveModulePosition()});
+                            backLeft.getSwerveModulePosition(),
+                            backRight.getSwerveModulePosition()});
 
         SmartDashboard.putNumber("PoseX", odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("Pose Y", odometry.getPoseMeters().getY());
@@ -146,10 +148,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     {
         odometry.resetPosition(pigeon.getAngleRad(), 
                                 new SwerveModulePosition[] {
-                                    backRight.getSwerveModulePosition(), 
-                                    backLeft.getSwerveModulePosition(),
+                                    frontLeft.getSwerveModulePosition(),
                                     frontRight.getSwerveModulePosition(),
-                                    frontLeft.getSwerveModulePosition()},
+                                    backLeft.getSwerveModulePosition(),
+                                    backRight.getSwerveModulePosition()},
                                 new Pose2d(0, 0, pigeon.getAngleRad()));
     }
 
@@ -157,10 +159,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     {
         odometry.resetPosition(pigeon.getAngleRad(), 
                                 new SwerveModulePosition[] {
-                                    backRight.getSwerveModulePosition(), 
-                                    backLeft.getSwerveModulePosition(),
+                                    frontLeft.getSwerveModulePosition(),
                                     frontRight.getSwerveModulePosition(),
-                                    frontLeft.getSwerveModulePosition()},
+                                    backLeft.getSwerveModulePosition(),
+                                    backRight.getSwerveModulePosition()},
                                 new Pose2d(x, y, new Rotation2d(heading)));
     }
 

@@ -10,12 +10,15 @@ public class Constants {
     // "Forward" (on boot) - +X axis
     // "Left" (on boot) - +Y axis
 
+    public static String alliance = "Blue";
+
+
     public static final double degToRad = Math.PI / 180;
     public static final double radToDeg = 180 / Math.PI;
-    public static final double fLOffset = 305.7714584544301;
-    public static final double fROffset = 120.32225542515516;
-    public static final double bLOffset = 337.0605183020234;
-    public static final double bROffset = 27.509763292968273;
+    public static final double fLOffset = 307.26559895277023;
+    public static final double fROffset = 117.3339744284749;
+    public static final double bLOffset = 336.5331745967269;
+    public static final double bROffset = 28.300778850913048;
 
     public static final double L1_RATIO = 8.14;
     public static final double L2_RATIO = 6.75;
@@ -40,7 +43,7 @@ public class Constants {
     
     //PID taken from Sonic Squirrels
     //Re-test with full bot
-    public static final double kP = 2.2941;
+    public static final double kP = 2.2941;//2.2941
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kA = 0.435;

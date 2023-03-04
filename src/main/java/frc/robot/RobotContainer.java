@@ -1,9 +1,13 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 //import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj2.command.RepeatCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -39,7 +43,11 @@ public class RobotContainer {
     private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
 
-    //private SendableChooser<String> autoSelect;
+    private SendableChooser<Integer> startNode;
+    private SendableChooser<Integer> firstPiece;
+    private SendableChooser<Integer> secondNode;
+    private SendableChooser<Boolean> balance;
+
 
     public SwerveDriveSubsystem getSwervedriveSubsystem() {
         return swerveDrive;
@@ -70,35 +78,64 @@ public class RobotContainer {
         positionHandler = new PositionHandler(lift, pulley, gripperAngle);
         pathHandler = new PathHandler(swerveDrive);
         //liftSubsystem.setDefaultCommand(positionHandler);
-        /*autoSelect = new SendableChooser<String>();
-        autoSelect.setDefaultOption("1 Ball", "1Ball"); //Look into if default not working
-        autoSelect.addOption("Taxi", "Taxi");
-        autoSelect.addOption("Ball 1", "Ball 1");
-        autoSelect.addOption("Ball 2", "Ball 2");
-        autoSelect.addOption("Ball 4", "Ball 4");
-        autoSelect.addOption("Ball 7", "Ball 7");
-        autoSelect.addOption("Ball 8", "Ball 8");
-        autoSelect.addOption("Ball 10", "Ball 10");
-        autoSelect.addOption("4 Ball Red", "4 Red");
-        autoSelect.addOption("4 Ball Blue", "4 Blue");
-        autoSelect.addOption("pigeon2", "Nav");
-        autoSelect.addOption("None", "None");
-            
-        Shuffleboard.getTab("Preferences").add("Auto Select", autoSelect);
-        //Shuffleboard.getTab("Preferences").add("Auto Turn PID", RotateToAngle.angleController);
-        */
-        //limeLightSubsystem.setServoAngle(35);
-        //RotateToZero.setInitialAngle(navX.getAngleRad());
-        //pigeon.setInitialAngle();
-        //pigeon.zeroYaw();
-        
-        //fieldSpaceDriveCommand.zero();
 
+        startNode = new SendableChooser<Integer>();
+        startNode.setDefaultOption("1", 1); //Look into if default not working
+        startNode.addOption("1", 1);
+        startNode.addOption("2", 2);
+        startNode.addOption("3", 3);
+        startNode.addOption("4", 4);
+        startNode.addOption("5", 5);
+        startNode.addOption("6", 6);
+        startNode.addOption("7", 7);
+        startNode.addOption("8", 8);
+        startNode.addOption("9", 9);
+    
+        Shuffleboard.getTab("Preferences").add("Starting Node", startNode);
+
+
+
+        firstPiece = new SendableChooser<Integer>();
+        firstPiece.setDefaultOption("1", 1); //Look into if default not working
+        //firstPiece.addOption("1", 1);
+        firstPiece.addOption("2", 2);
+        firstPiece.addOption("3", 3);
+        firstPiece.addOption("4", 4);
+    
+        Shuffleboard.getTab("Preferences").add("First Piece", firstPiece);
+
+
+
+        secondNode = new SendableChooser<Integer>();
+        secondNode.setDefaultOption("1", 1); //Look into if default not working
+        //secondNode.addOption("1", 1);
+        secondNode.addOption("2", 2);
+        secondNode.addOption("3", 3);
+        secondNode.addOption("4", 4);
+        secondNode.addOption("5", 5);
+        secondNode.addOption("6", 6);
+        secondNode.addOption("7", 7);
+        secondNode.addOption("8", 8);
+        secondNode.addOption("9", 9);
+    
+        Shuffleboard.getTab("Preferences").add("Second Node", secondNode);
+        
+        balance = new SendableChooser<Boolean>();
+        balance.setDefaultOption("No", false); //Look into if default not working
+        balance.addOption("Yes", true);
+    
+        Shuffleboard.getTab("Preferences").add("Balance", balance);
+
+        pigeon.zeroYaw();
+        fieldSpaceDriveCommand.zero();
         configureButtonBindings();
     }
 
     public Command getAutoCommandGroup() {
-        return pathHandler.balanceAuto();
+        return new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(-5, 0.05)), 
+                                        pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
+                                        //new InstantCommand(() -> positionHandler.setPose(-30, 0.1)),
+                                        //pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
     }
 
     private void configureButtonBindings() {

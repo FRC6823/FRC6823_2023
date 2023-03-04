@@ -62,4 +62,13 @@ public class PositionHandler extends CommandBase{
         pulleySubsystem.setSetPoint(positions.get(index)[1]);
     }
 
+    public void setPose(double[] pose) {
+        liftSubsystem.setSetPoint(pose[0]);
+        pulleySubsystem.setSetPoint(pose[1]);
+    }
+
+    public void setPose(double extension, double angle) {
+        liftSubsystem.setSetPoint(extension);
+        pulleySubsystem.setSetPoint(angle);
+    }
 }

@@ -132,8 +132,7 @@ public class RobotContainer {
     }
 
     public Command getAutoCommandGroup() {
-        return new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(-5, 0.05)), 
-                                        pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
+        return pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false);
                                         //new InstantCommand(() -> positionHandler.setPose(-30, 0.1)),
                                         //pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
     }

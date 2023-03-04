@@ -76,7 +76,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void setSwerveModuleStates(SwerveModuleState[] states)
     {
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, 5);
+        //SwerveDriveKinematics.desaturateWheelSpeeds(states, 5);
         
         // Front left module state
         SwerveModuleState frontLeftState = states[0];

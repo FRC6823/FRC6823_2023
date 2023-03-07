@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -12,11 +13,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GripperAngleSubsystem extends SubsystemBase{
-    private final SparkMaxAlternateEncoder.Type kType;
-    private final int kCPR = 8192;
+    private final SparkMaxAbsoluteEncoder.Type kType;
 
     private CANSparkMax angleMotor;
-    private RelativeEncoder encoder;
+    private SparkMaxAbsoluteEncoder encoder;
     private PIDController pid;
     private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)
     private double setPoint;
@@ -26,8 +26,8 @@ public class GripperAngleSubsystem extends SubsystemBase{
     public GripperAngleSubsystem () {
         angleMotor = new CANSparkMax(11, MotorType.kBrushed);
         angleMotor.restoreFactoryDefaults();
-        kType = SparkMaxAlternateEncoder.Type.kQuadrature;
-        encoder = angleMotor.getAlternateEncoder(kType, kCPR);
+        kType = SparkMaxAbsoluteEncoder.Type.kDutyCycle;
+        encoder = angleMotor.getAbsoluteEncoder(kType);
         mode = false;
         disabled = false;
         setPoint = 0.5;
@@ -56,6 +56,8 @@ public class GripperAngleSubsystem extends SubsystemBase{
 
     public double getPosition()
     {
+        if (encoder.getPosition() > 180) 
+            return 0;
         return encoder.getPosition();
     }
 

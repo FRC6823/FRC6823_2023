@@ -88,18 +88,18 @@ public class LiftSubsystem extends SubsystemBase{
     {
         if(!disabled){
             if(mode) {
-                //setPoint = Math.min(setPoint, Constants.EXTENSION_MIN);
-                //setPoint = Math.max(setPoint , Constants.EXTENSION_MAX);
+                setPoint = Math.min(setPoint, Constants.EXTENSION_MIN);
+                setPoint = Math.max(setPoint , Constants.EXTENSION_MAX);
                 SmartDashboard.putNumber("Lift Extension", setPoint);
                 SmartDashboard.putNumber("Lift Encoder", getPosition());
                 pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {
-                /*if (getPosition() >= Constants.EXTENSION_MIN){
+                if (getPosition() >= Constants.EXTENSION_MIN){
                     speed = Math.min(speed, 0);
                 }
                 if (getPosition() <= Constants.EXTENSION_MAX){
                     speed = Math.max(speed, 0);
-                }*/
+                }
                 setPoint = getPosition();
                 angleMotor.set(speed);
             }

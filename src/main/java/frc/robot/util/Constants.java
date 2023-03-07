@@ -31,9 +31,9 @@ public class Constants {
     public static final double DRIVE_TRAIN_WIDTH = 0.5334; // left to right size of drivetrain
     public static final double DRIVE_TRAIN_LENGTH = 0.6858; // front to back size of drivetrain
 
-    public static final double ELEVATOR_MIN = -0.2;
-    public static final double ELEVATOR_MAX = 0;
-    public static final double EXTENSION_MIN = -0.5;
+    public static final double ELEVATOR_MIN = 0;
+    public static final double ELEVATOR_MAX = 80;
+    public static final double EXTENSION_MIN = -1;
     public static final double EXTENSION_MAX = -105;
 
     public static final double kMaxVelocity = 6380 * WHEEL_CIRCUMFERENCE / (60.0 * L2_RATIO);
@@ -65,8 +65,9 @@ public class Constants {
     public static final double[] highScorePose = new double[] {-0.093505859375,-105,0.369140625};
     public static final double[] lowScorePose = new double[] {-0.0906982421875,-40.6662483215332,0.3717041015625};
     public static final double[] pickupPose = new double[] {0,0,0};
+    public static final double[] transportPose = new double[]{-0.1, -15, 0.6};
     public static final double[] floorPose = new double[] {-0.2044677734375,-40.35673141479492,0.26806640625};
-    public static final double[] startPose = new double[] {0,-15,0};
+    public static final double[] startPose = new double[] {80,-15,0};
 
     public static final double[] node1Pose = new double[] {0,0};
     public static final double[] node2Pose = new double[] {0,0};

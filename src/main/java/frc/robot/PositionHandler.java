@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
+import frc.robot.util.Constants;
 
 public class PositionHandler extends CommandBase{
     private ArrayList<double[]> positions;  //[0] - lift extension position
@@ -16,31 +17,33 @@ public class PositionHandler extends CommandBase{
 
     private LiftSubsystem liftSubsystem;
     private PulleySubsystem pulleySubsystem;
-    //private GripperAngleSubsystem gripperAngleSubsystem;
+    private GripperAngleSubsystem gripperAngleSubsystem;
 
     public PositionHandler (LiftSubsystem liftSubsystem, PulleySubsystem pulleySubsystem, GripperAngleSubsystem gripperAngleSubsystem){
         index = 0;
         positions = new ArrayList<double[]>();
-        positions.add(0, new double[] {0,0,0});
+        positions.add(Constants.startPose);
+        positions.add(Constants.highScorePose);
+        positions.add(Constants.lowScorePose);
+        positions.add(Constants.transportPose);
+        positions.add(Constants.pickupPose);
+        positions.add(Constants.floorPose);
 
         this.liftSubsystem = liftSubsystem;
         this.pulleySubsystem = pulleySubsystem;
-        //this.gripperAngleSubsystem = gripperAngleSubsystem;
+        this.gripperAngleSubsystem = gripperAngleSubsystem;
 
         calibrate = true;
     }
 
     public void increaseIndex() {
-        index++;
-        index %= positions.size();
+        if (index <= positions.size() - 2)
+            index++;
     }
 
     public void decreaseIndex() {
         if (index >= 1)
             index--;
-        else
-            index = positions.size();
-        index %= positions.size();
     }
 
     public void setState(boolean state){
@@ -52,7 +55,7 @@ public class PositionHandler extends CommandBase{
             double[] temp = new double[3];
             temp[0] = liftSubsystem.getPosition();
             temp[1] = pulleySubsystem.getPosition();
-            //temp[2] = gripperAngleSubsystem.getPosition(); //will be gripper angle
+            temp[2] = gripperAngleSubsystem.getPosition(); //will be gripper angle
             positions.add(index, temp);
         }
     }
@@ -60,10 +63,18 @@ public class PositionHandler extends CommandBase{
     public void setPose() {
         liftSubsystem.setSetPoint(positions.get(index)[0]);
         pulleySubsystem.setSetPoint(positions.get(index)[1]);
+        gripperAngleSubsystem.setSetPoint(positions.get(index)[2]);
     }
 
     public void setPose(double[] pose) {
         liftSubsystem.setSetPoint(pose[0]);
         pulleySubsystem.setSetPoint(pose[1]);
+        gripperAngleSubsystem.setSetPoint(positions.get(index)[2]);
+    }
+
+    public void setPose(int i){
+        liftSubsystem.setSetPoint(positions.get(i)[0]);
+        pulleySubsystem.setSetPoint(positions.get(i)[1]);
+        gripperAngleSubsystem.setSetPoint(positions.get(i)[2]);
     }
 }

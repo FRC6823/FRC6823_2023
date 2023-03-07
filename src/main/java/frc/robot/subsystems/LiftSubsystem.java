@@ -10,6 +10,7 @@ import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
+import frc.robot.util.MathUtil;
 
 public class LiftSubsystem extends SubsystemBase{
     private CANSparkMax angleMotor;
@@ -19,6 +20,7 @@ public class LiftSubsystem extends SubsystemBase{
     private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)
     private double setPoint;
     private double speed;
+    private boolean disabled;
     
     public LiftSubsystem () {
         angleMotor = new CANSparkMax(9, MotorType.kBrushless);
@@ -29,6 +31,7 @@ public class LiftSubsystem extends SubsystemBase{
         SendableRegistry.addLW(this, "Lift Extension");
         setPoint = 0;
         speed = 0;
+        disabled = false;
         // PID coefficients
         kP = .05; //5e-5
         kI = 5e-5;
@@ -37,10 +40,6 @@ public class LiftSubsystem extends SubsystemBase{
         kFF = 0; 
         kMaxOutput = 1; 
         kMinOutput = -1;
-        //maxRPM = 5700;
-
-        //maxVel = 2000; // values in rpm
-        //maxAcc = 1500;
 
         pidController.setP(kP);
         pidController.setI(kI);
@@ -48,12 +47,6 @@ public class LiftSubsystem extends SubsystemBase{
         pidController.setIZone(kIz);
         pidController.setFF(kFF);
         pidController.setOutputRange(kMinOutput, kMaxOutput);
-
-        //int smartMotionSlot = 0;
-        //pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-        //pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-        //pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-        //pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
         
         mode = true;
     }
@@ -78,24 +71,41 @@ public class LiftSubsystem extends SubsystemBase{
         return encoder.getPosition();
     }
 
+    public void disable(){
+        disabled = true;
+    }
+
+    public void enable(){
+        disabled = false;
+    }
+
+    public boolean isAtSetPoint(){
+        return getPosition() < setPoint + 0.1 && getPosition() > setPoint - 0.1;
+    }
+
     @Override
     public void periodic()
     {
-        if(mode) {
-            setPoint = Math.min(setPoint, Constants.EXTENSION_MIN);
-            setPoint = Math.max(setPoint , Constants.EXTENSION_MAX);
-            SmartDashboard.putNumber("Lift Extension", setPoint);
-            SmartDashboard.putNumber("Lift Encoder", getPosition());
-            pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
-          } else {
-            if (getPosition() >= Constants.EXTENSION_MIN){
-                speed = Math.min(speed, 0);
+        if(!disabled){
+            if(mode) {
+                //setPoint = Math.min(setPoint, Constants.EXTENSION_MIN);
+                //setPoint = Math.max(setPoint , Constants.EXTENSION_MAX);
+                SmartDashboard.putNumber("Lift Extension", setPoint);
+                SmartDashboard.putNumber("Lift Encoder", getPosition());
+                pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+            } else {
+                /*if (getPosition() >= Constants.EXTENSION_MIN){
+                    speed = Math.min(speed, 0);
+                }
+                if (getPosition() <= Constants.EXTENSION_MAX){
+                    speed = Math.max(speed, 0);
+                }*/
+                setPoint = getPosition();
+                angleMotor.set(speed);
             }
-            if (getPosition() <= Constants.EXTENSION_MAX){
-                speed = Math.max(speed, 0);
-            }
-            setPoint = getPosition();
-            angleMotor.set(speed);
-          }
+        }
+        else {
+            angleMotor.disable();
+        }
     }
 }

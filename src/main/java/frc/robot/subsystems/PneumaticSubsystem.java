@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PneumaticSubsystem extends SubsystemBase{
     private Compressor compressor;
     private DoubleSolenoid intakeSolenoid;
+    private boolean state;
 
     public PneumaticSubsystem()
     {
@@ -19,6 +20,7 @@ public class PneumaticSubsystem extends SubsystemBase{
         intakeSolenoid = new DoubleSolenoid(29, PneumaticsModuleType.REVPH, 0, 1);
         intakeSolenoid.set(Value.kOff);
         SendableRegistry.addLW(this, "pressure");
+        state = false;
         //openSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
         //closeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
     }
@@ -26,19 +28,16 @@ public class PneumaticSubsystem extends SubsystemBase{
     public void periodic()
     {
         compressor.enableDigital();
-    }
 
-    public void setPneumaticState(int state)
-    {
-        if (state == 1) {
+        if (state){
             intakeSolenoid.set(Value.kForward);
         }
-        else if (state == 0) {
+        else{ 
             intakeSolenoid.set(Value.kReverse);
         }
-        else{
-            intakeSolenoid.set(Value.kOff);
-            //SmartDashboard.putNumber("Pressure", compressor.getPressure());
-        }
+    }
+    
+    public void togglePneumaticState(){
+        state = !state;
     }
 }

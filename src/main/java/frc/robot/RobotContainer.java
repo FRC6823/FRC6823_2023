@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj2.command.RepeatCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,14 +18,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.LineUp;
+import frc.robot.commands.Rebalance;
 //import frc.robot.PositionHandler;
 import frc.robot.commands.RobotSpaceDrive;
+import frc.robot.commands.Unbalance;
+import frc.robot.commands.WaitUntilPose;
 import frc.robot.subsystems.GripperAngleSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.util.Constants;
 
 public class RobotContainer {
     // test commit
@@ -34,11 +41,14 @@ public class RobotContainer {
     public LiftSubsystem lift;
     public PulleySubsystem pulley;
     public GripperAngleSubsystem gripperAngle;
+    public LEDSubsystem LEDs;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
     private PositionHandler positionHandler;
     private PathHandler pathHandler;
+    private Unbalance unbalance;
+    private Rebalance rebalance;
 
     private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
@@ -65,6 +75,7 @@ public class RobotContainer {
         lift = new LiftSubsystem();
         pulley = new PulleySubsystem();
         gripperAngle = new GripperAngleSubsystem();
+        LEDs = new LEDSubsystem(0);
 
 
         joystickHandler3 = new JoystickHandler(3);
@@ -77,6 +88,8 @@ public class RobotContainer {
 
         positionHandler = new PositionHandler(lift, pulley, gripperAngle);
         pathHandler = new PathHandler(swerveDrive);
+        unbalance = new Unbalance(pigeon, swerveDrive);
+        rebalance = new Rebalance(pigeon, swerveDrive);
         //liftSubsystem.setDefaultCommand(positionHandler);
 
         startNode = new SendableChooser<Integer>();
@@ -132,6 +145,10 @@ public class RobotContainer {
     }
 
     public Command getAutoCommandGroup() {
+        //WaitUntilPose wait = new WaitUntilPose(lift, pulley);
+        //Command score = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(Constants.highScorePose)), wait, new InstantCommand(() -> pneumatics.togglePneumaticState()));
+        //Command pickup = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(Constants.floorPose)), wait, new InstantCommand(() -> pneumatics.togglePneumaticState()));
+
         return pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false);
                                         //new InstantCommand(() -> positionHandler.setPose(-30, 0.1)),
                                         //pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
@@ -140,11 +157,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         //Snow plow break
-        //joystickHandler3.button(1).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})) 
-                                                //.onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+        joystickHandler3.button(1).whileTrue(new InstantCommand(() -> pneumatics.togglePneumaticState()));
         
         // Holding 7 will enable robot space drive, instead of field space
-        //joystickHandler3.button(2).whileTrue(robotSpaceDriveCommand).onFalse(fieldSpaceDriveCommand);
+        joystickHandler3.button(2).whileTrue(new SequentialCommandGroup(unbalance, rebalance));
 
         // This will set the current orientation to be "forward" for field drive
         joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
@@ -177,22 +193,20 @@ public class RobotContainer {
 
         
         
-        //Open gripper
-        joystickHandler4.button(5).whileTrue(new InstantCommand(() -> pneumatics.setPneumaticState(1)))
-                                                .onFalse(new InstantCommand(() -> pneumatics.setPneumaticState(2)));
-        //Close gripper
-        joystickHandler4.button(6).whileTrue(new InstantCommand(() -> pneumatics.setPneumaticState(0)))
-                                                .onFalse(new InstantCommand(() -> pneumatics.setPneumaticState(2)));
+        //Yellow LED
+        joystickHandler4.button(5).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();}));
+        //Purple LED
+        joystickHandler4.button(6).whileTrue(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
 
 
 
         //Manual control commands
-        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> {lift.setSpeed(0.5); 
+        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> {lift.setSpeed(0.2); 
                                                                                     lift.setMode(false);}))
                                                 .onFalse(new InstantCommand(() -> {lift.setSpeed(0); 
                                                                                     lift.setMode(true);}));
 
-        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> {lift.setSpeed(-0.5); 
+        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> {lift.setSpeed(-0.2); 
                                                                                     lift.setMode(false);}))
                                                 .onFalse(new InstantCommand(() -> {lift.setSpeed(0); 
                                                                                     lift.setMode(true);}));
@@ -207,10 +221,15 @@ public class RobotContainer {
                                                     .onFalse(new InstantCommand(() -> {pulley.setSpeed(0); 
                                                                                         pulley.setMode(true);}));
 
-        joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> gripperAngle.setSetPoint(1))).onFalse(new InstantCommand(() -> gripperAngle.setSetPoint(0)));
+        joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(0.5); 
+                                                                        gripperAngle.setMode(false);}))
+                                    .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); 
+                                                                        gripperAngle.setMode(true);}));
 
-        joystickHandler4.povRight().whileTrue(new InstantCommand(() -> gripperAngle.setSetPoint(-1))).onFalse(new InstantCommand(() -> gripperAngle.setSetPoint(0)));
-
+        joystickHandler4.povRight().whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(-0.5); 
+                                                                        gripperAngle.setMode(false);}))
+                                    .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); 
+                                                                        gripperAngle.setMode(true);}));
 
 
         //Records current position of lift/arm system

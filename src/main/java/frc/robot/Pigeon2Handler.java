@@ -62,14 +62,22 @@ public class Pigeon2Handler {
         return Rotation2d.fromDegrees(pigeon.getYaw());
     }
 
+    public double getPitch(){
+        return pigeon.getPitch();
+    }
+
     /*public double getAngle() {
         return ahrs.getAngleAdjustment();
     }*/
 
     public void zeroYaw() {
-        pigeon.configMountPose(-90,0, 0 ,100);
         pigeon.setYaw(0);
         pigeon.setAccumZAngle(0);
+    }
+
+    public void setYaw(double yaw) {
+        pigeon.setYaw(yaw);
+        pigeon.setAccumZAngle(yaw);
     }
 
     /*public double getVelocity() {

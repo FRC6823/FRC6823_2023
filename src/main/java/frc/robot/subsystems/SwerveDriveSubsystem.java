@@ -29,6 +29,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private PIDController angleController;
     private Pigeon2Handler pigeon;
     private SwerveDriveOdometry odometry;
+    private boolean disableDrive;
     
     public SwerveDriveSubsystem(Pigeon2Handler pigeon) {
 
@@ -56,6 +57,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         kinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
         speeds = new ChassisSpeeds(0, 0, 0);
+        disableDrive = false;
         this.pigeon = pigeon;
         odometry = new SwerveDriveOdometry
                     (kinematics, 
@@ -72,6 +74,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void drive(ChassisSpeeds chassisSpeeds) {
         // implementation from Pride of the North
         speeds = chassisSpeeds;
+    }
+
+    public void toggleDrive(){
+        disableDrive = !disableDrive;
     }
 
     public void setSwerveModuleStates(SwerveModuleState[] states)
@@ -102,7 +108,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void periodic() {
         // Convert to module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-        setSwerveModuleStates(moduleStates);
+        if (!disableDrive)
+            setSwerveModuleStates(moduleStates);
 
         odometry.update(pigeon.getAngleRad(), 
                         new SwerveModulePosition[] {

@@ -9,6 +9,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
@@ -22,9 +24,9 @@ public class PulleySubsystem extends SubsystemBase{
     private SparkMaxPIDController pidController;
     private RelativeEncoder encoder;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr; //heavily "inspired" by Rev example code
-    //private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)                                                                              z 
-    private boolean mode;
+    private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)                                                                              z 
     private double speed;
+    private boolean disabled;
     
     public PulleySubsystem () {
         angleMotor = new CANSparkMax(10, MotorType.kBrushless);
@@ -37,7 +39,8 @@ public class PulleySubsystem extends SubsystemBase{
         SendableRegistry.addLW(this, "Pulley");
         speed = 0;
         setPoint = 0;
-
+        disabled = false;
+        
         // PID coefficients
         kP = 150; //5e-5
         kI = 1e-5; //1e-4
@@ -68,11 +71,6 @@ public class PulleySubsystem extends SubsystemBase{
     }
 
 
-    //public void setMode(boolean mode)
-    //{
-        //this.mode = mode;
-    //}
-
     public void setSpeed(double speed)
     {
         this.speed = speed;
@@ -92,24 +90,41 @@ public class PulleySubsystem extends SubsystemBase{
         return encoder.getPosition();
     }
 
+    public void disable(){
+        disabled = true;
+    }
+
+    public void enable(){
+        disabled = false;
+    }
+
+    public boolean isAtSetPoint(){
+        return getPosition() < setPoint + 0.1 && getPosition() > setPoint - 0.1;
+    }
+
     @Override
     public void periodic()
     {
-        if(mode) {
-            setPoint = Math.min(setPoint, Constants.ELEVATOR_MAX);
-            setPoint = Math.max(setPoint , Constants.ELEVATOR_MIN);
-            SmartDashboard.putNumber("Pulley Position", setPoint);
-            SmartDashboard.putNumber("Relative Encoder", encoder.getPosition());
-            //pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
-        } else {
-            if (getPosition() >= Constants.ELEVATOR_MAX){
-                speed = Math.min(speed, 0);
+        if (!disabled){
+            if(mode) {
+                //setPoint = Math.min(setPoint, Constants.ELEVATOR_MAX);
+                //setPoint = Math.max(setPoint , Constants.ELEVATOR_MIN);
+                SmartDashboard.putNumber("Pulley Position", setPoint);
+                SmartDashboard.putNumber("Relative Encoder", encoder.getPosition());
+                pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+            } else {
+                /*if (getPosition() >= Constants.ELEVATOR_MAX){
+                    speed = Math.min(speed, 0);
+                }
+                if (getPosition() <= Constants.ELEVATOR_MIN){
+                    speed = Math.max(speed, 0);
+                }*/
+                setPoint = getPosition();
+                angleMotor.set(speed);
             }
-            if (getPosition() <= Constants.ELEVATOR_MIN){
-                speed = Math.max(speed, 0);
-            }
-            setPoint = getPosition();
-            //angleMotor.set(speed);
+        }
+        else{
+            angleMotor.disable();
         }
     }
 }

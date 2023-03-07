@@ -189,4 +189,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     {
         return odometry.getPoseMeters();
     }
+    public SwerveModulePosition[] getSwerveModulePosition()
+    {
+        return new SwerveModulePosition[] {
+            frontLeft.getSwerveModulePosition(),
+            frontRight.getSwerveModulePosition(),
+            backLeft.getSwerveModulePosition(),
+            backRight.getSwerveModulePosition()};
+    }
 }

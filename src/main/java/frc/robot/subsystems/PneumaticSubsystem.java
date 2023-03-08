@@ -18,9 +18,9 @@ public class PneumaticSubsystem extends SubsystemBase{
     {
         compressor = new Compressor(29, PneumaticsModuleType.REVPH);
         intakeSolenoid = new DoubleSolenoid(29, PneumaticsModuleType.REVPH, 0, 1);
-        intakeSolenoid.set(Value.kOff);
+        intakeSolenoid.set(Value.kForward);
         SendableRegistry.addLW(this, "pressure");
-        state = false;
+        state = true;
         //openSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
         //closeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
     }

@@ -51,9 +51,9 @@ public class FieldSpaceDrive extends CommandBase {
         // }
 
         //Set xval, yval, spinval to the scaled values from the joystick, bounded on [-1, 1]
-        double xval = joystickHandler.getAxis1() * -speedRate * 6;
-        double yval = joystickHandler.getAxis0() * -speedRate * 6;
-        double spinval = joystickHandler.getAxis5() * -turnRate * 6;
+        double xval = joystickHandler.getAxis1() * -speedRate * 10;
+        double yval = joystickHandler.getAxis0() * -speedRate * 10;
+        double spinval = joystickHandler.getAxis5() * -turnRate * 10;
 
         // mapping field space to robot space
         //double txval = getTransX(xval, yval, robotAngle);

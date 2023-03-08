@@ -30,7 +30,7 @@ public class GripperAngleSubsystem extends SubsystemBase{
         encoder = angleMotor.getAbsoluteEncoder(kType);
         mode = false;
         disabled = false;
-        setPoint = 0.5;
+        setPoint = getPosition();
         speed = 0;
 
         SendableRegistry.addLW(this, "Pulley");
@@ -56,8 +56,8 @@ public class GripperAngleSubsystem extends SubsystemBase{
 
     public double getPosition()
     {
-        if (encoder.getPosition() > 180) 
-            return 0;
+        //if (encoder.getPosition() > 180) 
+            //return 0;
         return encoder.getPosition();
     }
 
@@ -67,6 +67,10 @@ public class GripperAngleSubsystem extends SubsystemBase{
 
     public void enable(){
         disabled = false;
+    }
+
+    public boolean isAtSetPoint(){
+        return getPosition() < setPoint + 0.01 && getPosition() > setPoint - 0.01;
     }
 
     @Override

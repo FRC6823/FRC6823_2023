@@ -236,8 +236,8 @@ public class RobotContainer {
         joystickHandler4.button(10).whileTrue(new InstantCommand(() -> {positionHandler.capturePose();}));
 
         //Cycling through presets
-        joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+        //joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
 
-        joystickHandler4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+        //joystickHandler4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
     }
 }

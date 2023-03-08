@@ -29,7 +29,7 @@ public class LiftSubsystem extends SubsystemBase{
         encoder = angleMotor.getEncoder();
         angleMotor.setIdleMode(IdleMode.kBrake);
         SendableRegistry.addLW(this, "Lift Extension");
-        setPoint = 0;
+        setPoint = getPosition();
         speed = 0;
         disabled = false;
         // PID coefficients
@@ -80,7 +80,7 @@ public class LiftSubsystem extends SubsystemBase{
     }
 
     public boolean isAtSetPoint(){
-        return getPosition() < setPoint + 0.1 && getPosition() > setPoint - 0.1;
+        return getPosition() < setPoint + 0.5 && getPosition() > setPoint - 0.5;
     }
 
     @Override
@@ -88,18 +88,18 @@ public class LiftSubsystem extends SubsystemBase{
     {
         if(!disabled){
             if(mode) {
-                setPoint = Math.min(setPoint, Constants.EXTENSION_MIN);
-                setPoint = Math.max(setPoint , Constants.EXTENSION_MAX);
+                //setPoint = Math.min(setPoint, Constants.EXTENSION_MIN);
+                //setPoint = Math.max(setPoint , Constants.EXTENSION_MAX);
                 SmartDashboard.putNumber("Lift Extension", setPoint);
                 SmartDashboard.putNumber("Lift Encoder", getPosition());
                 pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {
-                if (getPosition() >= Constants.EXTENSION_MIN){
+                /*if (getPosition() >= Constants.EXTENSION_MIN){
                     speed = Math.min(speed, 0);
                 }
                 if (getPosition() <= Constants.EXTENSION_MAX){
                     speed = Math.max(speed, 0);
-                }
+                }*/
                 setPoint = getPosition();
                 angleMotor.set(speed);
             }

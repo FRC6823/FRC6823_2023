@@ -38,7 +38,7 @@ public class PulleySubsystem extends SubsystemBase{
         angleMotor.setIdleMode(IdleMode.kBrake);
         SendableRegistry.addLW(this, "Pulley");
         speed = 0;
-        setPoint = 0;
+        setPoint = getPosition();
         disabled = false;
         
         // PID coefficients
@@ -102,7 +102,7 @@ public class PulleySubsystem extends SubsystemBase{
     }
 
     public boolean isAtSetPoint(){
-        return getPosition() < setPoint + 0.1 && getPosition() > setPoint - 0.1;
+        return getPosition() < setPoint + 0.01 && getPosition() > setPoint - 0.01;
     }
 
     @Override
@@ -117,10 +117,10 @@ public class PulleySubsystem extends SubsystemBase{
                 pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {
                 if (getPosition() >= Constants.ELEVATOR_MAX){
-                    speed = Math.min(speed, 0);
+                    //speed = Math.min(speed, 0);
                 }
                 if (getPosition() <= Constants.ELEVATOR_MIN){
-                    speed = Math.max(speed, 0);
+                    //speed = Math.max(speed, 0);
                 }
                 setPoint = getPosition();
                 angleMotor.set(speed);

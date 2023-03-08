@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.*;
 
+import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
@@ -32,6 +34,8 @@ public class PositionHandler extends CommandBase{
         this.liftSubsystem = liftSubsystem;
         this.pulleySubsystem = pulleySubsystem;
         this.gripperAngleSubsystem = gripperAngleSubsystem;
+
+        SendableRegistry.addLW(this, "Pose Handler");
 
         calibrate = true;
     }
@@ -64,6 +68,8 @@ public class PositionHandler extends CommandBase{
         liftSubsystem.setSetPoint(positions.get(index)[0]);
         pulleySubsystem.setSetPoint(positions.get(index)[1]);
         gripperAngleSubsystem.setSetPoint(positions.get(index)[2]);
+
+        SmartDashboard.putNumber("Index", index);
     }
 
     public void setPose(double[] pose) {
@@ -73,8 +79,11 @@ public class PositionHandler extends CommandBase{
     }
 
     public void setPose(int i){
+        index = i;
         liftSubsystem.setSetPoint(positions.get(i)[0]);
         pulleySubsystem.setSetPoint(positions.get(i)[1]);
         gripperAngleSubsystem.setSetPoint(positions.get(i)[2]);
+
+        SmartDashboard.putNumber("Index", i);
     }
 }

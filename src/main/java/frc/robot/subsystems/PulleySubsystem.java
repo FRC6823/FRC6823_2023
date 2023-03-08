@@ -116,12 +116,6 @@ public class PulleySubsystem extends SubsystemBase{
                 SmartDashboard.putNumber("Relative Encoder", encoder.getPosition());
                 pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {
-                if (getPosition() >= Constants.ELEVATOR_MAX){
-                    //speed = Math.min(speed, 0);
-                }
-                if (getPosition() <= Constants.ELEVATOR_MIN){
-                    //speed = Math.max(speed, 0);
-                }
                 setPoint = getPosition();
                 angleMotor.set(speed);
             }

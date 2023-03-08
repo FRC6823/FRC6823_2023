@@ -24,12 +24,13 @@ public class PositionHandler extends CommandBase{
     public PositionHandler (LiftSubsystem liftSubsystem, PulleySubsystem pulleySubsystem, GripperAngleSubsystem gripperAngleSubsystem){
         index = 0;
         positions = new ArrayList<double[]>();
-        positions.add(Constants.startPose);
-        positions.add(Constants.highScorePose);
-        positions.add(Constants.lowScorePose);
-        positions.add(Constants.transportPose);
-        positions.add(Constants.pickupPose);
+        
         positions.add(Constants.floorPose);
+        positions.add(Constants.pickupPose);
+        positions.add(Constants.transportPose);
+        positions.add(Constants.lowScorePose);
+        positions.add(Constants.highScorePose);
+        positions.add(Constants.startPose);
 
         this.liftSubsystem = liftSubsystem;
         this.pulleySubsystem = pulleySubsystem;

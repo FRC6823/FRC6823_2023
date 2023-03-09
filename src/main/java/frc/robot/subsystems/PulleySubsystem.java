@@ -42,8 +42,8 @@ public class PulleySubsystem extends SubsystemBase{
         disabled = false;
         
         // PID coefficients
-        kP = 150; //5e-5
-        kI = 1e-5; //1e-4
+        kP = -150; //5e-5
+        kI = 0; //1e-4
         kD = 1; 
         kIz = 0; 
         kFF = 0; 
@@ -117,7 +117,7 @@ public class PulleySubsystem extends SubsystemBase{
                 pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {
                 setPoint = getPosition();
-                angleMotor.set(speed);
+                angleMotor.set(-speed);
             }
         }
         else{

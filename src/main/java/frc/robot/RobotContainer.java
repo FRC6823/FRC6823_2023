@@ -145,13 +145,17 @@ public class RobotContainer {
     }
 
     public Command getAutoCommandGroup() {
-        //WaitUntilPose wait = new WaitUntilPose(lift, pulley);
-        //Command score = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(Constants.highScorePose)), wait, new InstantCommand(() -> pneumatics.togglePneumaticState()));
+        WaitUntilPose wait = new WaitUntilPose(lift, pulley, gripperAngle);
+        Command init = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(5)), wait);
+        Command score = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(Constants.highScorePose)), wait, new InstantCommand(() -> pneumatics.togglePneumaticState()));
+        Command balance = new SequentialCommandGroup(unbalance, rebalance);
         //Command pickup = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(Constants.floorPose)), wait, new InstantCommand(() -> pneumatics.togglePneumaticState()));
 
-        return pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false);
+        //return pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false);
                                         //new InstantCommand(() -> positionHandler.setPose(-30, 0.1)),
                                         //pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
+
+        return new SequentialCommandGroup(init, score, balance);
     }
 
     private void configureButtonBindings() {
@@ -233,11 +237,11 @@ public class RobotContainer {
 
 
         //Records current position of lift/arm system
-        joystickHandler4.button(10).whileTrue(new InstantCommand(() -> {positionHandler.capturePose();}));
+        //joystickHandler4.button(10).whileTrue(new InstantCommand(() -> {positionHandler.capturePose();}));
 
         //Cycling through presets
-        //joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+        joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
 
-        //joystickHandler4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+        joystickHandler4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
     }
 }

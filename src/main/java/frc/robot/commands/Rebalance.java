@@ -9,7 +9,6 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.util.MathUtil;
 
 public class Rebalance extends CommandBase{
-    private boolean balanced;
     private SwerveDriveSubsystem swerveDriveSubsystem;
     private Pigeon2Handler pigeon2;
     private PIDController pid;
@@ -21,25 +20,18 @@ public class Rebalance extends CommandBase{
     }
 
     public void initialize(){
-        balanced = false;
         pid.setSetpoint(-4);
     }
 
     @Override
     public void execute(){
-        if (MathUtil.clipToZero(pigeon2.getPitch() + 4, 2.15) == 0){
-            balanced = true;
-        }
-        else if (!balanced){
-            swerveDriveSubsystem.drive(new ChassisSpeeds(pid.calculate(pigeon2.getPitch()), 0, 0));
-        }
         if (MathUtil.clipToZero(pigeon2.getPitch() + 4, 2.15) != 0){
-            balanced = false;
+            swerveDriveSubsystem.drive(new ChassisSpeeds(pid.calculate(pigeon2.getPitch()), 0, 0));
         }
     }
 
     public boolean isFinished(){
-        return balanced;
+        return false;
     }
     
 }

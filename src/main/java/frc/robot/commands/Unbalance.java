@@ -21,7 +21,7 @@ public class Unbalance extends CommandBase{
 
     public void initialize(){
         balanced = false;
-        pid.setSetpoint(11);
+        pid.setSetpoint(10.5);
     }
 
     @Override

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 //import edu.wpi.first.wpilibj2.command.RepeatCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.LineUp;
 import frc.robot.commands.Rebalance;
+import frc.robot.commands.Reverse;
 //import frc.robot.PositionHandler;
 import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.commands.Unbalance;
@@ -41,7 +43,7 @@ public class RobotContainer {
     public LiftSubsystem lift;
     public PulleySubsystem pulley;
     public GripperAngleSubsystem gripperAngle;
-    public LEDSubsystem LEDs;
+    //public LEDSubsystem LEDs;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
@@ -75,7 +77,7 @@ public class RobotContainer {
         lift = new LiftSubsystem();
         pulley = new PulleySubsystem();
         gripperAngle = new GripperAngleSubsystem();
-        LEDs = new LEDSubsystem(0);
+        //LEDs = new LEDSubsystem(0);
 
 
         joystickHandler3 = new JoystickHandler(3);
@@ -139,23 +141,26 @@ public class RobotContainer {
     
         Shuffleboard.getTab("Preferences").add("Balance", balance);
 
-        pigeon.zeroYaw();
-        fieldSpaceDriveCommand.zero();
+        pigeon.setYaw(180);
+        pigeon.setPitchOffset(pigeon.getPitch());
+        pigeon.setRollOffset(pigeon.getRoll());
+        //fieldSpaceDriveCommand.zero();
         configureButtonBindings();
     }
 
     public Command getAutoCommandGroup() {
-        WaitUntilPose wait = new WaitUntilPose(lift, pulley, gripperAngle);
-        Command init = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(5)), wait);
-        Command score = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(Constants.highScorePose)), wait, new InstantCommand(() -> pneumatics.togglePneumaticState()));
-        Command balance = new SequentialCommandGroup(unbalance, rebalance);
-        //Command pickup = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(Constants.floorPose)), wait, new InstantCommand(() -> pneumatics.togglePneumaticState()));
-
+        
+        SequentialCommandGroup auto = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(5)), new WaitUntilPose(lift, pulley, gripperAngle));
+        auto.addCommands(new InstantCommand(() -> positionHandler.setPose(4)), new WaitUntilPose(lift, pulley, gripperAngle), new WaitCommand(1), new InstantCommand(() -> pneumatics.togglePneumaticState()));
+        auto.addCommands(new WaitCommand(1), new InstantCommand(() -> positionHandler.setPose(2)), new WaitUntilPose(lift, pulley, gripperAngle));
+        auto.addCommands(new Reverse(swerveDrive, pigeon));
+        auto.addCommands(new WaitCommand(15));
+        //auto.addCommands(new Unbalance(pigeon, swerveDrive), new Rebalance(pigeon, swerveDrive));
         //return pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false);
                                         //new InstantCommand(() -> positionHandler.setPose(-30, 0.1)),
                                         //pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
 
-        return new SequentialCommandGroup(init, score, balance);
+        return auto;
     }
 
     private void configureButtonBindings() {

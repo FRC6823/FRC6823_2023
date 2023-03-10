@@ -72,28 +72,16 @@ public class PathHandler {
     public Command balanceAuto(){
         PathPlannerTrajectory path = PathPlanner.loadPath("Balance Auto", constraints);
         
-        return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(1.88, 3.27, 0)));
+        return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(1.88, 3.27, 180)));
     }
 
     public Command getPath(int node, int piece, boolean reverse){
         PathPlannerTrajectory path;
-        String alliance;
-        if (Constants.isRed){
-            alliance = "Red";
-        }
-        else {
-            alliance = "Blue";
-        }
-
-        if (reverse){
-            path = PathPlanner.loadPath(alliance + " " + node + "," + piece +"r", constraints);
-        }
-        else{
-            path = PathPlanner.loadPath(alliance + " " + node + "," + piece, constraints);
-        }
+        
+        path = PathPlanner.loadPath("Blue 1,1", constraints);
         
         if (path != null){
-            return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(1.84, 1.06, 0)));
+            return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(1.84, 1.06, 180)));
         }
         return new WaitCommand(15);
     }

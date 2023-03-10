@@ -28,7 +28,7 @@ public class GripperAngleSubsystem extends SubsystemBase{
         angleMotor.restoreFactoryDefaults();
         kType = SparkMaxAbsoluteEncoder.Type.kDutyCycle;
         encoder = angleMotor.getAbsoluteEncoder(kType);
-        mode = false;
+        mode = true;
         disabled = false;
         setPoint = getPosition();
         speed = 0;
@@ -70,7 +70,7 @@ public class GripperAngleSubsystem extends SubsystemBase{
     }
 
     public boolean isAtSetPoint(){
-        return getPosition() < setPoint + 0.01 && getPosition() > setPoint - 0.01;
+        return getPosition() < setPoint + 0.05 && getPosition() > setPoint - 0.05;
     }
 
     @Override
@@ -79,8 +79,8 @@ public class GripperAngleSubsystem extends SubsystemBase{
         if (!disabled){
             if (mode){
                 pid.setSetpoint(setPoint);
-                angleMotor.set(pid.calculate(getPosition()));
-                SmartDashboard.putNumber("Wrist angle", getPosition());
+                angleMotor.set(pid.calculate(encoder.getPosition()));
+                SmartDashboard.putNumber("Wrist angle", encoder.getPosition());
             }
             else{
                 angleMotor.set(speed);

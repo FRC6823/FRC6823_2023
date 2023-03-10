@@ -8,6 +8,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
@@ -21,7 +22,8 @@ public class PulleySubsystem extends SubsystemBase{
 
     private double setPoint;
     private CANSparkMax angleMotor;
-    private SparkMaxPIDController pidController;
+    //private SparkMaxPIDController pidController;
+    private PIDController pidController;
     private SparkMaxAbsoluteEncoder encoder;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr; //heavily "inspired" by Rev example code
     private boolean mode; //true is position mode (default), false is velocity mode (driver controlled)                                                                              z 
@@ -33,8 +35,8 @@ public class PulleySubsystem extends SubsystemBase{
         angleMotor.restoreFactoryDefaults();
         kType = SparkMaxAbsoluteEncoder.Type.kDutyCycle;
         encoder = angleMotor.getAbsoluteEncoder(kType);
-        pidController = angleMotor.getPIDController();
-        pidController.setFeedbackDevice(encoder);
+        //pidController = angleMotor.getPIDController();
+        //pidController.setFeedbackDevice(encoder);
         angleMotor.setIdleMode(IdleMode.kBrake);
         SendableRegistry.addLW(this, "Pulley");
         speed = 0;
@@ -42,9 +44,9 @@ public class PulleySubsystem extends SubsystemBase{
         disabled = false;
         
         // PID coefficients
-        kP = -150; //5e-5
+        kP = -300; //5e-5
         kI = 0; //1e-4
-        kD = 1; 
+        kD = 0; 
         kIz = 0; 
         kFF = 0; 
         kMaxOutput = 1; 
@@ -54,18 +56,20 @@ public class PulleySubsystem extends SubsystemBase{
         //maxVel = 2000; // values in rpm
         //maxAcc = 1500;
 
-        pidController.setP(kP);
-        pidController.setI(kI);
-        pidController.setD(kD);
-        pidController.setIZone(kIz);
-        pidController.setFF(kFF);
-        pidController.setOutputRange(kMinOutput, kMaxOutput);
+        //pidController.setP(kP);
+        //pidController.setI(kI);
+        //pidController.setD(kD);
+        //pidController.setIZone(kIz);
+        //pidController.setFF(kFF);
+        //pidController.setOutputRange(kMinOutput, kMaxOutput);
 
         //int smartMotionSlot = 0;
         //pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
         //pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
         //pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
         //pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+
+        pidController = new PIDController(-100, 0, 0);
         
         mode = true;
     }
@@ -87,8 +91,6 @@ public class PulleySubsystem extends SubsystemBase{
 
     public double getPosition()
     {
-        if (encoder.getPosition() > 358)
-            return 0;
         return encoder.getPosition();
 
     }
@@ -102,7 +104,7 @@ public class PulleySubsystem extends SubsystemBase{
     }
 
     public boolean isAtSetPoint(){
-        return getPosition() < setPoint + 0.01 && getPosition() > setPoint - 0.01;
+        return getPosition() < setPoint + 0.02 && getPosition() > setPoint - 0.02;
     }
 
     @Override
@@ -114,8 +116,16 @@ public class PulleySubsystem extends SubsystemBase{
                 setPoint = Math.max(setPoint , Constants.ELEVATOR_MIN);
                 SmartDashboard.putNumber("Pulley Position", setPoint);
                 SmartDashboard.putNumber("Relative Encoder", encoder.getPosition());
-                pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+                pidController.setSetpoint(setPoint);
+                angleMotor.set(pidController.calculate(getPosition()));
+                //pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {
+                if (getPosition() >= Constants.ELEVATOR_MAX){
+                    speed = Math.max(speed, 0);
+                }
+                if (getPosition() <= Constants.ELEVATOR_MIN){
+                    speed = Math.min(speed, 0);
+                }
                 setPoint = getPosition();
                 angleMotor.set(-speed);
             }

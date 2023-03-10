@@ -25,7 +25,7 @@ public class Rebalance extends CommandBase{
 
     @Override
     public void execute(){
-        if (MathUtil.clipToZero(pigeon2.getPitch() + 4, 2.15) != 0){
+        if (MathUtil.clipToZero(pigeon2.getPitch(), 2.15) != 0){
             swerveDriveSubsystem.drive(new ChassisSpeeds(pid.calculate(pigeon2.getPitch()), 0, 0));
         }
     }

@@ -10,6 +10,8 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 public class Pigeon2Handler {
     private WPI_Pigeon2 pigeon;
+    private double pitchOffset = 0;
+    private double rollOffset = 0;
     //private double initialAngle;
 
     //public double getInitialAngle() {
@@ -19,6 +21,14 @@ public class Pigeon2Handler {
     //public void setInitialAngle() {
         //initialAngle = getAngleRad();
     //}
+
+    public void setPitchOffset(double pitch){
+        pitchOffset = pitch;
+    }
+
+    public void setRollOffset(double roll){
+        rollOffset = roll;
+    }
 
     public WPI_Pigeon2 getAhrs() {
         return pigeon;
@@ -63,12 +73,12 @@ public class Pigeon2Handler {
     }
 
     public double getPitch(){
-        return pigeon.getPitch();
+        return pigeon.getPitch() - pitchOffset;
     }
 
-    /*public double getAngle() {
-        return ahrs.getAngleAdjustment();
-    }*/
+    public double getRoll() {
+        return pigeon.getRoll() - rollOffset;
+    }
 
     public void zeroYaw() {
         pigeon.setYaw(0);

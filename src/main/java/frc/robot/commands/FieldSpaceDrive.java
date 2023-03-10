@@ -42,8 +42,13 @@ public class FieldSpaceDrive extends CommandBase {
         joystickHandler.updateDeadZone();
 
         //Set speed and turn rates for full throttle and not full throttle
-        double speedRate = speedRateWidget.getEntry().getDouble(0.5);
-        double turnRate = turnRateWidget.getEntry().getDouble(0.5);
+        double speedRate = speedRateWidget.getEntry().getDouble(1);
+        double turnRate = turnRateWidget.getEntry().getDouble(1);
+        double modeMultiplier = 1;
+
+        if (joystickHandler.getAxis2() > 0){
+            modeMultiplier = 0.1;
+        }
 
         // if (joystickHandler.isFullThrottle()) {
         //     speedRate = 1;
@@ -51,9 +56,9 @@ public class FieldSpaceDrive extends CommandBase {
         // }
 
         //Set xval, yval, spinval to the scaled values from the joystick, bounded on [-1, 1]
-        double xval = joystickHandler.getAxis1() * -speedRate * 10;
-        double yval = joystickHandler.getAxis0() * -speedRate * 10;
-        double spinval = joystickHandler.getAxis5() * -turnRate * 10;
+        double xval = joystickHandler.getAxis1() * -speedRate * 5 * modeMultiplier;
+        double yval = joystickHandler.getAxis0() * -speedRate * 5 * modeMultiplier;
+        double spinval = joystickHandler.getAxis5() * -turnRate * 5 * modeMultiplier;
 
         // mapping field space to robot space
         //double txval = getTransX(xval, yval, robotAngle);

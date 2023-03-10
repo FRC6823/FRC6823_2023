@@ -66,23 +66,23 @@ public class PositionHandler extends CommandBase{
     }
 
     public void setPose() {
-        liftSubsystem.setSetPoint(positions.get(index)[0]);
-        pulleySubsystem.setSetPoint(positions.get(index)[1]);
+        liftSubsystem.setSetPoint(positions.get(index)[1]);
+        pulleySubsystem.setSetPoint(positions.get(index)[0]);
         gripperAngleSubsystem.setSetPoint(positions.get(index)[2]);
 
         SmartDashboard.putNumber("Index", index);
     }
 
     public void setPose(double[] pose) {
-        liftSubsystem.setSetPoint(pose[0]);
-        pulleySubsystem.setSetPoint(pose[1]);
+        liftSubsystem.setSetPoint(pose[1]);
+        pulleySubsystem.setSetPoint(pose[0]);
         gripperAngleSubsystem.setSetPoint(positions.get(index)[2]);
     }
 
     public void setPose(int i){
         index = i;
-        liftSubsystem.setSetPoint(positions.get(i)[0]);
-        pulleySubsystem.setSetPoint(positions.get(i)[1]);
+        liftSubsystem.setSetPoint(positions.get(i)[1]);
+        pulleySubsystem.setSetPoint(positions.get(i)[0]);
         gripperAngleSubsystem.setSetPoint(positions.get(i)[2]);
 
         SmartDashboard.putNumber("Index", i);

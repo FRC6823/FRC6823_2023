@@ -32,7 +32,7 @@ public class Constants {
     public static final double DRIVE_TRAIN_LENGTH = 0.6858; // front to back size of drivetrain
 
     public static final double ELEVATOR_MIN = 0;
-    public static final double ELEVATOR_MAX = .87;
+    public static final double ELEVATOR_MAX = .9;
     public static final double EXTENSION_MIN = -1;
     public static final double EXTENSION_MAX = -105;
     public static final double GRIPPER_MIN = 0.03;
@@ -65,12 +65,12 @@ public class Constants {
     public static final double[] centerScore = new double[]{2, 0, 0};
     public static final double[] pickup = new double[]{1, 0.3, 0};
 
-    public static final double[] highScorePose = new double[] {0.810668110847473,-105,0.493635088205338};
-    public static final double[] lowScorePose = new double[] {0.815605103969574,-37.76153564453125,0.508269846439362};
-    public static final double[] pickupPose = new double[] {0.81950432062149,-20.809432983398438,0.51017302274704};
-    public static final double[] transportPose = new double[]{0.831124067306519, -2, 0.645778954029083};
+    public static final double[] highScorePose = new double[] {0.815668110847473,-104,0.493635088205338};
+    public static final double[] lowScorePose = new double[] {0.8156105103969574,-37.76153564453125,0.508269846439362};
+    public static final double[] pickupPose = new double[] {0.82050432062149,-20.809432983398438,0.51017302274704};
+    public static final double[] transportPose = new double[]{0.88200432062149, -5, 0.645778954029083};
     public static final double[] floorPose = new double[] {0.684879839420319,-12.880990028381348,0.404875934123993};
-    public static final double[] startPose = new double[] {0.900431036949158,-1.452381730079651,0.120892271399498};
+    public static final double[] startPose = new double[] {0.900431036949158,-5,0.120892271399498};
 
     public static final double[] node1Pose = new double[] {0,0};
 

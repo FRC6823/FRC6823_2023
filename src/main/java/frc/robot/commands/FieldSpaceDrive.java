@@ -47,7 +47,7 @@ public class FieldSpaceDrive extends CommandBase {
         double modeMultiplier = 1;
 
         if (joystickHandler.getAxis2() > 0){
-            modeMultiplier = 0.1;
+            modeMultiplier = 0.4;
         }
 
         // if (joystickHandler.isFullThrottle()) {

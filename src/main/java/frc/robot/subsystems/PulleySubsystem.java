@@ -103,6 +103,15 @@ public class PulleySubsystem extends SubsystemBase{
         disabled = false;
     }
 
+    public void increment(){
+        setPoint += 0.005;
+    }
+
+    public void decrement(){
+        setPoint -= 0.005;
+    }
+
+
     public boolean isAtSetPoint(){
         return getPosition() < setPoint + 0.02 && getPosition() > setPoint - 0.02;
     }

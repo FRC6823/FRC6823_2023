@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import com.ctre.phoenixpro.hardware.Pigeon2;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,9 +16,10 @@ public class Unbalance extends CommandBase{
     private PIDController pid;
 
     public Unbalance(Pigeon2Handler pigeon2, SwerveDriveSubsystem swerveDriveSubsystem){
+        addRequirements(swerveDriveSubsystem);
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
-        pid = new PIDController(.2, 0, 0);
+        pid = new PIDController(.3, 0, 0);
     }
 
     public void initialize(){
@@ -26,11 +29,11 @@ public class Unbalance extends CommandBase{
 
     @Override
     public void execute(){
-        if (MathUtil.clipToZero(pigeon2.getPitch() - 11, 0.5) == 0){
+        if (MathUtil.clipToZero(pigeon2.getRoll() - 11, 1) == 0){
             balanced = true;
         }
         else if (!balanced){
-            swerveDriveSubsystem.drive(new ChassisSpeeds(-pid.calculate(pigeon2.getPitch()), 0, 0));
+            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(pid.calculate(pigeon2.getRoll()), 0, 0, pigeon2.getAngleDeg()));
         }
     }
 

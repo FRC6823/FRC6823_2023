@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.AutoCommandGroup;
 //import edu.wpi.first.wpilibj2.command.RepeatCommand;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -52,6 +53,8 @@ public class RobotContainer {
     private Unbalance unbalance;
     private Rebalance rebalance;
 
+    private AutoCommandGroup auton;
+
     private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
 
@@ -67,6 +70,26 @@ public class RobotContainer {
 
     public Pigeon2Handler getPigeon2Handler() {
         return pigeon;
+    }
+
+    public PneumaticSubsystem getPneumatics(){
+        return pneumatics;
+    }
+
+    public PulleySubsystem getPulley(){
+        return pulley;
+    }
+
+    public LiftSubsystem getLift(){
+        return lift;
+    }
+
+    public GripperAngleSubsystem getGripperAngle(){
+        return gripperAngle;
+    }
+
+    public PositionHandler getPositionHandler(){
+        return positionHandler;
     }
 
     public RobotContainer() {
@@ -150,17 +173,20 @@ public class RobotContainer {
 
     public Command getAutoCommandGroup() {
         
-        SequentialCommandGroup auto = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(5)), new WaitUntilPose(lift, pulley, gripperAngle));
+        /*SequentialCommandGroup auto = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(5)), new WaitUntilPose(lift, pulley, gripperAngle));
         auto.addCommands(new InstantCommand(() -> positionHandler.setPose(4)), new WaitUntilPose(lift, pulley, gripperAngle), new WaitCommand(1), new InstantCommand(() -> pneumatics.togglePneumaticState()));
         auto.addCommands(new WaitCommand(1), new InstantCommand(() -> positionHandler.setPose(2)), new WaitUntilPose(lift, pulley, gripperAngle));
-        auto.addCommands(new Reverse(swerveDrive, pigeon));
+        //auto.addCommands(new Reverse(swerveDrive, pigeon));
+        auto.addCommands(new Unbalance(pigeon, swerveDrive), new Rebalance(pigeon, swerveDrive));
         auto.addCommands(new WaitCommand(15));
         //auto.addCommands(new Unbalance(pigeon, swerveDrive), new Rebalance(pigeon, swerveDrive));
         //return pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false);
                                         //new InstantCommand(() -> positionHandler.setPose(-30, 0.1)),
                                         //pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
 
-        return auto;
+        return auto;*/
+        auton = new AutoCommandGroup(this);
+        return auton;
     }
 
     private void configureButtonBindings() {
@@ -178,7 +204,7 @@ public class RobotContainer {
         //joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
 
         // This will reset motor positions
-        //joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
+        joystickHandler3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
 
         //Move to score +1 node
         joystickHandler3.povLeft().whileTrue(new LineUp(swerveDrive, limeLight, "left"));           
@@ -220,15 +246,15 @@ public class RobotContainer {
                                                 .onFalse(new InstantCommand(() -> {lift.setSpeed(0); 
                                                                                     lift.setMode(true);}));
 
-        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> {pulley.setSpeed(1); 
+        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));/*pulley.setSpeed(1); 
                                                                                     pulley.setMode(false);}))
                                                 .onFalse(new InstantCommand(() -> {pulley.setSpeed(0); 
-                                                                                    pulley.setMode(true);}));
+                                                                                    pulley.setMode(true);}));*/
 
-        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> {pulley.setSpeed(-1); 
+        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));/*pulley.setSpeed(-1); 
                                                                                         pulley.setMode(false);}))
                                                     .onFalse(new InstantCommand(() -> {pulley.setSpeed(0); 
-                                                                                        pulley.setMode(true);}));
+                                                                                        pulley.setMode(true);}));*/
 
         joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(0.5); 
                                                                         gripperAngle.setMode(false);}))

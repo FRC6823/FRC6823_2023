@@ -19,6 +19,7 @@ public class Reverse extends CommandBase{
 
     public Reverse(SwerveDriveSubsystem swerve, Pigeon2Handler pigeon)
     {
+        addRequirements(swerve);
         this.swerve = swerve;
         this.pigeon = pigeon;
         time = new Timer();
@@ -33,13 +34,13 @@ public class Reverse extends CommandBase{
 
     @Override
     public void execute(){
-        swerve.drive(new ChassisSpeeds(5, 0, 0));
+        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(3, 0, 0, pigeon.getAngleDeg()));
         
        SmartDashboard.putNumber("time", time.get());
     }
 
     public boolean isFinished(){
-        if (time.hasElapsed(3)){
+        if (time.hasElapsed(2)){
             swerve.drive(new ChassisSpeeds(0,0,0));
             swerve.brake();
             return true;

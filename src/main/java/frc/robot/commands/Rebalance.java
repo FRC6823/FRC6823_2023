@@ -14,19 +14,20 @@ public class Rebalance extends CommandBase{
     private PIDController pid;
 
     public Rebalance(Pigeon2Handler pigeon2, SwerveDriveSubsystem swerveDriveSubsystem){
+        addRequirements(swerveDriveSubsystem);
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
-        pid = new PIDController(.06, 0, 0);
+        pid = new PIDController(.1, 0, 0);
     }
 
     public void initialize(){
-        pid.setSetpoint(-4);
+        pid.setSetpoint(0);
     }
 
     @Override
     public void execute(){
-        if (MathUtil.clipToZero(pigeon2.getPitch(), 2.15) != 0){
-            swerveDriveSubsystem.drive(new ChassisSpeeds(pid.calculate(pigeon2.getPitch()), 0, 0));
+        if (MathUtil.clipToZero(pigeon2.getRoll(), 1) != 0){
+            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-pid.calculate(pigeon2.getRoll()), 0, 0, pigeon2.getAngleDeg()));
         }
     }
 

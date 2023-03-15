@@ -19,13 +19,15 @@ public class PoseEstimatorSubsystem{
     SwerveDrivePoseEstimator estimator;
     Pigeon2Handler pigeon;
     LimeLightSubsystem limelight;
+    PhotonCameraSubsystem photon;
     SwerveDriveSubsystem swerveDrive;
     
 
-    public PoseEstimatorSubsystem(SwerveDriveSubsystem swerveDrive, LimeLightSubsystem limelight, Pigeon2Handler pigeon, Pose2d initPose){
+    public PoseEstimatorSubsystem(SwerveDriveSubsystem swerveDrive, LimeLightSubsystem limelight, PhotonCameraSubsystem photon, Pigeon2Handler pigeon, Pose2d initPose){
         this.swerveDrive = swerveDrive;
         this.pigeon = pigeon;
         this.limelight = limelight;
+        this.photon = photon;
         estimator = new SwerveDrivePoseEstimator(swerveDrive.getKinematics(), pigeon.getAngleDeg(), swerveDrive.getSwerveModulePosition(), initPose, VecBuilder.fill(.1,.1,.1), VecBuilder.fill(.9,.9,.9));
     }
 
@@ -39,5 +41,13 @@ public class PoseEstimatorSubsystem{
 
     public void periodic(){
         estimator.update(pigeon.getAngleRad(), swerveDrive.getSwerveModulePosition());
+
+        if (limelight.hasValidTarget()){
+
+        }
+
+        if (photon.hasTarget()){
+            
+        }
     }
 }

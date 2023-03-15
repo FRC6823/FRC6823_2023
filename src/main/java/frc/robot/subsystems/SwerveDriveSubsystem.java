@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -12,7 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableRegistry;
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 //import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,8 +26,10 @@ import frc.robot.util.Constants;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
 
-    public final double L = 26;
-    public final double W = 32; // These are from the Length and Width between wheels.
+    public final double L = 0.5334 / 2;
+    public final double W = 0.6858 / 2;
+    //public final double L = 21;
+    //public final double W = 27; // These are from the Length and Width between wheels.
     // CHANGE THESE IF THE ROBOT IS NOT A SQUARE
 
     private SwerveWheelModuleSubsystem backRight;
@@ -62,10 +65,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         angleController.enableContinuousInput(0, Math.PI * 2);
         angleController.setSetpoint(0);
         
-        Translation2d backRightLocation = new Translation2d(W, -L);
-        Translation2d backLeftLocation = new Translation2d(-W, -L);
-        Translation2d frontRightLocation = new Translation2d(W, L);
-        Translation2d frontLeftLocation = new Translation2d(-W, L);
+        Translation2d backRightLocation = new Translation2d(-W, -L);
+        Translation2d backLeftLocation = new Translation2d(-W, L);
+        Translation2d frontRightLocation = new Translation2d(W, -L);
+        Translation2d frontLeftLocation = new Translation2d(W, L);
 
         kinematics = new SwerveDriveKinematics(backRightLocation, backLeftLocation, frontRightLocation, frontLeftLocation);
         speeds = new ChassisSpeeds(0, 0, 0);
@@ -73,7 +76,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         odometry = new SwerveDriveOdometry
                     (kinematics, 
 
-                    new Rotation2d(pigeon.getAngleRad()), 
+                    pigeon.getAngleRad(), 
 
                     new SwerveModulePosition[] {
                         backRight.getSwerveModulePosition(), 
@@ -91,7 +94,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void periodic() {
         // Convert to module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, 5.5);
         // Front left module state
         SwerveModuleState backRightState = moduleStates[0];
 
@@ -104,12 +107,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Back right module state
         SwerveModuleState frontLeftState = moduleStates[3];
 
-        backLeft.drive(backLeftState.speedMetersPerSecond * 5.5, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
-        backRight.drive(-backRightState.speedMetersPerSecond * 5.5, backRightState.angle.getDegrees());
-        frontLeft.drive(frontLeftState.speedMetersPerSecond * 5.5, frontLeftState.angle.getDegrees());
-        frontRight.drive(-frontRightState.speedMetersPerSecond * 5.5, frontRightState.angle.getDegrees());
+        backLeft.drive(backLeftState.speedMetersPerSecond, backLeftState.angle.getDegrees()); //5.5 m/s is maximum zero load velocity
+        backRight.drive(-backRightState.speedMetersPerSecond, backRightState.angle.getDegrees());
+        frontLeft.drive(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getDegrees());
+        frontRight.drive(-frontRightState.speedMetersPerSecond, frontRightState.angle.getDegrees());
 
-        odometry.update(new Rotation2d(pigeon.getAngleRad()), 
+        odometry.update(pigeon.getAngleRad(), 
                         new SwerveModulePosition[] {
                             backRight.getSwerveModulePosition(), 
                             backLeft.getSwerveModulePosition(),
@@ -119,6 +122,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("PoseX", odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("Pose Y", odometry.getPoseMeters().getY());
         SmartDashboard.putNumber("Pose Theta", odometry.getPoseMeters().getRotation().getDegrees());
+        SmartDashboard.putNumber("Pigeon Readings", pigeon.getAngleDeg().getDegrees());
     }
 
     public void stop() {
@@ -136,27 +140,35 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public void brake(){
+        speeds = new ChassisSpeeds(0,0,0.0001);
         backRight.brake();
         backLeft.brake();
         frontRight.brake();
         frontLeft.brake();
     }
 
-    public double getRobotAngle()
-    {
-        double robotAngle = pigeon.getAngleRad();
-        return robotAngle;
-    }
+    //public Rotation2d getRobotAngle()
+    //{
+        //return pigeon.getAngleDeg();
+    //}
 
     public void resetPose()
     {
-        odometry.resetPosition(new Rotation2d(pigeon.getAngleRad()), 
+        odometry.resetPosition(pigeon.getAngleRad(), 
                                 new SwerveModulePosition[] {
                                     backRight.getSwerveModulePosition(), 
                                     backLeft.getSwerveModulePosition(),
                                     frontRight.getSwerveModulePosition(),
                                     frontLeft.getSwerveModulePosition()},
-                                new Pose2d(0, 0, new Rotation2d(pigeon.getAngleRad())));
+                                new Pose2d(0, 0, pigeon.getAngleRad()));
+    }
+
+    public void resetSensors()
+    {
+        backLeft.resetSensor();
+        backRight.resetSensor();
+        frontLeft.resetSensor();
+        frontRight.resetSensor();
     }
 }
 

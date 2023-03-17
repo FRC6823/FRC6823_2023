@@ -21,6 +21,8 @@ import frc.robot.util.Constants;
 public class SwerveWheelModuleSubsystem extends SubsystemBase {
     private final double P = .008;
     private final double I = .00001;
+    // private final double P = .009;
+    // private final double I = .0002;
 
     private TalonFX angleMotor;
     private TalonFX speedMotor;
@@ -82,7 +84,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         
         double pidOut = -pidController.calculate(currentEncoderValue, angle);
         
-        angleMotor.set(ControlMode.PercentOutput, pidOut);
+          angleMotor.set(ControlMode.PercentOutput, pidOut);
 
         return reverse;
     }
@@ -96,6 +98,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     // calibrating the encoder offsets
     public double getPosition() {
         return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360);
+        // return MathUtil.mod(angleEncoder.getAbsolutePosition(), 360);
     }
 
     public double getPositionRad() {

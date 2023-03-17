@@ -17,9 +17,12 @@ public class Constants {
 
     public static final double degToRad = Math.PI / 180;
     public static final double radToDeg = 180 / Math.PI;
-    public static final double fLOffset = 221.66015625;
+
+
+//  Wheel Offsets
+    public static final double fLOffset = 220.66015625;
     public static final double fROffset = 205.6640450656414;
-    public static final double bLOffset = 323.173828125;
+    public static final double bLOffset = 24.082029208540916;
     public static final double bROffset = 238.798828125;
 
     public static final double L1_RATIO = 8.14;

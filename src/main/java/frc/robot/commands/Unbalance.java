@@ -19,7 +19,7 @@ public class Unbalance extends CommandBase{
         addRequirements(swerveDriveSubsystem);
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
-        pid = new PIDController(.3, 0, 0);
+        pid = new PIDController(.35, .0001, 0);
     }
 
     public void initialize(){

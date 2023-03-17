@@ -27,4 +27,11 @@ public class MathUtil {
         val = Math.max(val, -max);
         return val;
     }
+
+    public static double getSign(double a){
+        if (a >= 0){
+            return 1;
+        }
+        return -1;
+    }
 }

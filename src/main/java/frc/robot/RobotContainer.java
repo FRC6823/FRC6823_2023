@@ -201,7 +201,7 @@ public class RobotContainer {
         joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
 
         // This will reset odometry for Swerve drive
-        //joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
+        joystickHandler3.button(5).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleSlowmo()));
 
         // This will reset motor positions
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));

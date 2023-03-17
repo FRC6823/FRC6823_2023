@@ -20,7 +20,7 @@ public class FieldSpaceDrive extends CommandBase {
     private Pigeon2Handler pigeon2Handler;
     private SimpleWidget speedRateWidget;
     private SimpleWidget turnRateWidget;
-    private boolean drive;
+    private boolean drive, slowMode;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
@@ -34,6 +34,7 @@ public class FieldSpaceDrive extends CommandBase {
         .withWidget(BuiltInWidgets.kNumberSlider);
         addRequirements(swerveDrive);
         drive = true;
+        slowMode = false;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class FieldSpaceDrive extends CommandBase {
         double turnRate = turnRateWidget.getEntry().getDouble(1);
         double modeMultiplier = 1;
 
-        if (joystickHandler.getAxis2() > 0){
+        if (slowMode){
             modeMultiplier = 0.4;
         }
 
@@ -79,5 +80,9 @@ public class FieldSpaceDrive extends CommandBase {
     public void drive(boolean drive)
     {
         this.drive = drive;
+    }
+
+    public void toggleSlowmo(){
+        slowMode = !slowMode;
     }
 }

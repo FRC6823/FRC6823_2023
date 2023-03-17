@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableRegistry;
@@ -15,7 +16,7 @@ public class Reverse extends CommandBase{
     private SwerveDriveSubsystem swerve;
     private Pigeon2Handler pigeon;
     private Timer time;
-
+    private PIDController yawPid;
 
     public Reverse(SwerveDriveSubsystem swerve, Pigeon2Handler pigeon)
     {
@@ -24,17 +25,19 @@ public class Reverse extends CommandBase{
         this.pigeon = pigeon;
         time = new Timer();
         SendableRegistry.addLW(this, "Reverse");
+        yawPid = new PIDController(0.05, 0, 0);
     }
 
     @Override
     public void initialize(){
         time.reset();
         time.start();
+        yawPid.setSetpoint(180);
     }
 
     @Override
     public void execute(){
-        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(3, 0, 0, pigeon.getAngleDeg()));
+        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(3, 0, yawPid.calculate(pigeon.getPositiveYaw().getDegrees()), pigeon.getAngleDeg()));
         
        SmartDashboard.putNumber("time", time.get());
     }

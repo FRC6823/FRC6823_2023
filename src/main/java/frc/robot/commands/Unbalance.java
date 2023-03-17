@@ -13,27 +13,29 @@ public class Unbalance extends CommandBase{
     private boolean balanced;
     private SwerveDriveSubsystem swerveDriveSubsystem;
     private Pigeon2Handler pigeon2;
-    private PIDController pid;
+    private PIDController pid, yawPid;
 
     public Unbalance(Pigeon2Handler pigeon2, SwerveDriveSubsystem swerveDriveSubsystem){
         addRequirements(swerveDriveSubsystem);
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         pid = new PIDController(.3, 0, 0);
+        yawPid = new PIDController(0.05, 0, 0);
     }
 
     public void initialize(){
         balanced = false;
         pid.setSetpoint(10.5);
+        yawPid.setSetpoint(90);
     }
 
     @Override
     public void execute(){
-        if (MathUtil.clipToZero(pigeon2.getRoll() - 11, 1) == 0){
+        if (MathUtil.clipToZero(pigeon2.getPitch() - 11, 1) == 0){
             balanced = true;
         }
         else if (!balanced){
-            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(pid.calculate(pigeon2.getRoll()), 0, 0, pigeon2.getAngleDeg()));
+            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(pid.calculate(pigeon2.getRoll()), 0, yawPid.calculate(pigeon2.getPositiveYaw().getDegrees()), pigeon2.getAngleDeg()));
         }
     }
 

@@ -46,7 +46,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
         this.pidController = new PIDController(P, I, 0); // This is the PID constant,
         // we're not using any
-        // Integral/Derivative control but increasing the P value will make
+        // Derivative control but increasing the P value will make
         // the motors more aggressive to changing to angles.
 
         pidController.enableContinuousInput(0, 360); // This makes the PID controller

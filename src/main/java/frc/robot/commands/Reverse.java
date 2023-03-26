@@ -25,7 +25,7 @@ public class Reverse extends CommandBase{
         this.pigeon = pigeon;
         time = new Timer();
         SendableRegistry.addLW(this, "Reverse");
-        yawPid = new PIDController(0.05, 0, 0);
+        yawPid = new PIDController(0.5, 0, 0);
     }
 
     @Override
@@ -37,13 +37,13 @@ public class Reverse extends CommandBase{
 
     @Override
     public void execute(){
-        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(3, 0, yawPid.calculate(pigeon.getPositiveYaw().getDegrees()), pigeon.getAngleDeg()));
+        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, yawPid.calculate(pigeon.getPositiveYaw().getDegrees()), pigeon.getAngleDeg()));
         
        SmartDashboard.putNumber("time", time.get());
     }
 
     public boolean isFinished(){
-        if (time.hasElapsed(2)){
+        if (time.hasElapsed(1)){
             swerve.drive(new ChassisSpeeds(0,0,0));
             swerve.brake();
             return true;

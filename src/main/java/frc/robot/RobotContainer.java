@@ -185,7 +185,7 @@ public class RobotContainer {
                                         //pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
 
         return auto;*/
-        auton = new AutoCommandGroup(this, false);
+        auton = new AutoCommandGroup(this, true);
         return auton;
     }
 

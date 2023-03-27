@@ -20,18 +20,18 @@ public class Unbalance extends CommandBase{
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         pid = new PIDController(.3, 0, 0);
-        yawPid = new PIDController(0.05, 0, 0);
+        yawPid = new PIDController(0.2, 0, 0);
     }
 
     public void initialize(){
         balanced = false;
         pid.setSetpoint(10.5);
-        yawPid.setSetpoint(90);
+        yawPid.setSetpoint(180);
     }
 
     @Override
     public void execute(){
-        if (MathUtil.clipToZero(pigeon2.getPitch() - 11, 1) == 0){
+        if (MathUtil.clipToZero(pigeon2.getRoll() - 11, 1) == 0){
             balanced = true;
         }
         else if (!balanced){

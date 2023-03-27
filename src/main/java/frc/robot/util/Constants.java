@@ -17,9 +17,12 @@ public class Constants {
 
     public static final double degToRad = Math.PI / 180;
     public static final double radToDeg = 180 / Math.PI;
-    public static final double fLOffset = 221.66015625;
+
+
+//  Wheel Offsets
+    public static final double fLOffset = 220.66015625;
     public static final double fROffset = 205.6640450656414;
-    public static final double bLOffset = 323.173828125;
+    public static final double bLOffset = 23.203123033046722;
     public static final double bROffset = 238.798828125;
 
     public static final double L1_RATIO = 8.14;
@@ -69,8 +72,10 @@ public class Constants {
     public static final double[] lowScorePose = new double[] {0.8156105103969574,-37.76153564453125,0.508269846439362};
     public static final double[] pickupPose = new double[] {0.81950432062149,-20.809432983398438,0.51017302274704};
     public static final double[] transportPose = new double[]{0.88200432062149, -10, 0.552061796188354};
-    public static final double[] floorPose = new double[] {0.684879839420319,-12.880990028381348,0.404875934123993};
-    public static final double[] startPose = new double[] {0.900431036949158,-20,0.120892271399498};
+    // public static final double[] floorPose = new double[] {0.684879839420319,-12.880990028381348,0.404875934123993};  //old floor pose -Bruce
+    public static final double[] floorPose = new double[] {0.684879839420319,-12.880990028381348,0.35}; //new floor pose -Bruce
+    //public static final double[] startPose = new double[] {0.900431036949158,-20,0.120892271399498}; //old position - BEn
+    public static final double[] startPose = new double[] {0.893,-20,0.123850924730301}; //adjusted position - Ben
 
     public static final double[] node1Pose = new double[] {0,0};
 

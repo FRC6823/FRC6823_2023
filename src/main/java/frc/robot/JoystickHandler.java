@@ -1,11 +1,7 @@
 package frc.robot;
 
-//import com.kauailabs.pigeon2.frc.AHRS;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.event.EventLoop;
-//import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.util.MathUtil;
@@ -14,7 +10,6 @@ public class JoystickHandler {
 
     private Joystick joystick;
     private double deadZone;
-    private EventLoop loop;
 
     public JoystickHandler(int joyNum) {
         this.joystick = new Joystick(joyNum); //Joystick is on port 3;

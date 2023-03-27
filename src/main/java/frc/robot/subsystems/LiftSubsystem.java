@@ -9,8 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.Constants;
-import frc.robot.util.MathUtil;
 
 public class LiftSubsystem extends SubsystemBase{
     private CANSparkMax angleMotor;

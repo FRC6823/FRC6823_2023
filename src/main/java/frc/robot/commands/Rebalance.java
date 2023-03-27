@@ -18,7 +18,7 @@ public class Rebalance extends CommandBase{
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         pid = new PIDController(.1, 0, 0);
-        yawPid = new PIDController(0.1, 0, 0);
+        yawPid = new PIDController(0.2, 0, 0);
     }
 
     public void initialize(){

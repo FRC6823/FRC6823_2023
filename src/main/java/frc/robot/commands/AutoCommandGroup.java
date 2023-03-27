@@ -38,14 +38,14 @@ public class AutoCommandGroup extends SequentialCommandGroup{
         //addCommands(new WaitCommand(1), new InstantCommand(() -> positionHandler.setPose(2)), new WaitUntilPose(lift, pulley, gripperAngle));
         //addCommands(new WaitCommand(1), new Reverse(swerve, pigeon));
         //addCommands(new WaitCommand(1), new InstantCommand(() -> positionHandler.setPose(0)), new WaitUntilPose(lift, pulley, gripperAngle));
-        addCommands(new WaitCommand(0.5), new Unbalance(pigeon, swerve), new Rebalance(pigeon, swerve));
+        addCommands(new WaitCommand(0.5), new Unbalance(pigeon, swerve), new Reverse(swerve, pigeon, 0.5, 2), new Rebalance(pigeon, swerve));
         addCommands(new WaitCommand(15)); 
         }
         else{
         //addCommands(new InstantCommand(() -> positionHandler.setPose(5)), new WaitUntilPose(lift, pulley, gripperAngle));
         //addCommands(new InstantCommand(() -> positionHandler.setPose(4)), new WaitUntilPose(lift, pulley, gripperAngle), new WaitCommand(1), new InstantCommand(() -> pneumatic.togglePneumaticState()));
         //addCommands(new WaitCommand(1), new InstantCommand(() -> positionHandler.setPose(2)), new WaitUntilPose(lift, pulley, gripperAngle));
-        addCommands(new WaitCommand(1), new Reverse(swerve, pigeon));
+        addCommands(new WaitCommand(1), new Reverse(swerve, pigeon, 2, 3));
         //addCommands(new WaitCommand(1), new InstantCommand(() -> positionHandler.setPose(1)), new WaitUntilPose(lift, pulley, gripperAngle));
         //addCommands(new WaitCommand(0.5), new Unbalance(pigeon, swerve), new Rebalance(pigeon, swerve));
         addCommands(new WaitCommand(15)); 

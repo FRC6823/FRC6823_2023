@@ -15,35 +15,36 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 public class Reverse extends CommandBase{
     private SwerveDriveSubsystem swerve;
     private Pigeon2Handler pigeon;
-    private Timer time;
+    private Timer timer;
     private PIDController yawPid;
+    private double time, speed;
 
-    public Reverse(SwerveDriveSubsystem swerve, Pigeon2Handler pigeon)
+
+    public Reverse(SwerveDriveSubsystem swerve, Pigeon2Handler pigeon, double time, double speed)
     {
         addRequirements(swerve);
         this.swerve = swerve;
         this.pigeon = pigeon;
-        time = new Timer();
-        SendableRegistry.addLW(this, "Reverse");
+        timer = new Timer();
+        this.time = time;
+        this.speed = speed;
         yawPid = new PIDController(0.1, 0, 0);
     }
 
     @Override
     public void initialize(){
-        time.reset();
-        time.start();
+        timer.reset();
+        timer.start();
         yawPid.setSetpoint(180);
     }
 
     @Override
     public void execute(){
-        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(3, 0, yawPid.calculate(pigeon.getPositiveYaw().getDegrees()), pigeon.getAngleDeg()));
-        
-       SmartDashboard.putNumber("time", time.get());
+        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(speed, 0, yawPid.calculate(pigeon.getPositiveYaw().getDegrees()), pigeon.getAngleDeg()));
     }
 
     public boolean isFinished(){
-        if (time.hasElapsed(2)){
+        if (timer.hasElapsed(time)){
             swerve.drive(new ChassisSpeeds(0,0,0));
             swerve.brake();
             return true;

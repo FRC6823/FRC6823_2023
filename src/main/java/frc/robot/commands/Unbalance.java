@@ -35,7 +35,7 @@ public class Unbalance extends CommandBase{
             balanced = true;
         }
         else if (!balanced){
-            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(MathUtil.getSign(pid.calculate(pigeon2.getPitch())) * 2, 0, yawPid.calculate(pigeon2.getPositiveYaw().getDegrees()), pigeon2.getAngleDeg()));
+            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(2, 0, yawPid.calculate(pigeon2.getYaw()), pigeon2.getAngleDeg()));
         }
     }
 

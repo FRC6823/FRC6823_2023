@@ -3,6 +3,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pigeon2Handler;
 import frc.robot.subsystems.SwerveDriveSubsystem;
@@ -18,7 +19,7 @@ public class Rebalance extends CommandBase{
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         pid = new PIDController(.1, 0, 0);
-        yawPid = new PIDController(0.2, 0, 0);
+        yawPid = new PIDController(0.3, 0, 0);
     }
 
     public void initialize(){
@@ -28,11 +29,11 @@ public class Rebalance extends CommandBase{
 
     @Override
     public void execute(){
-        if (MathUtil.clipToZero(pigeon2.getRoll(), 1) != 0){
-            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(MathUtil.getSign(pid.calculate(pigeon2.getPitch())) * -0.5, 0, yawPid.calculate(pigeon2.getPositiveYaw().getDegrees()), pigeon2.getAngleDeg()));
+        if (MathUtil.clipToZero(pigeon2.getRoll(), 5) != 0){
+            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(MathUtil.getSign(pid.calculate(pigeon2.getRoll())) * -0.65, 0, yawPid.calculate(pigeon2.getYaw()), pigeon2.getAngleDeg()));
         }
         else{
-            swerveDriveSubsystem.drive(new ChassisSpeeds(0,0,0));
+            swerveDriveSubsystem.brake();
         }
     }
 

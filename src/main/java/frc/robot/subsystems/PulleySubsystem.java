@@ -70,6 +70,7 @@ public class PulleySubsystem extends SubsystemBase{
         //pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
 
         pidController = new PIDController(-100, 0, 0);
+        pidController.setTolerance(0.005);
         
         mode = true;
     }
@@ -141,6 +142,7 @@ public class PulleySubsystem extends SubsystemBase{
         }
         else{
             angleMotor.disable();
+            setPoint = getPosition();
         }
     }
 }

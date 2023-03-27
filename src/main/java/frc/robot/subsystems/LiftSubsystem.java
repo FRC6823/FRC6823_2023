@@ -106,6 +106,7 @@ public class LiftSubsystem extends SubsystemBase{
         }
         else {
             angleMotor.disable();
+            setPoint = getPosition();
         }
     }
 }

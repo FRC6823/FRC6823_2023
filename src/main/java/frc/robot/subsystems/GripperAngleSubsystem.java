@@ -89,6 +89,7 @@ public class GripperAngleSubsystem extends SubsystemBase{
         }
         else{
             angleMotor.disable();
+            setPoint = getPosition();
         }
     }
 }

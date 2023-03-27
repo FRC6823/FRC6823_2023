@@ -72,11 +72,10 @@ public class Pigeon2Handler {
         return Rotation2d.fromDegrees(pigeon.getYaw());
     }
 
-    public Rotation2d getPositiveYaw() {
-        double yaw = pigeon.getYaw();
-        yaw += 360;
+    public double getYaw() {
+        double yaw = pigeon.getYaw() + 360;
         yaw %= 360;
-        return Rotation2d.fromDegrees(yaw);
+        return yaw;
     }
 
     public double getPitch(){

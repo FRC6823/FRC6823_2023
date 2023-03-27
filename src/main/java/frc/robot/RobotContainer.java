@@ -58,10 +58,7 @@ public class RobotContainer {
     private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
 
-    private SendableChooser<Integer> startNode;
-    private SendableChooser<Integer> firstPiece;
-    private SendableChooser<Integer> secondNode;
-    private SendableChooser<Boolean> balance;
+    private SendableChooser<Integer> autoChooser;
 
 
     public SwerveDriveSubsystem getSwervedriveSubsystem() {
@@ -117,52 +114,16 @@ public class RobotContainer {
         rebalance = new Rebalance(pigeon, swerveDrive);
         //liftSubsystem.setDefaultCommand(positionHandler);
 
-        startNode = new SendableChooser<Integer>();
-        startNode.setDefaultOption("1", 1); //Look into if default not working
-        startNode.addOption("1", 1);
-        startNode.addOption("2", 2);
-        startNode.addOption("3", 3);
-        startNode.addOption("4", 4);
-        startNode.addOption("5", 5);
-        startNode.addOption("6", 6);
-        startNode.addOption("7", 7);
-        startNode.addOption("8", 8);
-        startNode.addOption("9", 9);
-    
-        Shuffleboard.getTab("Preferences").add("Starting Node", startNode);
-
-
-
-        firstPiece = new SendableChooser<Integer>();
-        firstPiece.setDefaultOption("1", 1); //Look into if default not working
-        //firstPiece.addOption("1", 1);
-        firstPiece.addOption("2", 2);
-        firstPiece.addOption("3", 3);
-        firstPiece.addOption("4", 4);
-    
-        Shuffleboard.getTab("Preferences").add("First Piece", firstPiece);
-
-
-
-        secondNode = new SendableChooser<Integer>();
-        secondNode.setDefaultOption("1", 1); //Look into if default not working
-        //secondNode.addOption("1", 1);
-        secondNode.addOption("2", 2);
-        secondNode.addOption("3", 3);
-        secondNode.addOption("4", 4);
-        secondNode.addOption("5", 5);
-        secondNode.addOption("6", 6);
-        secondNode.addOption("7", 7);
-        secondNode.addOption("8", 8);
-        secondNode.addOption("9", 9);
-    
-        Shuffleboard.getTab("Preferences").add("Second Node", secondNode);
+        autoChooser = new SendableChooser<Integer>();
+        autoChooser.setDefaultOption("Just Score", 1);
+        autoChooser.addOption("Backup", 2);
+        autoChooser.addOption("Balance", 3);
+        autoChooser.addOption("Backup and Floor Pose", 4);
+        autoChooser.addOption("Backup and Start Pose", 5);
+        autoChooser.addOption("Start Pose", 6);
         
-        balance = new SendableChooser<Boolean>();
-        balance.setDefaultOption("No", false); //Look into if default not working
-        balance.addOption("Yes", true);
     
-        Shuffleboard.getTab("Preferences").add("Balance", balance);
+        Shuffleboard.getTab("Preferences").add("Autonomous", autoChooser);
 
         pigeon.setYaw(180);
         pigeon.setPitchOffset(pigeon.getPitch());
@@ -172,20 +133,7 @@ public class RobotContainer {
     }
 
     public Command getAutoCommandGroup() {
-        
-        /*SequentialCommandGroup auto = new SequentialCommandGroup(new InstantCommand(() -> positionHandler.setPose(5)), new WaitUntilPose(lift, pulley, gripperAngle));
-        auto.addCommands(new InstantCommand(() -> positionHandler.setPose(4)), new WaitUntilPose(lift, pulley, gripperAngle), new WaitCommand(1), new InstantCommand(() -> pneumatics.togglePneumaticState()));
-        auto.addCommands(new WaitCommand(1), new InstantCommand(() -> positionHandler.setPose(2)), new WaitUntilPose(lift, pulley, gripperAngle));
-        //auto.addCommands(new Reverse(swerveDrive, pigeon));
-        auto.addCommands(new Unbalance(pigeon, swerveDrive), new Rebalance(pigeon, swerveDrive));
-        auto.addCommands(new WaitCommand(15));
-        //auto.addCommands(new Unbalance(pigeon, swerveDrive), new Rebalance(pigeon, swerveDrive));
-        //return pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false);
-                                        //new InstantCommand(() -> positionHandler.setPose(-30, 0.1)),
-                                        //pathHandler.getPath(startNode.getSelected(), firstPiece.getSelected(), false));
-
-        return auto;*/
-        auton = new AutoCommandGroup(this, balance.getSelected());
+        auton = new AutoCommandGroup(this, autoChooser.getSelected());
         return auton;
     }
 
@@ -226,9 +174,7 @@ public class RobotContainer {
         
         
         //Soft disable for lift/arm
-        joystickHandler4.button(5).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();}));
-        //Soft reenable
-        joystickHandler4.button(6).whileTrue(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
+        joystickHandler4.button(5).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();})).onFalse(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
 
 
 
@@ -259,7 +205,7 @@ public class RobotContainer {
                                     .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); 
                                                                         gripperAngle.setMode(true);}));
 
-                                                                        
+
         //Cycling through presets
         joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
 

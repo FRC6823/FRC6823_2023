@@ -28,7 +28,7 @@ public class Reverse extends CommandBase{
         timer = new Timer();
         this.time = time;
         this.speed = speed;
-        yawPid = new PIDController(0.1, 0, 0);
+        yawPid = new PIDController(0.2, 0, 0);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class Reverse extends CommandBase{
 
     @Override
     public void execute(){
-        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(speed, 0, yawPid.calculate(pigeon.getPositiveYaw().getDegrees()), pigeon.getAngleDeg()));
+        swerve.drive(ChassisSpeeds.fromFieldRelativeSpeeds(speed, 0, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
     }
 
     public boolean isFinished(){

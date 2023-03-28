@@ -5,13 +5,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.LineUp;
-import frc.robot.commands.Rebalance;
 import frc.robot.commands.RobotSpaceDrive;
-import frc.robot.commands.Unbalance;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
@@ -35,13 +32,11 @@ public class RobotContainer {
     private RobotSpaceDrive robotSpaceDriveCommand;
     private PositionHandler positionHandler;
     private PathHandler pathHandler;
-    private Unbalance unbalance;
-    private Rebalance rebalance;
 
-    private AutoCommandGroup auton;
+    private AutoCommandGroup auto;
 
-    private JoystickHandler joystickHandler3;
-    private JoystickHandler joystickHandler4;
+    private JoystickHandler joy3;
+    private JoystickHandler joy4;
 
     private SendableChooser<Integer> autoChooser;
 
@@ -85,19 +80,16 @@ public class RobotContainer {
         //LEDs = new LEDSubsystem(0);
 
 
-        joystickHandler3 = new JoystickHandler(3);
-        joystickHandler4 = new JoystickHandler(4);
+        joy3 = new JoystickHandler(3);
+        joy4 = new JoystickHandler(4);
 
         // Field space uses pigeon2 to get its angle
-        fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDrive, joystickHandler3, pigeon);
-        robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joystickHandler3);
+        fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDrive, joy3, pigeon);
+        robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joy3);
         swerveDrive.setDefaultCommand(fieldSpaceDriveCommand);
 
         positionHandler = new PositionHandler(lift, pulley, gripperAngle);
         pathHandler = new PathHandler(swerveDrive);
-        unbalance = new Unbalance(pigeon, swerveDrive);
-        rebalance = new Rebalance(pigeon, swerveDrive);
-        //liftSubsystem.setDefaultCommand(positionHandler);
 
         autoChooser = new SendableChooser<Integer>();
         autoChooser.setDefaultOption("Just Score", 1);
@@ -118,38 +110,38 @@ public class RobotContainer {
     }
 
     public Command getAutoCommandGroup() {
-        auton = new AutoCommandGroup(this, autoChooser.getSelected());
-        return auton;
+        auto = new AutoCommandGroup(this, autoChooser.getSelected());
+        return auto;
     }
 
     private void configureButtonBindings() {
 
         //Gripper toggle
-        joystickHandler3.button(1).whileTrue(new InstantCommand(() -> pneumatics.togglePneumaticState()));
+        joy3.button(1).whileTrue(new InstantCommand(() -> pneumatics.togglePneumaticState()));
         
         //Auto balance
-        joystickHandler3.button(2).whileTrue(new SequentialCommandGroup(unbalance, rebalance));
+        //joystickHandler3.button(2).whileTrue(new SequentialCommandGroup(unbalance, rebalance));
 
         //This will set the current orientation to be "forward" for field drive
-        joystickHandler3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
+        joy3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
 
         // This will reset odometry for Swerve drive
         //joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
 
         //Snow plow break
-        joystickHandler3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+        joy3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
 
         //Move to score +1 node
-        joystickHandler3.povLeft().whileTrue(new LineUp(swerveDrive, limeLight, "left"));           
+        joy3.povLeft().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "left"));           
 
         //Move to score -1 node
-        joystickHandler3.povRight().whileTrue(new LineUp(swerveDrive, limeLight, "right"));
+        joy3.povRight().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "right"));
 
         //Move to score center node
-        joystickHandler3.povUp().whileTrue(new LineUp(swerveDrive, limeLight, "center"));
+        joy3.povUp().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "center"));
 
         //Pickup
-        joystickHandler3.button(10).whileTrue(new LineUp(swerveDrive, limeLight, "pickup"));
+        joy3.button(2).whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "pickup"));
 
 
 
@@ -159,41 +151,41 @@ public class RobotContainer {
         
         
         //Soft disable for lift/arm
-        joystickHandler4.button(5).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();})).onFalse(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
+        joy4.button(5).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();})).onFalse(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
 
 
 
         //Manual control commands
-        joystickHandler4.button(2).whileTrue(new InstantCommand(() -> {lift.setSpeed(0.2); 
+        joy4.button(2).whileTrue(new InstantCommand(() -> {lift.setSpeed(0.2); 
                                                                                     lift.setMode(false);}))
                                                 .onFalse(new InstantCommand(() -> {lift.setSpeed(0); 
                                                                                     lift.setMode(true);}));
 
-        joystickHandler4.button(3).whileTrue(new InstantCommand(() -> {lift.setSpeed(-0.2); 
+        joy4.button(3).whileTrue(new InstantCommand(() -> {lift.setSpeed(-0.2); 
                                                                                     lift.setMode(false);}))
                                                 .onFalse(new InstantCommand(() -> {lift.setSpeed(0); 
                                                                                     lift.setMode(true);}));
 
 
-        joystickHandler4.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));
+        joy4.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));
 
-        joystickHandler4.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
+        joy4.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
 
 
-        joystickHandler4.povLeft().whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(0.5); 
+        joy4.povLeft().whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(0.5); 
                                                                         gripperAngle.setMode(false);}))
                                     .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); 
                                                                         gripperAngle.setMode(true);}));
 
-        joystickHandler4.povRight().whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(-0.5); 
+        joy4.povRight().whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(-0.5); 
                                                                         gripperAngle.setMode(false);}))
                                     .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); 
                                                                         gripperAngle.setMode(true);}));
 
 
         //Cycling through presets
-        joystickHandler4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+        joy4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
 
-        joystickHandler4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+        joy4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
     }
 }

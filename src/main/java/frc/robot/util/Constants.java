@@ -61,10 +61,11 @@ public class Constants {
     public static final double kIThetaController = 0.0;
     public static final double kDThetaController = 0.0;
 
-    //PID setpoint constants for LineUp
-    public static final double[] leftScore = new double[]{2, 0.6, 0};
-    public static final double[] rightScore = new double[]{2, -0.6, 0};
-    public static final double[] centerScore = new double[]{2, 0, 0};
+    //Apriltag relative PID setpoint constants for LineUp
+    //[0] - TZ, [1] - TX, [2] - yaw
+    public static final double[] leftScore = new double[]{-1.4, 0.35, 180};
+    public static final double[] rightScore = new double[]{-1.4, -0.35, 180};
+    public static final double[] centerScore = new double[]{-0.9, 0, 180};
     public static final double[] pickup = new double[]{1, 0.3, 0};
 
     public static final double[] highScorePose = new double[] {0.813668110847473,-104.5,0.503635088205338};

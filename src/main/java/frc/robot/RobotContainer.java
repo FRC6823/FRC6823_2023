@@ -9,6 +9,8 @@ import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.LineUp;
 import frc.robot.commands.RobotSpaceDrive;
+import frc.robot.commands.StrafeLeft;
+import frc.robot.commands.StrafeRight;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
@@ -126,17 +128,17 @@ public class RobotContainer {
         joy3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
 
         // This will reset odometry for Swerve drive
-        //joystickHandler3.button(4).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetPose()));
+        joy3.button(4).whileTrue(new InstantCommand(() -> swerveDrive.resetPose()));
 
         //Snow plow break
         joy3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
 
         //Move to score +1 node
-        joy3.povLeft().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "left"));           
-
+        //joy3.povLeft().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "left"));           
+        joy3.povLeft().whileTrue(new StrafeLeft(swerveDrive, pigeon, 0.75));
         //Move to score -1 node
-        joy3.povRight().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "right"));
-
+        //joy3.povRight().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "right"));
+        joy3.povRight().whileTrue(new StrafeRight(swerveDrive, pigeon, 0.75));
         //Move to score center node
         joy3.povUp().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "center"));
 

@@ -114,6 +114,6 @@ public class JoystickHandler {
     public void updateDeadZone(){
         if (!Preferences.containsKey("Dead Zone"))
             Preferences.setDouble("Dead Zone", 0.1);
-        deadZone = 0.05;//Preferences.getDouble("Dead Zone", 0.1);
+        deadZone = 0.03;//Preferences.getDouble("Dead Zone", 0.1);
     }
 }

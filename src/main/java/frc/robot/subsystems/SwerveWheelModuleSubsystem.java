@@ -19,10 +19,10 @@ import frc.robot.util.MathUtil;
 import frc.robot.util.Constants;
 
 public class SwerveWheelModuleSubsystem extends SubsystemBase {
-    private final double P = .008;
-    private final double I = .00001;
-    // private final double P = .009;
-    // private final double I = .0002;
+    //private final double P = .008;
+    //private final double I = .00001;
+    private final double P = .009;
+    private final double I = .00002;
 
     private TalonFX angleMotor;
     private TalonFX speedMotor;

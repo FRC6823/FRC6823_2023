@@ -4,48 +4,52 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Pigeon2Handler;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.util.Constants;
-import frc.robot.util.MathUtil;
+
 
 public class LineUp extends CommandBase{
-    private SwerveDriveSubsystem swerveDriveSubsystem;
-    private PIDController xPid, txPid, tyPid;
-    private LimeLightSubsystem limeLightSubsystem;
+    private SwerveDriveSubsystem swerveDrive;
+    private PIDController tyPid, txPid, xPid, yawPid, tzPid;
+    private LimeLightSubsystem limeLight;
+    private Pigeon2Handler pigeon;
     private String node;
     private double[] setPts;
     private double tolerance;
-    private boolean aligned;
     private boolean reflective;
     private boolean finished;
 
-  public LineUp(SwerveDriveSubsystem swerveDriveSubsystem, LimeLightSubsystem limeLightSubsystem, String node) {
-    this.swerveDriveSubsystem = swerveDriveSubsystem;
-    this.limeLightSubsystem = limeLightSubsystem;
-    addRequirements(swerveDriveSubsystem);
+  public LineUp(SwerveDriveSubsystem swerveDrive, LimeLightSubsystem limeLight, Pigeon2Handler pigeon, String node) {
+    this.swerveDrive = swerveDrive;
+    this.limeLight = limeLight;
+    this.pigeon = pigeon;
+    addRequirements(swerveDrive);
     SendableRegistry.addLW(this, "LineUp");
     this.node = node;
 
     tyPid = new PIDController(0.1, 0, 0);
-    xPid = new PIDController(0.4, 0, 0);
-    txPid = new PIDController(0.07, 0.00001, 0);
+    txPid = new PIDController(0.1, 0, 0);
+    xPid = new PIDController(4, 0, 0);
+    yawPid = new PIDController(0.3, 0, 0);
+    tzPid = new PIDController(2.5, 0, 0);
 
     if (node.equals("left")){
       setPts = Constants.leftScore;
-      tolerance = .15;
+      tolerance = .05;
     }
     else if (node.equals("right")){
       setPts = Constants.rightScore;
-      tolerance = .15;
+      tolerance = .05;
     }
     else if (node.equals("center")){
       setPts = Constants.centerScore;
-      tolerance = .1;
+      tolerance = .01;
     }
     else if (node.equals("pickup")){
       setPts = Constants.pickup;
-      tolerance = 0.1;
+      tolerance = 0.01;
     }
     else {
       setPts = new double[]{0,0,0};
@@ -54,66 +58,52 @@ public class LineUp extends CommandBase{
 
   @Override
   public void initialize() {
-    aligned = false;
     reflective = false;
     finished = false;
-    limeLightSubsystem.setPipeline(0);
+    limeLight.setPipeline(0);
   }
 
   @Override
   public void execute() {
     
-    tyPid.setSetpoint(setPts[0]);
-    xPid.setSetpoint(setPts[1]);
-    txPid.setSetpoint(setPts[2]);
-    
-    if (!aligned) {
-        if (MathUtil.clipToZero(txPid.calculate(limeLightSubsystem.get3dRY()), tolerance) != 0 || MathUtil.clipToZero(xPid.calculate(limeLightSubsystem.get3dTX()), tolerance) != 0 || MathUtil.clipToZero(tyPid.calculate(limeLightSubsystem.getTy()), tolerance) != 0){
-          
-          swerveDriveSubsystem.drive(new ChassisSpeeds(MathUtil.clipToRange(-tyPid.calculate(limeLightSubsystem.getTy()), 1), MathUtil.clipToRange(-xPid.calculate(limeLightSubsystem.get3dTX()), 1),
-            MathUtil.clipToRange(-txPid.calculate(limeLightSubsystem.get3dRY()), 1)));
-        }
-        else {
-          aligned = true;
-          swerveDriveSubsystem.drive(new ChassisSpeeds(0,0,0));
-          swerveDriveSubsystem.brake();
+    if (!reflective){
 
-          if (node.equals("left") || node.equals("right")){
-            limeLightSubsystem.setPipeline(1);
-            reflective = true;
-            swerveDriveSubsystem.drive(new ChassisSpeeds(0,0,0));
-            swerveDriveSubsystem.brake();
-          }
-          else{
-            finished = true;
-          }
-        }
-    }
+      tzPid.setSetpoint(setPts[0]);
+      xPid.setSetpoint(setPts[1]);
+      yawPid.setSetpoint(setPts[2]);
 
-    if (reflective){
-      limeLightSubsystem.setPipeline(1);
-      tyPid.setSetpoint(0);
-      txPid.setSetpoint(0);
+      tzPid.setTolerance(tolerance);
+      xPid.setTolerance(tolerance);
+      yawPid.setTolerance(1);
 
-      if (MathUtil.clipToZero(limeLightSubsystem.getTy(), 0.2) != 0 || MathUtil.clipToZero(limeLightSubsystem.getTx(), 0.2) != 0){
-          swerveDriveSubsystem.drive(new ChassisSpeeds(MathUtil.clipToRange(-tyPid.calculate(limeLightSubsystem.getTy()), 1), 0, 
-                                                          MathUtil.clipToRange(txPid.calculate(limeLightSubsystem.getTx()), 1)));
-        
-      }
-      else if (limeLightSubsystem.getTv() != 0){
-        swerveDriveSubsystem.brake();
-        limeLightSubsystem.setPipeline(0);
-        finished = true;
-      }
+      if (!tzPid.atSetpoint() || !xPid.atSetpoint() || !yawPid.atSetpoint()){
+          swerveDrive.drive(new ChassisSpeeds(tzPid.calculate(limeLight.get3dTZ()), -xPid.calculate(limeLight.get3dTX()), yawPid.calculate(pigeon.getYaw())));
+      } 
       else{
-        swerveDriveSubsystem.drive(new ChassisSpeeds(0,0,0));
-        swerveDriveSubsystem.brake();
+          if (node.equals("left") || node.equals("right")){
+              reflective = true;
+          }
+          else {
+              finished = true;
+          }
       }
     }
-  }
+    else {
+        limeLight.setPipeline(1); 
+        txPid.setSetpoint(0);
+        tyPid.setSetpoint(0);
+        txPid.setTolerance(0.1);
+        tyPid.setTolerance(0.1);
 
-  public boolean isFinished(){
-    return finished;
+        if (!txPid.atSetpoint() || !yawPid.atSetpoint()){
+            swerveDrive.drive(new ChassisSpeeds(tyPid.calculate(limeLight.getTy()), txPid.calculate(limeLight.getTx()), yawPid.calculate(pigeon.getYaw())));
+        }
+        else{
+            swerveDrive.drive(new ChassisSpeeds(0, 0, 0));
+            limeLight.setPipeline(0);
+            finished = true;
+        }
+    }
   }
 }
 

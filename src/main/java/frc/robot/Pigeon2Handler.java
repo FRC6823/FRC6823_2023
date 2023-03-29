@@ -60,7 +60,7 @@ public class Pigeon2Handler {
 
         SmartDashboard.putNumber("Pitch", pigeon.getPitch());
         SmartDashboard.putNumber("Roll", pigeon.getRoll());
-        SmartDashboard.putNumber("Yaw", pigeon.getYaw());
+        SmartDashboard.putNumber("Yaw", getYaw());
         //SmartDashboard.putNumber("pigeon2 Angle", MathUtil.mod(getAngleRad(), 2 * Math.PI));
     }
 
@@ -73,7 +73,7 @@ public class Pigeon2Handler {
     }
 
     public double getYaw() {
-        double yaw = pigeon.getYaw() + 360;
+        double yaw = pigeon.getYaw() + (360.0 * 5);
         yaw %= 360;
         return yaw;
     }

@@ -54,7 +54,7 @@ public class LimeLightSubsystem extends SubsystemBase{
         return id.getDouble(0);
     }
 
-    public double[] getB_T() {
+    public double[] getTargetSpacePose() {
         return b_t.getDoubleArray(new double[]{0,0,0,0,0,0});
     }
 
@@ -62,20 +62,19 @@ public class LimeLightSubsystem extends SubsystemBase{
         return table.getEntry("tv").getDouble(0) == 1;  
     }
 
-
     public double get3dTX() {
-        return getB_T()[0];
+        return getTargetSpacePose()[0];
     }
 
     public double get3dRY() {
-        return getB_T()[4];
+        return getTargetSpacePose()[4];
+    }
+
+    public double get3dTZ() {
+        return getTargetSpacePose()[2];
     }
 
     public void periodic() {
-        //SmartDashboard.putNumber("tx", tx.getDouble(0));
-        //SmartDashboard.putNumber("ty", ty.getDouble(0.0));
-        //SmartDashboard.putNumber("TX", b_t.getDoubleArray(new double[]{0,0,0,0,0,0})[0]);
-        //SmartDashboard.putNumber("ta", ta.getDouble(0));
         SmartDashboard.putNumber("pipeline", table.getEntry("pipeline").getDouble(0));
         SmartDashboard.putNumber("target?", getTv());
     }

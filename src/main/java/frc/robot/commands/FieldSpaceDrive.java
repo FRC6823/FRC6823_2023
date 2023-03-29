@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -21,6 +22,7 @@ public class FieldSpaceDrive extends CommandBase {
     private SimpleWidget speedRateWidget;
     private SimpleWidget turnRateWidget;
     private boolean drive;
+    private PIDController yawPid;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
@@ -33,6 +35,8 @@ public class FieldSpaceDrive extends CommandBase {
         this.turnRateWidget = Shuffleboard.getTab("Preferences").addPersistent("Turn Rate", 0.5)
         .withWidget(BuiltInWidgets.kNumberSlider);
         addRequirements(swerveDrive);
+        yawPid = new PIDController(0.3, 0.001, 0);
+        yawPid.setSetpoint(pigeon2Handler.getYaw());
         drive = true;
     }
 
@@ -59,6 +63,13 @@ public class FieldSpaceDrive extends CommandBase {
         double xval = joystickHandler.getAxis1() * -speedRate * 5 * modeMultiplier;
         double yval = joystickHandler.getAxis0() * -speedRate * 5 * modeMultiplier;
         double spinval = joystickHandler.getAxis5() * -turnRate * 5 * modeMultiplier;
+
+        if (joystickHandler.getRawAxis5() == 0 && xval != 0 && yval != 0){
+            spinval = yawPid.calculate(pigeon2Handler.getYaw());
+        }
+        else{
+            yawPid.setSetpoint(pigeon2Handler.getYaw());
+        }
 
         // mapping field space to robot space
         //double txval = getTransX(xval, yval, robotAngle);

@@ -34,6 +34,8 @@ public class RobotContainer {
     private RobotSpaceDrive robotSpaceDriveCommand;
     private PositionHandler positionHandler;
     private PathHandler pathHandler;
+    private LineUp center;
+    private LineUp pickup;
 
     private AutoCommandGroup auto;
 
@@ -90,6 +92,9 @@ public class RobotContainer {
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joy3);
         swerveDrive.setDefaultCommand(fieldSpaceDriveCommand);
 
+        center = new LineUp(swerveDrive, limeLight, pigeon, "center");
+        pickup = new LineUp(swerveDrive, limeLight, pigeon, "pickup");
+
         positionHandler = new PositionHandler(lift, pulley, gripperAngle);
         pathHandler = new PathHandler(swerveDrive);
 
@@ -140,10 +145,10 @@ public class RobotContainer {
         //joy3.povRight().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "right"));
         joy3.povRight().whileTrue(new StrafeRight(swerveDrive, pigeon, 0.75));
         //Move to score center node
-        joy3.povUp().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "center"));
+        joy3.povUp().whileTrue(center);
 
         //Pickup
-        joy3.button(2).whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "pickup"));
+        joy3.button(2).whileTrue(pickup);
 
 
 

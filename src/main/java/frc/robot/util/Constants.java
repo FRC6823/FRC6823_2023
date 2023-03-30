@@ -65,8 +65,8 @@ public class Constants {
     //[0] - TZ, [1] - TX, [2] - yaw
     public static final double[] leftScore = new double[]{-1.4, 0.35, 180};
     public static final double[] rightScore = new double[]{-1.4, -0.35, 180};
-    public static final double[] centerScore = new double[]{-0.9, 0, 180};
-    public static final double[] pickup = new double[]{1, 0.3, 0};
+    public static final double[] centerScore = new double[]{-0.83, 0.55, 180};
+    public static final double[] pickup = new double[]{-0.8, 0.8, 0};
 
     public static final double[] highScorePose = new double[] {0.813668110847473,-104.5,0.503635088205338};
     public static final double[] lowScorePose = new double[] {0.8156105103969574,-37.76153564453125,0.508269846439362};

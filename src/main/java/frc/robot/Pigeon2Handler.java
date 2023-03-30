@@ -78,6 +78,15 @@ public class Pigeon2Handler {
         return yaw;
     }
 
+    public double getYaw180() {
+        double yaw = pigeon.getYaw() + (360.0 * 5);
+        yaw %= 360;
+        if (yaw >= 180){
+            yaw -= 360;
+        }
+        return yaw;
+    }
+
     public double getPitch(){
         return pigeon.getPitch() - pitchOffset;
     }

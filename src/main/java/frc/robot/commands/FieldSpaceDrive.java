@@ -67,8 +67,8 @@ public class FieldSpaceDrive extends CommandBase {
         double yval = joystickHandler.getAxis0() * -speedRate * 5 * modeMultiplier;
         double spinval = joystickHandler.getAxis5() * -turnRate * 5 * modeMultiplier;
 
-        if (joystickHandler.getRawAxis5() == 0 && xval != 0 && yval != 0){
-            spinval = MathUtil.clipToRange(yawPid.calculate(pigeon2Handler.getYaw()), 0.75);
+        if (spinval == 0 && (xval != 0 || yval != 0)){
+            spinval = yawPid.calculate(pigeon2Handler.getYaw());
         }
         else{
             yawPid.setSetpoint(pigeon2Handler.getYaw());

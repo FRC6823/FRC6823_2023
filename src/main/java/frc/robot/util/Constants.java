@@ -13,26 +13,32 @@ public class Constants {
 
     public static boolean isRed = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(true);
 
-
+    //Useful conversion constants
     public static final double degToRad = Math.PI / 180;
     public static final double radToDeg = 180 / Math.PI;
 
 
-//  Wheel Offsets
+    //Wheel Offsets
     public static final double fLOffset = 220.66015625;
     public static final double fROffset = 205.6640450656414;
     public static final double bLOffset = 23.203123033046722;
     public static final double bROffset = 238.798828125;
 
+
+    //Swerve wheel module constants (currently using L2 swerve modules)
     public static final double L1_RATIO = 8.14;
     public static final double L2_RATIO = 6.75;
     public static final double L3_RATIO = 6.12;
     public static final double STEER_RATIO = 150.0/7.0;
     public static final double WHEEL_CIRCUMFERENCE = 0.31918581324; 
 
+
+    //Drivetrain size constants (26' by 32')
     public static final double DRIVE_TRAIN_WIDTH = 0.5334; // left to right size of drivetrain
     public static final double DRIVE_TRAIN_LENGTH = 0.6858; // front to back size of drivetrain
 
+
+    //Lift/arm max and min values
     public static final double ELEVATOR_MIN = 0;
     public static final double ELEVATOR_MAX = .9;
     public static final double EXTENSION_MIN = -1;
@@ -41,6 +47,7 @@ public class Constants {
     public static final double GRIPPER_MAX = 0.77;
 
 
+    //Drivetrain movement maxes
     public static final double kMaxVelocity = 6380 * WHEEL_CIRCUMFERENCE / (60.0 * L2_RATIO);
     public static final double kMaxAccel = kMaxVelocity;
     public static final double kMaxAngularVelocity = kMaxVelocity / Math.hypot(DRIVE_TRAIN_LENGTH / 2.0, DRIVE_TRAIN_WIDTH / 2.0);
@@ -48,6 +55,7 @@ public class Constants {
     public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(kMaxAngularVelocity, kMaxAngularAccel);
     public static final SupplyCurrentLimitConfiguration kdriveCurrentLimit = new SupplyCurrentLimitConfiguration(true, 60, 60, 0);
     
+
     //PID taken from Sonic Squirrels
     //Re-test with full bot
     public static final double kP = 2.2941;//2.2941
@@ -61,9 +69,11 @@ public class Constants {
     public static final double kIThetaController = 0.0;
     public static final double kDThetaController = 0.0;
 
+
     //Yaw pid constants (no kd)
     public static final double yawKp = 0.27;
     public static final double yawKi = 0.01;
+
 
     //Apriltag relative PID setpoint constants for LineUp
     //[0] - TZ, [1] - TX, [2] - yaw
@@ -72,6 +82,8 @@ public class Constants {
     public static final double[] centerScore = new double[]{-0.83, 0.55, 180};
     public static final double[] pickup = new double[]{-0.8, 0.8, 0};
 
+
+    //Lift/arm set poses to be used by PositionHandler
     public static final double[] highScorePose = new double[] {0.808605010509491,-104.5,0.4887945950031288};
     public static final double[] lowScorePose = new double[] {0.8156105103969574,-37.76153564453125,0.488794595003128};
     public static final double[] pickupPose = new double[] {0.80950432062149,-20.809432983398438,0.491733729839325};
@@ -81,8 +93,9 @@ public class Constants {
     //public static final double[] startPose = new double[] {0.900431036949158,-20,0.120892271399498}; //old position - BEn
     public static final double[] startPose = new double[] {0.888,-20,0.123850924730301}; //adjusted position - Ben
 
-    public static final double[] node1Pose = new double[] {0,0};
 
+    //Path planning node poses in field space
+    public static final double[] node1Pose = new double[] {0,0};
     public static final double[] node2Pose = new double[] {0,0};
     public static final double[] node3Pose = new double[] {0,0};
     public static final double[] node4Pose = new double[] {0,0};

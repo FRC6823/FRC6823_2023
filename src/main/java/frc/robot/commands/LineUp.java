@@ -14,14 +14,14 @@ import frc.robot.util.MathUtil;
 public class LineUp extends CommandBase{
     private SwerveDriveSubsystem swerveDrive;
     private PIDController xPid, yawPid, tzPid;
-    private LimeLightSubsystem limeLight;
+    private LimeLightSubsystem lime;
     private Pigeon2Handler pigeon;
     private String node;
     private double[] setPts;
 
-  public LineUp(SwerveDriveSubsystem swerveDrive, LimeLightSubsystem limeLight, Pigeon2Handler pigeon, String node) {
+  public LineUp(SwerveDriveSubsystem swerveDrive, LimeLightSubsystem lime, Pigeon2Handler pigeon, String node) {
     this.swerveDrive = swerveDrive;
-    this.limeLight = limeLight;
+    this.lime = lime;
     this.pigeon = pigeon;
     addRequirements(swerveDrive);
     SendableRegistry.addLW(this, "LineUp");
@@ -56,16 +56,16 @@ public class LineUp extends CommandBase{
 
   @Override
   public void initialize() {
-    limeLight.setPipeline(0);
+    lime.setPipeline(0);
   }
 
   @Override
   public void execute() {
     if (yawPid.getSetpoint() == 0){
-      swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.get3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(limeLight.get3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw180()), 1)));
+      swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(lime.get3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(lime.get3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw180()), 1)));
     }
     else{
-      swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.get3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(limeLight.get3dTX()), 1.25), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+      swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(lime.get3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(lime.get3dTX()), 1.25), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
     }
     
   }

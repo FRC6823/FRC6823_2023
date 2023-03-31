@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pigeon2Handler;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.util.Constants;
 
 public class Reverse extends CommandBase{
     private SwerveDriveSubsystem swerve;
@@ -23,7 +24,7 @@ public class Reverse extends CommandBase{
         timer = new Timer();
         this.time = time;
         this.speed = speed;
-        yawPid = new PIDController(0.3, 0, 0);
+        yawPid = new PIDController(Constants.yawKp, Constants.yawKi, 0);
     }
 
     @Override

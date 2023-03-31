@@ -88,7 +88,7 @@ public class LiftSubsystem extends SubsystemBase{
             if(mode) {
                 //setPoint = Math.min(setPoint, Constants.EXTENSION_MIN);
                 //setPoint = Math.max(setPoint , Constants.EXTENSION_MAX);
-                SmartDashboard.putNumber("Lift Extension", setPoint);
+                SmartDashboard.putNumber("Lift SetPt", setPoint);
                 SmartDashboard.putNumber("Lift Encoder", getPosition());
                 pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {

@@ -61,6 +61,10 @@ public class Constants {
     public static final double kIThetaController = 0.0;
     public static final double kDThetaController = 0.0;
 
+    //Yaw pid constants (no kd)
+    public static final double yawKp = 0.27;
+    public static final double yawKi = 0.01;
+
     //Apriltag relative PID setpoint constants for LineUp
     //[0] - TZ, [1] - TX, [2] - yaw
     public static final double[] leftScore = new double[]{-1.4, 0.35, 180};
@@ -68,14 +72,14 @@ public class Constants {
     public static final double[] centerScore = new double[]{-0.83, 0.55, 180};
     public static final double[] pickup = new double[]{-0.8, 0.8, 0};
 
-    public static final double[] highScorePose = new double[] {0.813668110847473,-104.5,0.503635088205338};
-    public static final double[] lowScorePose = new double[] {0.8156105103969574,-37.76153564453125,0.508269846439362};
-    public static final double[] pickupPose = new double[] {0.81950432062149,-20.809432983398438,0.51017302274704};
+    public static final double[] highScorePose = new double[] {0.808605010509491,-104.5,0.4887945950031288};
+    public static final double[] lowScorePose = new double[] {0.8156105103969574,-37.76153564453125,0.488794595003128};
+    public static final double[] pickupPose = new double[] {0.80950432062149,-20.809432983398438,0.491733729839325};
     public static final double[] transportPose = new double[]{0.88200432062149, -10, 0.552061796188354};
     // public static final double[] floorPose = new double[] {0.684879839420319,-12.880990028381348,0.404875934123993};  //old floor pose -Bruce
     public static final double[] floorPose = new double[] {0.684879839420319,-12.880990028381348,0.35}; //new floor pose -Bruce
     //public static final double[] startPose = new double[] {0.900431036949158,-20,0.120892271399498}; //old position - BEn
-    public static final double[] startPose = new double[] {0.893,-20,0.123850924730301}; //adjusted position - Ben
+    public static final double[] startPose = new double[] {0.888,-20,0.123850924730301}; //adjusted position - Ben
 
     public static final double[] node1Pose = new double[] {0,0};
 

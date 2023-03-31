@@ -42,6 +42,7 @@ public class Pigeon2Handler {
              ***********************************************************************/
             pigeon = new WPI_Pigeon2(18);
             pigeon.configMountPose(-90,0, 0 ,100);
+            printEverything();
         } catch (RuntimeException ex) {
             DriverStation.reportError("Error instantiating pigeon:  " + ex.getMessage(), true);
         }
@@ -58,9 +59,9 @@ public class Pigeon2Handler {
         // SmartDashboard.putNumber("getVelocityY()", ahrs.getVelocityY());
         // SmartDashboard.putNumber("getVelocityZ()", ahrs.getVelocityZ());
 
-        SmartDashboard.putNumber("Pitch", pigeon.getPitch());
-        SmartDashboard.putNumber("Roll", pigeon.getRoll());
-        SmartDashboard.putNumber("Yaw", getYaw());
+        SmartDashboard.putNumber("Pigeon Pitch", pigeon.getPitch());
+        SmartDashboard.putNumber("Pigeon Roll", pigeon.getRoll());
+        SmartDashboard.putNumber("Pigeon Yaw", getYaw());
         //SmartDashboard.putNumber("pigeon2 Angle", MathUtil.mod(getAngleRad(), 2 * Math.PI));
     }
 

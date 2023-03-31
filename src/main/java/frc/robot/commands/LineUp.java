@@ -27,9 +27,11 @@ public class LineUp extends CommandBase{
     SendableRegistry.addLW(this, "LineUp");
     this.node = node;
 
-    xPid = new PIDController(5, 0, 0);
-    yawPid = new PIDController(0.2, 0.001, 0);
-    tzPid = new PIDController(4, 0, 0);
+    xPid = new PIDController(10, 0.001, 0.0);
+    yawPid = new PIDController(Constants.yawKp, Constants.yawKi, 0);
+    tzPid = new PIDController(3, 0, 0);
+
+    yawPid.enableContinuousInput(0, 360);
 
     if (node.equals("left")){
       setPts = Constants.leftScore;
@@ -60,10 +62,10 @@ public class LineUp extends CommandBase{
   @Override
   public void execute() {
     if (yawPid.getSetpoint() == 0){
-      swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.get3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(limeLight.get3dTX()), 1), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw180()), 1)));
+      swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.get3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(limeLight.get3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw180()), 1)));
     }
     else{
-      swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.get3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(limeLight.get3dTX()), 1), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+      swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.get3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(limeLight.get3dTX()), 1.25), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
     }
     
   }

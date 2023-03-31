@@ -14,7 +14,7 @@ import frc.robot.util.Constants;
 public class PulleySubsystem extends SubsystemBase{
 
     private final SparkMaxAbsoluteEncoder.Type kType;
-    
+
     private double setPoint;
     private CANSparkMax angleMotor;
     //private SparkMaxPIDController pidController;
@@ -119,8 +119,8 @@ public class PulleySubsystem extends SubsystemBase{
             if(mode) {
                 setPoint = Math.min(setPoint, Constants.ELEVATOR_MAX);
                 setPoint = Math.max(setPoint , Constants.ELEVATOR_MIN);
-                SmartDashboard.putNumber("Pulley Position", setPoint);
-                SmartDashboard.putNumber("Relative Encoder", encoder.getPosition());
+                SmartDashboard.putNumber("Pulley SetPt", setPoint);
+                SmartDashboard.putNumber("Pulley Encoder", encoder.getPosition());
                 pidController.setSetpoint(setPoint);
                 angleMotor.set(pidController.calculate(getPosition()));
                 //pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);

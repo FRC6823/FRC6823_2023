@@ -75,7 +75,5 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("pipeline", table.getEntry("pipeline").getDouble(0));
-        SmartDashboard.putNumber("target?", getTv());
     }
 }

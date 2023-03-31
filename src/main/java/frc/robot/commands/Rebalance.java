@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pigeon2Handler;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.util.Constants;
 import frc.robot.util.MathUtil;
 
 public class Rebalance extends CommandBase{
@@ -18,7 +19,7 @@ public class Rebalance extends CommandBase{
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         pid = new PIDController(.1, 0, 0);
-        yawPid = new PIDController(0.3, 0, 0);
+        yawPid = new PIDController(Constants.yawKp, Constants.yawKi, 0);
     }
 
     public void initialize(){

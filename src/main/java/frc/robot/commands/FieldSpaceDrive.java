@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.JoystickHandler;
 import frc.robot.Pigeon2Handler;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.util.Constants;
+import frc.robot.util.MathUtil;
 
 public class FieldSpaceDrive extends CommandBase {
     //Declare subsystem, Joystick Handler, pigeon2
@@ -35,8 +37,9 @@ public class FieldSpaceDrive extends CommandBase {
         this.turnRateWidget = Shuffleboard.getTab("Preferences").addPersistent("Turn Rate", 0.5)
         .withWidget(BuiltInWidgets.kNumberSlider);
         addRequirements(swerveDrive);
-        yawPid = new PIDController(0.3, 0.001, 0);
+        yawPid = new PIDController(Constants.yawKp, Constants.yawKi, 0);
         yawPid.setSetpoint(pigeon2Handler.getYaw());
+        yawPid.enableContinuousInput(0, 360);
         drive = true;
     }
 
@@ -65,7 +68,7 @@ public class FieldSpaceDrive extends CommandBase {
         double spinval = joystickHandler.getAxis5() * -turnRate * 5 * modeMultiplier;
 
         if (joystickHandler.getRawAxis5() == 0 && xval != 0 && yval != 0){
-            spinval = yawPid.calculate(pigeon2Handler.getYaw());
+            spinval = MathUtil.clipToRange(yawPid.calculate(pigeon2Handler.getYaw()), 0.75);
         }
         else{
             yawPid.setSetpoint(pigeon2Handler.getYaw());

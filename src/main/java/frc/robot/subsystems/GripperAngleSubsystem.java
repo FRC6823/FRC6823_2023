@@ -32,7 +32,7 @@ public class GripperAngleSubsystem extends SubsystemBase{
 
         SendableRegistry.addLW(this, "Pulley");
 
-        pid = new PIDController(5, 0, 0);
+        pid = new PIDController(7, 0, 0);
 
         //mode = true;
     }
@@ -77,7 +77,8 @@ public class GripperAngleSubsystem extends SubsystemBase{
             if (mode){
                 pid.setSetpoint(setPoint);
                 angleMotor.set(pid.calculate(encoder.getPosition()));
-                SmartDashboard.putNumber("Wrist angle", encoder.getPosition());
+                SmartDashboard.putNumber("Wrist SetPt", setPoint);
+                SmartDashboard.putNumber("Wrist Encoder", encoder.getPosition());
             }
             else{
                 angleMotor.set(speed);

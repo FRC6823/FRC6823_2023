@@ -117,10 +117,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                             frontRight.getSwerveModulePosition(),
                             backLeft.getSwerveModulePosition(),
                             backRight.getSwerveModulePosition()});
-
-        SmartDashboard.putNumber("PoseX", odometry.getPoseMeters().getX());
-        SmartDashboard.putNumber("Pose Y", odometry.getPoseMeters().getY());
-        SmartDashboard.putNumber("Pose Theta", odometry.getPoseMeters().getRotation().getDegrees());
     }
 
     public void stop() {

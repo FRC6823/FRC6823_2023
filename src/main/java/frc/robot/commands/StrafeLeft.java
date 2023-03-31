@@ -5,6 +5,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pigeon2Handler;
 import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.util.Constants;
 
 public class StrafeLeft extends CommandBase{
     private SwerveDriveSubsystem swerve;
@@ -19,7 +20,7 @@ public class StrafeLeft extends CommandBase{
         this.swerve = swerve;
         this.pigeon = pigeon;
         this.speed = speed;
-        yawPid = new PIDController(0.3, 0, 0);
+        yawPid = new PIDController(Constants.yawKp, Constants.yawKi, 0);
     }
 
     @Override

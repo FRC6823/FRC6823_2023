@@ -36,7 +36,7 @@ public class PulleySubsystem extends SubsystemBase{
         SendableRegistry.addLW(this, "Pulley");
         speed = 0;
         setPoint = getPosition();
-        disabled = false;
+        disabled = true;
         
         // PID coefficients
         kP = -300; //5e-5
@@ -74,11 +74,13 @@ public class PulleySubsystem extends SubsystemBase{
     public void setSpeed(double speed)
     {
         this.speed = speed;
+        disabled = false;
     }
 
     public void setSetPoint(double setPoint)
     {
         this.setPoint = setPoint;
+        disabled = false;
     }
 
     public void setMode(boolean mode){
@@ -101,10 +103,12 @@ public class PulleySubsystem extends SubsystemBase{
 
     public void increment(){
         setPoint += 0.005;
+        disabled = false;
     }
 
     public void decrement(){
         setPoint -= 0.005;
+        disabled = false;
     }
 
 

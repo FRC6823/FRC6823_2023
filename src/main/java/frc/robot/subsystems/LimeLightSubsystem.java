@@ -9,77 +9,102 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimeLightSubsystem extends SubsystemBase{
     
-    private NetworkTable table;
-    private NetworkTableEntry tx;
-    private NetworkTableEntry ty;
-    private NetworkTableEntry ta;
-    private NetworkTableEntry tv;
-    private NetworkTableEntry b_t; //Botpose relative to Target
-    //private NetworkTableEntry B_F; //Botpose relative to Field
-    private NetworkTableEntry id;
+    //All items for the left limelight will be prefixed with "l"
+    //All items for the right limelight will be prefixed with "r"
+
+    private NetworkTable leftTable;
+    private NetworkTable rightTable;
+    private NetworkTableEntry ltx, rtx;
+    private NetworkTableEntry lty, rty;
+    //private NetworkTableEntry ltv, rtv;
+    private NetworkTableEntry lb_t, rb_t; //Botpose relative to Target
+    private NetworkTableEntry lid, rid;
 
     public LimeLightSubsystem(){
-        table = NetworkTableInstance.getDefault().getTable("limelight-left");
-        tx = table.getEntry("tx");
-        ty = table.getEntry("ty");
-        ta = table.getEntry("ta");
-        tv = table.getEntry("tv");
-        b_t = table.getEntry("botpose_targetspace");
-        id = table.getEntry("tid");
+        leftTable = NetworkTableInstance.getDefault().getTable("limelight-left");
+        rightTable = NetworkTableInstance.getDefault().getTable("limelight-right");
+        ltx = leftTable.getEntry("tx");
+        lty = leftTable.getEntry("ty");
+        //ltv = leftTable.getEntry("tv");
+        lb_t = leftTable.getEntry("botpose_targetspace");
+        lid = leftTable.getEntry("tid");
+
+        rtx = rightTable.getEntry("tx");
+        rty = rightTable.getEntry("ty");
+        //rtv = rightTable.getEntry("tv");
+        rb_t = rightTable.getEntry("botpose_targetspace");
+        rid = rightTable.getEntry("tid");
 
         SendableRegistry.addLW(this, "LimeLight");
     }
 
-    public void setPipeline(int pipeline){
-        table.getEntry("pipeline").setNumber(pipeline);
+    //Pipeline management methods
+    public void lSetPipeline(int pipeline){
+        leftTable.getEntry("pipeline").setNumber(pipeline);
     }
 
-    public int getPipeline(){
-        return (int) table.getEntry("getpipe").getDouble(0);
+    public void rSetPipeline(int pipeline){
+        rightTable.getEntry("pipeline").setNumber(pipeline);
     }
 
-    public double getTx() {
-        return tx.getDouble(0);
-    }
-    public double getTy() {
-        return ty.getDouble(0);
-    }
-    public double getTa() {
-        return ta.getDouble(0);
-    }
-    public double getTv(){
-        return tv.getDouble(0);
-    }
-    public double getId() {
-        return id.getDouble(0);
+    public int lGetPipeline(){
+        return (int) leftTable.getEntry("getpipe").getDouble(0);
     }
 
-    public double[] getPrimaryTargetSpacePose() {
-        double[] targetSpacePose1 = b_t.getDoubleArray(new double[]{0,0,0,0,0,0});
-        // Implementation for double limeLight impending
-        return targetSpacePose1;
+    public int rGetPipeline(){
+        return (int) rightTable.getEntry("getpipe").getDouble(0);
+    }
+
+    //General info methods
+    public double lGetTx() {
+        return ltx.getDouble(0);
+    }
+    public double lGetTy() {
+        return lty.getDouble(0);
+    }
+    public double lGetId() {
+        return lid.getDouble(0);
+    }
+
+    public double rGetTx() {
+        return rtx.getDouble(0);
+    }
+    public double rGetTy() {
+        return rty.getDouble(0);
+    }
+    public double rGetId() {
+        return rid.getDouble(0);
+    }
+
+    //3d tracking methods
+    public double[] lGetTargetSpacePose() {
+        return lb_t.getDoubleArray(new double[]{0,0,0,0,0,0});
     }
     
-    public double[] getAlternateTargetSpacePose() {
-        double[] targetSpacePose1 = b_t.getDoubleArray(new double[]{0,0,0,0,0,0});
-        // Implementation for double limeLight impending
-        return targetSpacePose1;
+    public double[] rGetTargetSpacePose() {
+        return rb_t.getDoubleArray(new double[]{0,0,0,0,0,0});
     }
 
-    public boolean hasValidTarget(){
-        return table.getEntry("tv").getDouble(0) == 1;  
+    public boolean lHasValidTarget(){
+        return lGetTargetSpacePose()[1] != 0;  
     }
 
-    public double get3dTX() {
-        return getPrimaryTargetSpacePose()[0];
+    public boolean rHasValidTarget(){
+        return rGetTargetSpacePose()[1] != 0;  
     }
 
-    public double get3dRY() {
-        return getPrimaryTargetSpacePose()[4];
+    public double lGet3dTX() {
+        return lGetTargetSpacePose()[0];
+    }
+    public double lGet3dTZ() {
+        return lGetTargetSpacePose()[2];
     }
 
-    public double get3dTZ() {
-        return getPrimaryTargetSpacePose()[2];
+    public double rGet3dTX() {
+        return rGetTargetSpacePose()[0];
+    }
+    public double rGet3dTZ() {
+        return rGetTargetSpacePose()[2];
     }
 
     public void periodic() {

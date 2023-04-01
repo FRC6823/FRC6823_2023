@@ -26,7 +26,7 @@ public class GripperAngleSubsystem extends SubsystemBase{
         kType = SparkMaxAbsoluteEncoder.Type.kDutyCycle;
         encoder = angleMotor.getAbsoluteEncoder(kType);
         mode = true;
-        disabled = false;
+        disabled = true;
         setPoint = getPosition();
         speed = 0;
 
@@ -45,10 +45,12 @@ public class GripperAngleSubsystem extends SubsystemBase{
     public void setSetPoint(double setPoint)
     {
         this.setPoint = setPoint;
+        disabled = false;
     }
 
     public void setSpeed(double speed){
         this.speed = speed;
+        disabled = false;
     }
 
     public double getPosition()

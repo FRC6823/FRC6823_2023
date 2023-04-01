@@ -20,6 +20,7 @@ public class Unbalance extends CommandBase{
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         pid = new PIDController(.3, 0, 0);
         yawPid = new PIDController(Constants.yawKp, Constants.yawKi, 0);
+        yawPid.enableContinuousInput(0, 360);
     }
 
     public void initialize(){

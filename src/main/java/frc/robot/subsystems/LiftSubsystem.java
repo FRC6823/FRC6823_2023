@@ -29,7 +29,7 @@ public class LiftSubsystem extends SubsystemBase{
         SendableRegistry.addLW(this, "Lift Extension");
         setPoint = getPosition();
         speed = 0;
-        disabled = false;
+        disabled = true;
         // PID coefficients
         kP = .1; //5e-5
         kI = 0;
@@ -57,11 +57,13 @@ public class LiftSubsystem extends SubsystemBase{
     public void setSetPoint(double setPoint)
     {
         this.setPoint = setPoint;
+        disabled = false;
     }
 
     public void setSpeed(double speed)
     {
         this.speed = speed;
+        disabled = false;
     }
 
     public double getPosition()

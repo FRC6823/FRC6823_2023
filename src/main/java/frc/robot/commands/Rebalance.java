@@ -20,6 +20,7 @@ public class Rebalance extends CommandBase{
         this.swerveDriveSubsystem = swerveDriveSubsystem;
         pid = new PIDController(.1, 0, 0);
         yawPid = new PIDController(Constants.yawKp, Constants.yawKi, 0);
+        yawPid.enableContinuousInput(0, 360);
     }
 
     public void initialize(){

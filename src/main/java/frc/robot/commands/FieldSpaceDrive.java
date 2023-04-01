@@ -25,6 +25,7 @@ public class FieldSpaceDrive extends CommandBase {
     private SimpleWidget turnRateWidget;
     private boolean drive;
     private PIDController yawPid;
+    private int counter;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
@@ -41,6 +42,7 @@ public class FieldSpaceDrive extends CommandBase {
         yawPid.setSetpoint(pigeon2Handler.getYaw());
         yawPid.enableContinuousInput(0, 360);
         drive = true;
+        counter = 0;
     }
 
     @Override
@@ -67,11 +69,18 @@ public class FieldSpaceDrive extends CommandBase {
         double yval = joystickHandler.getAxis0() * -speedRate * 5 * modeMultiplier;
         double spinval = joystickHandler.getAxis5() * -turnRate * 5 * modeMultiplier;
 
-        if (spinval == 0 && (xval != 0 || yval != 0)){
-            spinval = yawPid.calculate(pigeon2Handler.getYaw());
+        if (joystickHandler.getRawAxis5() == 0 && (xval != 0 || yval != 0)){
+            if (counter == 0){
+                spinval = yawPid.calculate(pigeon2Handler.getYaw());
+            } 
+            else{
+                yawPid.setSetpoint(pigeon2Handler.getYaw()); 
+                counter--;
+            }
         }
         else{
-            yawPid.setSetpoint(pigeon2Handler.getYaw());
+            yawPid.setSetpoint(pigeon2Handler.getYaw()); 
+            counter = 20;
         }
 
         // mapping field space to robot space

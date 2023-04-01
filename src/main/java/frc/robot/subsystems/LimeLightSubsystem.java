@@ -19,7 +19,7 @@ public class LimeLightSubsystem extends SubsystemBase{
     private NetworkTableEntry id;
 
     public LimeLightSubsystem(){
-        table = NetworkTableInstance.getDefault().getTable("limelight");
+        table = NetworkTableInstance.getDefault().getTable("limelight-left");
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
@@ -54,8 +54,16 @@ public class LimeLightSubsystem extends SubsystemBase{
         return id.getDouble(0);
     }
 
-    public double[] getTargetSpacePose() {
-        return b_t.getDoubleArray(new double[]{0,0,0,0,0,0});
+    public double[] getPrimaryTargetSpacePose() {
+        double[] targetSpacePose1 = b_t.getDoubleArray(new double[]{0,0,0,0,0,0});
+        // Implementation for double limeLight impending
+        return targetSpacePose1;
+    }
+    
+    public double[] getAlternateTargetSpacePose() {
+        double[] targetSpacePose1 = b_t.getDoubleArray(new double[]{0,0,0,0,0,0});
+        // Implementation for double limeLight impending
+        return targetSpacePose1;
     }
 
     public boolean hasValidTarget(){
@@ -63,15 +71,15 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
 
     public double get3dTX() {
-        return getTargetSpacePose()[0];
+        return getPrimaryTargetSpacePose()[0];
     }
 
     public double get3dRY() {
-        return getTargetSpacePose()[4];
+        return getPrimaryTargetSpacePose()[4];
     }
 
     public double get3dTZ() {
-        return getTargetSpacePose()[2];
+        return getPrimaryTargetSpacePose()[2];
     }
 
     public void periodic() {

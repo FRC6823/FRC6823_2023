@@ -79,8 +79,8 @@ public class Constants {
     //[0] - TZ, [1] - TX, [2] - yaw
     public static final double[] leftScore = new double[]{-1.4, 0.35, 180};
     public static final double[] rightScore = new double[]{-1.4, -0.35, 180};
-    public static final double[] centerScore = new double[]{-0.83, 0.55, 180};
-    public static final double[] pickup = new double[]{-0.8, 0.8, 0};
+    public static final double[] centerScore = new double[]{-0.93, 0.55, 180};
+    public static final double[] pickup = new double[]{-0.9, 0.8, 0};
 
 
     //Lift/arm set poses to be used by PositionHandler

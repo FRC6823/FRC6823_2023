@@ -115,7 +115,7 @@ public class LineUp extends CommandBase{
 
         if (limeLight.lHasValidTarget()){
 
-          if (Math.abs(limeLight.lGet3dTX()) >= Constants.TX_MAX){
+          if (Math.abs(limeLight.lGet3dTX()) >= Constants.TX_MAX || Math.abs(limeLight.rGet3dTX()) <= Constants.TX_MAX){
             strafe = true;
           }
 
@@ -142,7 +142,7 @@ public class LineUp extends CommandBase{
 
         if (limeLight.rHasValidTarget()){
 
-          if (Math.abs(limeLight.rGet3dTX()) >= Constants.TX_MAX){
+          if (Math.abs(limeLight.rGet3dTX()) >= Constants.TX_MAX || Math.abs(limeLight.lGet3dTX()) <= Constants.TX_MAX){
             strafe = true;
           }
 

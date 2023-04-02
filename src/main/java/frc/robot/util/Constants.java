@@ -79,11 +79,11 @@ public class Constants {
     //[0] - TZ, [1] - TX, [2] - yaw
     public static final double[] leftScore = new double[]{-0.87, 0.58, 180};
     public static final double[] rightScore = new double[]{-0.87, -0.58, 180};
-    public static final double[] leftPickup = new double[]{-0.87, 0.69, 0};
-    public static final double[] rightPickup = new double[]{-0.87, -0.69, 0};
+    public static final double[] leftPickup = new double[]{-0.85, 0.69, 0};
+    public static final double[] rightPickup = new double[]{-0.85, -0.69, 0};
 
     //AprilTag max TX value
-    public static final double TX_MAX = 1;
+    public static final double TX_MAX = 1.2;
 
 
     //Lift/arm set poses to be used by PositionHandler

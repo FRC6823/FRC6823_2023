@@ -31,7 +31,7 @@ public class Rebalance extends CommandBase{
     @Override
     public void execute(){
         if (MathUtil.clipToZero(pigeon2.getRoll(), 5) != 0){
-            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(MathUtil.getSign(pid.calculate(pigeon2.getRoll())) * -0.65, 0, yawPid.calculate(pigeon2.getYaw()), pigeon2.getAngleDeg()));
+            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(MathUtil.getSign(pid.calculate(pigeon2.getRoll())) * -0.6, 0, yawPid.calculate(pigeon2.getYaw()), pigeon2.getAngleDeg()));
         }
         else{
             swerveDriveSubsystem.brake();

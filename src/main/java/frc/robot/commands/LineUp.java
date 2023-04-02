@@ -32,7 +32,7 @@ public class LineUp extends CommandBase{
     this.node = node;
 
     xPid = new PIDController(5, 0.001, 0.0);
-    yawPid = new PIDController(Constants.yawKp + 0.05, Constants.yawKi, 0);
+    yawPid = new PIDController(Constants.yawKp + 0.025, Constants.yawKi, 0);
     tzPid = new PIDController(4, 0, 0);
 
     yawPid.enableContinuousInput(0, 360);
@@ -83,7 +83,7 @@ public class LineUp extends CommandBase{
         xPid.setSetpoint(setPts[1]);
         yawPid.setSetpoint(setPts[2]);
 
-        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), .8), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
       }
 
       else if (limeLight.rHasValidTarget() && (limeLight.rGetId() == 4 || limeLight.rGetId() == 5)){ 
@@ -92,7 +92,7 @@ public class LineUp extends CommandBase{
         xPid.setSetpoint(setPts[1]);
         yawPid.setSetpoint(setPts[2]);
 
-        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 1), -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), .8), -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
       }
 
       else{
@@ -142,7 +142,7 @@ public class LineUp extends CommandBase{
 
         if (limeLight.rHasValidTarget()){
 
-          if (Math.abs(limeLight.rGet3dTX()) >= Constants.TX_MAX || (Math.abs(limeLight.lGet3dTX()) <= Constants.TX_MAX && limeLight.rGet3dTX() != 0)){
+          if (Math.abs(limeLight.rGet3dTX()) >= Constants.TX_MAX || (Math.abs(limeLight.lGet3dTX()) <= Constants.TX_MAX && limeLight.lGet3dTX() != 0)){
             strafe = true;
           }
 

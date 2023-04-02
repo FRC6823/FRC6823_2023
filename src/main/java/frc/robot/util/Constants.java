@@ -83,7 +83,7 @@ public class Constants {
     public static final double[] rightPickup = new double[]{-0.92, -0.69, 0};
 
     //AprilTag max TX value
-    public static final double TX_MAX = 1;
+    public static final double TX_MAX = 1.2;
 
 
     //Lift/arm set poses to be used by PositionHandler

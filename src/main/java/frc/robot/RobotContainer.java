@@ -140,21 +140,20 @@ public class RobotContainer {
         //Snow plow break
         joy3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
 
-        //Move to score +1 node
-        //joy3.povLeft().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "left"));           
-        //joy3.povLeft().whileTrue(new StrafeLeft(swerveDrive, pigeon, 0.75));
-        //Move to score -1 node
-        //joy3.povRight().whileTrue(new LineUp(swerveDrive, limeLight, pigeon, "right"));
-        //joy3.povRight().whileTrue(new StrafeRight(swerveDrive, pigeon, 0.75));
+        //Move to score high on left node 
+        joy3.button(10).whileTrue(left).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
+        
+        //Move to score low on left node 
+        joy3.button(9).whileTrue(left).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
 
-        //Move to score left node
-        joy3.povLeft().whileTrue(left);
-
-        //Move to score left node
-        joy3.povRight().whileTrue(right);
+        //Move to score high on right node 
+        joy3.button(14).whileTrue(right).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
+        
+        //Move to score low on right node 
+        joy3.button(13).whileTrue(right).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
 
         //Pickup
-        joy3.button(2).whileTrue(pickup);
+        joy3.button(12).whileTrue(pickup).whileTrue(new InstantCommand(() -> positionHandler.setPose(1)));
 
 
 

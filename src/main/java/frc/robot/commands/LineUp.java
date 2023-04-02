@@ -32,7 +32,7 @@ public class LineUp extends CommandBase{
     this.node = node;
 
     xPid = new PIDController(5, 0.001, 0.0);
-    yawPid = new PIDController(Constants.yawKp, Constants.yawKi, 0);
+    yawPid = new PIDController(Constants.yawKp + 0.05, Constants.yawKi, 0);
     tzPid = new PIDController(4, 0, 0);
 
     yawPid.enableContinuousInput(0, 360);
@@ -115,7 +115,7 @@ public class LineUp extends CommandBase{
 
         if (limeLight.lHasValidTarget()){
 
-          if (Math.abs(limeLight.lGet3dTX()) >= Constants.TX_MAX || Math.abs(limeLight.rGet3dTX()) <= Constants.TX_MAX){
+          if (Math.abs(limeLight.lGet3dTX()) >= Constants.TX_MAX || (Math.abs(limeLight.rGet3dTX()) <= Constants.TX_MAX && limeLight.rGet3dTX() != 0)){
             strafe = true;
           }
 
@@ -142,7 +142,7 @@ public class LineUp extends CommandBase{
 
         if (limeLight.rHasValidTarget()){
 
-          if (Math.abs(limeLight.rGet3dTX()) >= Constants.TX_MAX || Math.abs(limeLight.lGet3dTX()) <= Constants.TX_MAX){
+          if (Math.abs(limeLight.rGet3dTX()) >= Constants.TX_MAX || (Math.abs(limeLight.lGet3dTX()) <= Constants.TX_MAX && limeLight.rGet3dTX() != 0)){
             strafe = true;
           }
 

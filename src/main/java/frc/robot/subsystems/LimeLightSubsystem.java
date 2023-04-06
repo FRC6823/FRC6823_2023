@@ -107,6 +107,19 @@ public class LimeLightSubsystem extends SubsystemBase{
         return rGetTargetSpacePose()[2];
     }
 
+    public double rGet3dRY() {
+        return rGetTargetSpacePose()[4];
+    }
+    public double lGet3dRY() {
+        return lGetTargetSpacePose()[4];
+    }
+
     public void periodic() {
+        SmartDashboard.putNumber("Right TX", rGet3dTX());
+        SmartDashboard.putNumber("Left TX", lGet3dTX());
+        SmartDashboard.putNumber("Right TZ", rGet3dTZ());
+        SmartDashboard.putNumber("Left TZ", lGet3dTZ());
+        SmartDashboard.putNumber("Right RY", rGet3dRY());
+        SmartDashboard.putNumber("Left RY", lGet3dRY());
     }
 }

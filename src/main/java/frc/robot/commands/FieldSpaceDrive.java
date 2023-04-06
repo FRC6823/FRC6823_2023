@@ -26,6 +26,7 @@ public class FieldSpaceDrive extends CommandBase {
     private boolean drive;
     private PIDController yawPid;
     private int counter;
+    private boolean slowMode;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
@@ -43,6 +44,7 @@ public class FieldSpaceDrive extends CommandBase {
         yawPid.enableContinuousInput(0, 360);
         drive = true;
         counter = 0;
+        slowMode = false;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class FieldSpaceDrive extends CommandBase {
         double turnRate = turnRateWidget.getEntry().getDouble(1);
         double modeMultiplier = 1;
 
-        if (joystickHandler.getAxis2() > 0){
+        if (slowMode){
             modeMultiplier = 0.4;
         }
 
@@ -102,5 +104,8 @@ public class FieldSpaceDrive extends CommandBase {
     public void drive(boolean drive)
     {
         this.drive = drive;
+    }
+    public void toggleSlowMode(){
+        slowMode = !slowMode;
     }
 }

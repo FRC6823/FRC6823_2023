@@ -77,10 +77,10 @@ public class Constants {
 
     //Apriltag relative PID setpoint constants for LineUp
     //[0] - TZ, [1] - TX, [2] - yaw
-    public static final double[] leftScore = new double[]{-0.87, 0.58, 180};
-    public static final double[] rightScore = new double[]{-0.87, -0.58, 180};
-    public static final double[] leftPickup = new double[]{-0.92, 0.69, 0};
-    public static final double[] rightPickup = new double[]{-0.92, -0.69, 0};
+    public static final double[] leftScore = new double[]{-0.89, 0.54, 180}; //0.5 
+    public static final double[] rightScore = new double[]{-0.89, -0.54, 180};
+    public static final double[] leftPickup = new double[]{-0.935, 0.71, 0}; 
+    public static final double[] rightPickup = new double[]{-0.935, -0.71, 0};
 
     //AprilTag max TX value
     public static final double TX_MAX = .83;

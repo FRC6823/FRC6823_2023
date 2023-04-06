@@ -134,8 +134,11 @@ public class RobotContainer {
         //This will set the current orientation to be "forward" for field drive
         joy3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
 
-        // This will reset odometry for Swerve drive
-        joy3.button(4).whileTrue(new InstantCommand(() -> swerveDrive.resetPose()));
+        //This will set the current orientation to be "backward" for field drive
+        joy3.button(4).whileTrue(new InstantCommand(() -> pigeon.setYaw(180)));
+
+        // This will toggle slow mode for drive
+        joy3.button(11).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleSlowMode())).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.toggleSlowMode()));
 
         //Snow plow break
         joy3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
@@ -194,6 +197,9 @@ public class RobotContainer {
                                     .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); 
                                                                         gripperAngle.setMode(true);}));
 
+        joy4.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(2)));
+        
+        joy4.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(5)));
 
         //Cycling through presets
         joy4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));

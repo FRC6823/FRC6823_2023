@@ -57,10 +57,14 @@ public class AutoCommandGroup extends SequentialCommandGroup{
             addCommands(new WaitCommand(1), new InstantCommand(() -> positionHandler.setPose(5)));
             addCommands(new WaitCommand(15)); 
         }
-        else {
+        else if (auto == 6) {
             addCommands(new InstantCommand(() -> positionHandler.setPose(5)), new WaitCommand(0.5));
             addCommands(new InstantCommand(() -> positionHandler.setPose(4)), new WaitCommand(2.5), new InstantCommand(() -> pneumatic.togglePneumaticState()));
             addCommands(new WaitCommand(0.2), new InstantCommand(() -> positionHandler.setPose(5)));
+            addCommands(new WaitCommand(15)); 
+        }
+        else {
+            addCommands(new WaitCommand(0.5), new Unbalance(pigeon, swerve), new Reverse(swerve, pigeon, 0.7, 2), new Rebalance(pigeon, swerve));
             addCommands(new WaitCommand(15)); 
         }
     }

@@ -107,6 +107,7 @@ public class RobotContainer {
         autoChooser.addOption("Backup and Floor Pose", 4);
         autoChooser.addOption("Backup and Start Pose", 5);
         autoChooser.addOption("Start Pose", 6);
+        autoChooser.addOption("Just Balance", 7);
         
     
         Shuffleboard.getTab("Preferences").add("Autonomous", autoChooser);

@@ -15,7 +15,7 @@ import frc.robot.util.MathUtil;
 
 public class LineUp extends CommandBase{
     private SwerveDriveSubsystem swerveDrive;
-    private PIDController xPid, yawPid, tzPid;//, ryPid;
+    private PIDController xPid, yawPid, tzPid, ryPid;
     private LimeLightSubsystem limeLight;
     private Pigeon2Handler pigeon;
     private String node;
@@ -34,10 +34,10 @@ public class LineUp extends CommandBase{
     xPid = new PIDController(5, 0.001, 0.0);
     yawPid = new PIDController(Constants.yawKp + 0.025, Constants.yawKi, 0);
     tzPid = new PIDController(4, 0, 0);
-    //ryPid = new PIDController(0.1, 0.01, 0);
+    ryPid = new PIDController(0.1, 0.01, 0);
 
     yawPid.enableContinuousInput(0, 360);
-    //ryPid.enableContinuousInput(-180, 180);
+    ryPid.enableContinuousInput(-180, 180);
 
     
     if (node.equals("left")){
@@ -123,7 +123,7 @@ public class LineUp extends CommandBase{
 
           else{
             strafe = false;
-            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 1.25), -MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 1.25), -MathUtil.clipToRange(yawPid.calculate(limeLight.lGet3dRY()), 1)));
           }
         }
 
@@ -150,7 +150,7 @@ public class LineUp extends CommandBase{
 
           else{
             strafe = false;
-            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 1.25), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 1.25), MathUtil.clipToRange(ryPid.calculate(limeLight.rGet3dRY()), 1)));
           }
         }
 

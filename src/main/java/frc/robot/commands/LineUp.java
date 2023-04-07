@@ -123,7 +123,7 @@ public class LineUp extends CommandBase{
 
           else{
             strafe = false;
-            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 1.25), -MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 1.25), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
           }
         }
 

@@ -65,6 +65,7 @@ public class LineUp extends CommandBase{
     tzPid.setSetpoint(setPts[0]);
     xPid.setSetpoint(setPts[1]);
     yawPid.setSetpoint(setPts[2]);
+    ryPid.setSetpoint(0);
   }
 
   @Override

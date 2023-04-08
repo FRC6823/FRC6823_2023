@@ -228,30 +228,30 @@ public class RobotContainer {
                                     .onFalse(new InstantCommand(() -> {lift.setSpeed(0); lift.setMode(true);}));
 
 
-        joy0.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));
+        joy0.button(6).whileTrue(new InstantCommand(() -> { pulley.increment();}));
 
-        joy0.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
+        joy0.button(8).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
 
 
-        joy0.button(0).whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(0.5); gripperAngle.setMode(false);}))
+        joy0.button(4).whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(0.5); gripperAngle.setMode(false);}))
                                     .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); gripperAngle.setMode(true);}));
 
-        joy0.button(0).whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(-0.5); gripperAngle.setMode(false);}))
+        joy0.button(5).whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(-0.5); gripperAngle.setMode(false);}))
                                     .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); gripperAngle.setMode(true);}));
 
         
         //Preset inputs
-        joy0.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(0)));
+        joy0.button(9).whileTrue(new InstantCommand(() -> positionHandler.setPose(0)));
         
-        joy0.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(1)));
+        joy0.button(7).whileTrue(new InstantCommand(() -> positionHandler.setPose(1)));
         
-        joy0.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(2)));
+        joy0.button(12).whileTrue(new InstantCommand(() -> positionHandler.setPose(2)));
         
-        joy0.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
+        joy0.button(14).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
 
-        joy0.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
+        joy0.button(13).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
         
-        joy0.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(5)));
+        joy0.button(11).whileTrue(new InstantCommand(() -> positionHandler.setPose(5)));
 
 
 

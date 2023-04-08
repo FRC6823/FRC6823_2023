@@ -87,7 +87,7 @@ public class RobotContainer {
 
 
         joy3 = new JoystickHandler(3);
-        joy4 = new JoystickHandler(4);
+        //joy4 = new JoystickHandler(4);
         joy0 = new JoystickHandler(0);
 
         // Field space uses pigeon2 to get its angle
@@ -165,7 +165,7 @@ public class RobotContainer {
 
 
 
-        
+        /* 
         
         //Soft disable for lift/arm
         joy4.button(5).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();})).onFalse(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
@@ -209,14 +209,14 @@ public class RobotContainer {
         joy4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
         
 
-
+        */
 
 
 
         //Operator panel
 
         //Soft disable for lift/arm
-        joy0.button(0).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();})).onFalse(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
+        joy0.button(1).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();})).onFalse(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
 
 
 

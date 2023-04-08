@@ -144,19 +144,19 @@ public class RobotContainer {
         joy3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
 
         //Move to score high on left node 
-        joy3.button(10).whileTrue(left);//.whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
+        joy3.button(10).whileTrue(left).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
         
         //Move to score low on left node 
-        joy3.button(9).whileTrue(left);//.whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
+        joy3.button(9).whileTrue(left).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
 
         //Move to score high on right node 
-        joy3.button(14).whileTrue(right);//.whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
+        joy3.button(14).whileTrue(right).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
         
         //Move to score low on right node 
-        joy3.button(13).whileTrue(right);//.whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
+        joy3.button(13).whileTrue(right).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
 
         //Pickup
-        joy3.button(12).whileTrue(pickup);//.whileTrue(new InstantCommand(() -> positionHandler.setPose(1)));
+        joy3.button(12).whileTrue(pickup).whileTrue(new InstantCommand(() -> positionHandler.setPose(1)));
 
 
 

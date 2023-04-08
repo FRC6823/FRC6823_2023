@@ -22,6 +22,7 @@ public class LineUp extends CommandBase{
     private SendableChooser<Boolean> leftBias;
     private double[] setPts;
     private boolean strafe;
+    private int counter;
 
   public LineUp(SwerveDriveSubsystem swerveDrive, LimeLightSubsystem limeLight, Pigeon2Handler pigeon, String node) {
     this.swerveDrive = swerveDrive;
@@ -30,11 +31,12 @@ public class LineUp extends CommandBase{
     addRequirements(swerveDrive);
     SendableRegistry.addLW(this, "LineUp");
     this.node = node;
+    counter = 0;
 
     xPid = new PIDController(5, 0.001, 0.0);
     yawPid = new PIDController(Constants.yawKp + 0.025, Constants.yawKi, 0);
     tzPid = new PIDController(4, 0, 0);
-    ryPid = new PIDController(0.1, 0.01, 0);
+    ryPid = new PIDController(0.13, 0.01, 0);
 
     yawPid.enableContinuousInput(0, 360);
     ryPid.enableContinuousInput(-180, 180);
@@ -86,7 +88,9 @@ public class LineUp extends CommandBase{
         xPid.setSetpoint(setPts[1]);
         yawPid.setSetpoint(setPts[2]);
 
-        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), .8), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+        counter = 10;
+
+        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 1.5), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 0.5), -MathUtil.clipToRange(ryPid.calculate(limeLight.lGet3dRY()), 1)));
       }
 
       else if (limeLight.rHasValidTarget() && (limeLight.rGetId() == 4 || limeLight.rGetId() == 5)){ 
@@ -95,17 +99,25 @@ public class LineUp extends CommandBase{
         xPid.setSetpoint(setPts[1]);
         yawPid.setSetpoint(setPts[2]);
 
-        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), .8), -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 0.5), MathUtil.clipToRange(yawPid.calculate(pigeon.getYaw()), 1)));
+        counter = 10;
+
+        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 1.5), -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 0.5), -MathUtil.clipToRange(ryPid.calculate(limeLight.rGet3dRY()), 1)));
       }
 
       else{
-        //Seeking behavior if either limeLight doesn't detect pickup station tag
-        if (leftBias.getSelected()){
-          swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(1,1,yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
+        counter--;
+        if (counter < 0){
+          counter = 0;
         }
+        if (counter == 0){
+          //Seeking behavior if either limeLight doesn't detect pickup station tag
+          if (leftBias.getSelected()){
+            swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(1,1,yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
+          }
 
-        else{
-          swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(1,-1,yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
+          else{
+            swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(1,-1,yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
+          }
         }
       }
     }
@@ -124,7 +136,7 @@ public class LineUp extends CommandBase{
 
           else{
             strafe = false;
-            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 1.25), -MathUtil.clipToRange(yawPid.calculate(limeLight.lGet3dRY()), 1)));
+            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 1.25), -MathUtil.clipToRange(ryPid.calculate(limeLight.lGet3dRY()), 1)));
           }
         }
 
@@ -151,7 +163,7 @@ public class LineUp extends CommandBase{
 
           else{
             strafe = false;
-            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 1.25), MathUtil.clipToRange(ryPid.calculate(limeLight.rGet3dRY()), 1)));
+            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 0.75), -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 1.25), -MathUtil.clipToRange(ryPid.calculate(limeLight.rGet3dRY()), 1)));
           }
         }
 

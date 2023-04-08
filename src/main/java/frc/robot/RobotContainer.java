@@ -42,6 +42,7 @@ public class RobotContainer {
 
     private JoystickHandler joy3;
     private JoystickHandler joy4;
+    private JoystickHandler joy0;
 
     private SendableChooser<Integer> autoChooser;
 
@@ -87,6 +88,7 @@ public class RobotContainer {
 
         joy3 = new JoystickHandler(3);
         joy4 = new JoystickHandler(4);
+        joy0 = new JoystickHandler(0);
 
         // Field space uses pigeon2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDrive, joy3, pigeon);
@@ -205,5 +207,53 @@ public class RobotContainer {
         joy4.povUp().whileTrue(new InstantCommand(() -> {positionHandler.increaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
 
         joy4.povDown().whileTrue(new InstantCommand(() -> {positionHandler.decreaseIndex();})).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+        
+
+
+
+
+
+        //Operator panel
+
+        //Soft disable for lift/arm
+        joy0.button(0).whileTrue(new InstantCommand(() -> {pulley.disable(); lift.disable(); gripperAngle.disable();})).onFalse(new InstantCommand(() -> {pulley.enable(); lift.enable(); gripperAngle.enable();}));
+
+
+
+        //Manual control commands
+        joy0.button(2).whileTrue(new InstantCommand(() -> {lift.setSpeed(0.2); lift.setMode(false);}))
+                                    .onFalse(new InstantCommand(() -> {lift.setSpeed(0); lift.setMode(true);}));
+
+        joy0.button(3).whileTrue(new InstantCommand(() -> {lift.setSpeed(-0.2); lift.setMode(false);}))
+                                    .onFalse(new InstantCommand(() -> {lift.setSpeed(0); lift.setMode(true);}));
+
+
+        joy0.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));
+
+        joy0.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
+
+
+        joy0.button(0).whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(0.5); gripperAngle.setMode(false);}))
+                                    .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); gripperAngle.setMode(true);}));
+
+        joy0.button(0).whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(-0.5); gripperAngle.setMode(false);}))
+                                    .onFalse(new InstantCommand(() -> {gripperAngle.setSpeed(0); gripperAngle.setMode(true);}));
+
+        
+        //Preset inputs
+        joy0.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(0)));
+        
+        joy0.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(1)));
+        
+        joy0.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(2)));
+        
+        joy0.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
+
+        joy0.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
+        
+        joy0.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(5)));
+
+
+
     }
 }

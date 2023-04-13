@@ -126,7 +126,12 @@ public class PulleySubsystem extends SubsystemBase{
                 SmartDashboard.putNumber("Pulley SetPt", setPoint);
                 SmartDashboard.putNumber("Pulley Encoder", encoder.getPosition());
                 pidController.setSetpoint(setPoint);
-                angleMotor.set(pidController.calculate(getPosition()));
+                if (pidController.atSetpoint()){
+                    angleMotor.disable();
+                }
+                else{
+                    angleMotor.set(pidController.calculate(getPosition()));
+                }
                 //pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {
                 if (getPosition() >= Constants.ELEVATOR_MAX){

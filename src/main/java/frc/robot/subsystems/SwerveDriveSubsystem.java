@@ -26,7 +26,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private SwerveWheelModuleSubsystem frontLeft;
     private SwerveDriveKinematics kinematics;
     private ChassisSpeeds speeds;
-    private PIDController angleController;
+    private PIDController angleController; //this angleController is never used?
     private Pigeon2Handler pigeon;
     private SwerveDriveOdometry odometry;
     private boolean disableDrive;

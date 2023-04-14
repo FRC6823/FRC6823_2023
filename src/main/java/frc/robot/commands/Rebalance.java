@@ -9,12 +9,12 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.util.Constants;
 import frc.robot.util.MathUtil;
 
-public class Rebalance extends CommandBase{
+public class Rebalance extends CommandBase {
     private SwerveDriveSubsystem swerveDriveSubsystem;
     private Pigeon2Handler pigeon2;
     private PIDController pid, yawPid;
 
-    public Rebalance(Pigeon2Handler pigeon2, SwerveDriveSubsystem swerveDriveSubsystem){
+    public Rebalance(Pigeon2Handler pigeon2, SwerveDriveSubsystem swerveDriveSubsystem) {
         addRequirements(swerveDriveSubsystem);
         this.pigeon2 = pigeon2;
         this.swerveDriveSubsystem = swerveDriveSubsystem;
@@ -23,23 +23,26 @@ public class Rebalance extends CommandBase{
         yawPid.enableContinuousInput(0, 360);
     }
 
-    public void initialize(){
+    public void initialize() {
         pid.setSetpoint(0);
         yawPid.setSetpoint(180);
     }
 
     @Override
-    public void execute(){
-        if (MathUtil.clipToZero(pigeon2.getRoll(), 10) != 0){ // old speed: -0.54
-            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(MathUtil.getSign(pid.calculate(pigeon2.getRoll())) * -0.52, 0, yawPid.calculate(pigeon2.getYaw()), pigeon2.getAngleDeg()));
-        }
-        else{
+    public void execute() {
+        if (MathUtil.clipToZero(pigeon2.getRoll(), 10) != 0) { // old speed: -0.54
+            swerveDriveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
+                    MathUtil.getSign(pid.calculate(pigeon2.getRoll())) * -0.52,
+                    0,
+                    yawPid.calculate(pigeon2.getYaw()),
+                    pigeon2.getAngleDeg()));
+        } else {
             swerveDriveSubsystem.brake();
         }
     }
 
-    public boolean isFinished(){
+    public boolean isFinished() {
         return false;
     }
-    
+
 }

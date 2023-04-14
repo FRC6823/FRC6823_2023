@@ -113,7 +113,8 @@ public class PulleySubsystem extends SubsystemBase{
 
 
     public boolean isAtSetPoint(){
-        return getPosition() < setPoint + 0.02 && getPosition() > setPoint - 0.02;
+        // return getPosition() < setPoint + 0.02 && getPosition() > setPoint - 0.02;
+        return pidController.atSetpoint();
     }
 
     @Override

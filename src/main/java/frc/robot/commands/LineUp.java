@@ -34,8 +34,8 @@ public class LineUp extends CommandBase {
 
     xPid = new PIDController(5, 0.001, 0.0);
     yawPid = new PIDController(Constants.yawKp + 0.025, Constants.yawKi, 0);
-    tzPid = new PIDController(4, 0, 0);
-    ryPid = new PIDController(0.13, 0.01, 0);
+    tzPid = new PIDController(3.5, 0, 0);//4
+    ryPid = new PIDController(0.05, 0.00, 0);
 
     yawPid.enableContinuousInput(0, 360);
     ryPid.enableContinuousInput(-180, 180);
@@ -130,8 +130,8 @@ public class LineUp extends CommandBase {
 
         if (limeLight.lHasValidTarget()) {
 
-          if (Math.abs(limeLight.lGet3dTX()) >= Constants.TX_MAX
-              || (Math.abs(limeLight.rGet3dTX()) <= Constants.TX_MAX && limeLight.rGet3dTX() != 0)) {
+          if (Math.abs(limeLight.lGet3dTX()) >= Constants.TX_FAR_MAX
+              || (Math.abs(limeLight.rGet3dTX()) <= Constants.TX_NEAR_MAX && limeLight.rGet3dTX() != 0)) {
             strafe = true;
           }
 
@@ -139,7 +139,7 @@ public class LineUp extends CommandBase {
             strafe = false;
             swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 0.75),
                 -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 1.25),
-                -MathUtil.clipToRange(ryPid.calculate(limeLight.lGet3dRY()), 1)));
+                -MathUtil.clipToRange(ryPid.calculate(limeLight.lGet3dRY()), 0.75)));
           }
         }
 
@@ -159,7 +159,7 @@ public class LineUp extends CommandBase {
 
         if (limeLight.rHasValidTarget()) {
 
-          if (Math.abs(limeLight.rGet3dTX()) >= Constants.TX_MAX
+          if (Math.abs(limeLight.rGet3dTX()) >= Constants.TX_FAR_MAX
               || (Math.abs(limeLight.lGet3dTX()) <= Constants.TX_MAX && limeLight.lGet3dTX() != 0)) {
             strafe = true;
           }
@@ -168,7 +168,7 @@ public class LineUp extends CommandBase {
             strafe = false;
             swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 0.75),
                 -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 1.25),
-                -MathUtil.clipToRange(ryPid.calculate(limeLight.rGet3dRY()), 1)));
+                -MathUtil.clipToRange(ryPid.calculate(limeLight.rGet3dRY()), 0.75)));
           }
         }
 

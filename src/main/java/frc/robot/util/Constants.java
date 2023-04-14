@@ -73,18 +73,21 @@ public class Constants {
     //Yaw pid constants (no kd)
     public static final double yawKp = 0.17;
     public static final double yawKi = 0.01;
+    public static final double ryKp = 0.13;
+    public static final double ryKi = 0.01;
 
 
     //Apriltag relative PID setpoint constants for LineUp
     //[0] - TZ, [1] - TX, [2] - yaw
     public static final double[] leftScore = new double[]{-0.88, 0.54, 180}; //180
     public static final double[] rightScore = new double[]{-0.88, -0.58, 180};
-    public static final double[] leftPickup = new double[]{-0.935, 0.71, 0}; 
-    public static final double[] rightPickup = new double[]{-0.935, -0.71, 0};
+    public static final double[] leftPickup = new double[]{-0.935, 0.73, 0}; 
+    public static final double[] rightPickup = new double[]{-0.935, -0.73, 0};
 
     //AprilTag max TX value
     public static final double TX_MAX = .83;
-
+    public static final double TX_FAR_MAX = 1.2;
+    public static final double TX_NEAR_MAX = .44;
 
     //Lift/arm set poses to be used by PositionHandler
     public static final double[] highScorePose = new double[] {0.808605010509491,-104.5,0.4887945950031288};

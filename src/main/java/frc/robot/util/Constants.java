@@ -93,7 +93,7 @@ public class Constants {
     public static final double[] highScorePose = new double[] {0.808605010509491,-104.5,0.4887945950031288};
     //public static final double[] lowScorePose = new double[] {0.8156105103969574,-37.76153564453125,0.488794595003128};
     public static final double[] lowScorePose = new double[] {0.809765040874481,-30.428321838378906,0.495485693216324};
-    public static final double[] pickupPose = new double[] {0.81150432062149,-20.809432983398438,0.491733729839325};
+    public static final double[] pickupPose = new double[] {0.81150432062149,-20.809432983398438,0.486733729839325};
     public static final double[] transportPose = new double[]{0.88200432062149, -10, 0.552061796188354};
     // public static final double[] floorPose = new double[] {0.684879839420319,-12.880990028381348,0.404875934123993};  //old floor pose -Bruce
     public static final double[] floorPose = new double[] {0.684879839420319,-12.880990028381348,0.35}; //new floor pose -Bruce

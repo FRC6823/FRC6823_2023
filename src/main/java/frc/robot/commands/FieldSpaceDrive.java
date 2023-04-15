@@ -27,6 +27,7 @@ public class FieldSpaceDrive extends CommandBase {
     private PIDController yawPid;
     private int counter;
     private boolean slowMode;
+    private boolean overrideYaw;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem,
             JoystickHandler joystickHandler, Pigeon2Handler pigeon2Handler) {
@@ -45,6 +46,7 @@ public class FieldSpaceDrive extends CommandBase {
         drive = true;
         counter = 0;
         slowMode = false;
+        overrideYaw = false;
     }
 
     @Override
@@ -72,18 +74,29 @@ public class FieldSpaceDrive extends CommandBase {
         double yval = joystickHandler.getAxis0() * -speedRate * 5 * modeMultiplier;
         double spinval = joystickHandler.getAxis5() * -turnRate * 5 * modeMultiplier;
 
-        if (joystickHandler.getRawAxis5() == 0 && (xval != 0 || yval != 0)) {
-            if (counter == 0) {
-                spinval = yawPid.calculate(pigeon2Handler.getYaw());
+        if (overrideYaw) {
+            if (pigeon2Handler.getYaw() >= 90 && pigeon2Handler.getYaw() <= 270) {
+                yawPid.setSetpoint(180);
+            }
+            else {
+                yawPid.setSetpoint(0);
+            }
+            spinval = MathUtil.clipToRange(yawPid.calculate(pigeon2Handler.getYaw()), Math.PI);
+        }
+        
+        else {
+            if (joystickHandler.getRawAxis5() == 0 && (xval != 0 || yval != 0)) {
+                if (counter == 0) {
+                    spinval = yawPid.calculate(pigeon2Handler.getYaw());
+                } else {
+                    yawPid.setSetpoint(pigeon2Handler.getYaw());
+                    counter--;
+                }
             } else {
                 yawPid.setSetpoint(pigeon2Handler.getYaw());
-                counter--;
+                counter = 20;
             }
-        } else {
-            yawPid.setSetpoint(pigeon2Handler.getYaw());
-            counter = 20;
         }
-
         // mapping field space to robot space
         // double txval = getTransX(xval, yval, robotAngle);
         // double tyval = getTransY(xval, yval, robotAngle);
@@ -106,5 +119,9 @@ public class FieldSpaceDrive extends CommandBase {
 
     public void toggleSlowMode() {
         slowMode = !slowMode;
+    }
+
+    public void toggleOverrideYaw(){
+        overrideYaw = !overrideYaw;
     }
 }

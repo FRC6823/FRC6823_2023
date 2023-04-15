@@ -8,12 +8,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Pigeon2Handler;
 import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.util.Constants;
 import frc.robot.util.MathUtil;
 
 public class LineUp extends CommandBase {
   private SwerveDriveSubsystem swerveDrive;
+  private PneumaticSubsystem pneumatics;
   private PIDController xPid, yawPid, tzPid, ryPid;
   private LimeLightSubsystem limeLight;
   private Pigeon2Handler pigeon;
@@ -23,8 +25,9 @@ public class LineUp extends CommandBase {
   private boolean strafe;
   private int counter;
 
-  public LineUp(SwerveDriveSubsystem swerveDrive, LimeLightSubsystem limeLight, Pigeon2Handler pigeon, String node) {
+  public LineUp(SwerveDriveSubsystem swerveDrive, PneumaticSubsystem pneumatics, LimeLightSubsystem limeLight, Pigeon2Handler pigeon, String node) {
     this.swerveDrive = swerveDrive;
+    this.pneumatics = pneumatics;
     this.limeLight = limeLight;
     this.pigeon = pigeon;
     addRequirements(swerveDrive);
@@ -78,7 +81,6 @@ public class LineUp extends CommandBase {
   public void execute() {
 
     if (node.equals("pickup")) {
-
       if (limeLight.lHasValidTarget() && (limeLight.lGetId() == 4 || limeLight.lGetId() == 5)) {
         setPts = Constants.leftPickup;
         tzPid.setSetpoint(setPts[0]);
@@ -86,10 +88,20 @@ public class LineUp extends CommandBase {
         yawPid.setSetpoint(setPts[2]);
 
         counter = 10;
-
-        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 1.5),
+         if (limeLight.lGet3dTX() > 0.61 && limeLight.lGet3dTX() < 0.74) {
+            xPid.setSetpoint(limeLight.lGet3dTX());
+         }
+        /*swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 1.5),
             -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 0.5),
+            -MathUtil.clipToRange(ryPid.calculate(limeLight.lGet3dRY()), 1)));*/
+            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.lGet3dTZ()), 1.5),
+            -MathUtil.clipToRange(xPid.calculate(limeLight.lGet3dTX()), 1),
             -MathUtil.clipToRange(ryPid.calculate(limeLight.lGet3dRY()), 1)));
+          
+          if (Math.abs(tzPid.calculate(limeLight.lGet3dTZ())) < 0.1){
+            swerveDrive.brake();
+            pneumatics.close();
+          }
       }
 
       else if (limeLight.rHasValidTarget() && (limeLight.rGetId() == 4 || limeLight.rGetId() == 5)) {
@@ -99,10 +111,20 @@ public class LineUp extends CommandBase {
         yawPid.setSetpoint(setPts[2]);
 
         counter = 10;
-
-        swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 1.5),
+        if (limeLight.lGet3dTX() < -0.61 && limeLight.lGet3dTX() > -0.74) {
+          xPid.setSetpoint(limeLight.rGet3dTX());
+        }
+        /*swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 1.5),
             -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 0.5),
+            -MathUtil.clipToRange(ryPid.calculate(limeLight.rGet3dRY()), 1)));*/
+            swerveDrive.drive(new ChassisSpeeds(MathUtil.clipToRange(tzPid.calculate(limeLight.rGet3dTZ()), 1.5),
+            -MathUtil.clipToRange(xPid.calculate(limeLight.rGet3dTX()), 1),
             -MathUtil.clipToRange(ryPid.calculate(limeLight.rGet3dRY()), 1)));
+
+        if (Math.abs(tzPid.calculate(limeLight.rGet3dTZ())) < 0.1){
+          swerveDrive.brake();
+          pneumatics.close();
+        }
       }
 
       else {
@@ -114,12 +136,12 @@ public class LineUp extends CommandBase {
           // Seeking behavior if either limeLight doesn't detect pickup station tag
           if (leftBias.getSelected()) {
             swerveDrive.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(1, 0.5, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
+                ChassisSpeeds.fromFieldRelativeSpeeds(1, 0.3, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
           }
 
           else {
             swerveDrive.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(1, -0.5, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
+                ChassisSpeeds.fromFieldRelativeSpeeds(1, -0.3, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
           }
         }
       }
@@ -184,6 +206,5 @@ public class LineUp extends CommandBase {
         }
       }
     }
-
   }
 }

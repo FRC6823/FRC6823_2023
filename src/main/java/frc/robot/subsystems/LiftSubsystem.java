@@ -7,6 +7,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -19,6 +22,7 @@ public class LiftSubsystem extends SubsystemBase{
     private double setPoint;
     private double speed;
     private boolean disabled;
+    private SimpleWidget liftSpeedWidget;
     
     public LiftSubsystem () {
         angleMotor = new CANSparkMax(9, MotorType.kBrushless);
@@ -27,6 +31,8 @@ public class LiftSubsystem extends SubsystemBase{
         encoder = angleMotor.getEncoder();
         angleMotor.setIdleMode(IdleMode.kBrake);
         SendableRegistry.addLW(this, "Lift Extension");
+        this.liftSpeedWidget = Shuffleboard.getTab("Preferences").addPersistent("Lift Rate", 1)
+                .withWidget(BuiltInWidgets.kNumberSlider);
         setPoint = getPosition();
         speed = 0;
         disabled = true;
@@ -101,7 +107,7 @@ public class LiftSubsystem extends SubsystemBase{
                     speed = Math.max(speed, 0);
                 }*/
                 setPoint = getPosition();
-                angleMotor.set(speed);
+                angleMotor.set(liftSpeedWidget.getEntry().getDouble(1) * speed);
             }
         }
         else {

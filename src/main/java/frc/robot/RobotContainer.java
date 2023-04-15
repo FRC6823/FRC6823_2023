@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.LineUp;
@@ -76,8 +77,8 @@ public class RobotContainer {
 
     public RobotContainer() {
         pigeon = new Pigeon2Handler(); // pigeon2 input
-        swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
         limeLight = new LimeLightSubsystem();
+        swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
         pneumatics = new PneumaticSubsystem();
         lift = new LiftSubsystem();
         pulley = new PulleySubsystem();
@@ -93,20 +94,21 @@ public class RobotContainer {
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joy3);
         swerveDrive.setDefaultCommand(fieldSpaceDriveCommand);
 
-        left = new LineUp(swerveDrive, limeLight, pigeon, "left");
-        right = new LineUp(swerveDrive, limeLight, pigeon, "right");
-        pickup = new LineUp(swerveDrive, limeLight, pigeon, "pickup");
+        left = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "left");
+        right = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "right");
+        pickup = new LineUp(swerveDrive,pneumatics, limeLight, pigeon, "pickup");
 
         positionHandler = new PositionHandler(lift, pulley, gripperAngle);
         pathHandler = new PathHandler(swerveDrive);
 
         autoChooser = new SendableChooser<Integer>();
-        autoChooser.setDefaultOption("Just Score", 1);
-        autoChooser.addOption("Backup", 2);
-        autoChooser.addOption("Balance", 3);
-        autoChooser.addOption("Backup and Floor Pose", 4);
-        autoChooser.addOption("Backup and Start Pose", 5);
-        autoChooser.addOption("Start Pose", 6);
+        autoChooser.setDefaultOption("Score", 1);
+        autoChooser.addOption("Score, Backup", 2);
+        autoChooser.addOption("Score, Balance", 3);
+        autoChooser.addOption("Score, Backup, Floor Pose", 4);
+        autoChooser.addOption("Score, Backup, Start Pose", 5);
+        autoChooser.addOption("Score, Start Pose", 6);
+        autoChooser.addOption("Score, Over, Balance", 7);
         
     
         Shuffleboard.getTab("Preferences").add("Autonomous", autoChooser);
@@ -128,8 +130,8 @@ public class RobotContainer {
         //Gripper toggle
         joy3.button(1).whileTrue(new InstantCommand(() -> pneumatics.togglePneumaticState()));
         
-        //Auto balance
-        //joystickHandler3.button(2).whileTrue(new SequentialCommandGroup(unbalance, rebalance));
+        //Toggle yaw lock
+        joy3.button(2).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw())).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()));
 
         //This will set the current orientation to be "forward" for field drive
         joy3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
@@ -156,7 +158,7 @@ public class RobotContainer {
         joy3.button(13).whileTrue(right).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
 
         //Pickup
-        joy3.button(12).whileTrue(pickup).whileTrue(new InstantCommand(() -> positionHandler.setPose(1)));
+        joy3.button(12).whileTrue(pickup).whileTrue(new InstantCommand(() -> {positionHandler.setPose(1); pneumatics.open();}));
 
 
 
@@ -181,10 +183,16 @@ public class RobotContainer {
                                                 .onFalse(new InstantCommand(() -> {lift.setSpeed(0); 
                                                                                     lift.setMode(true);}));
 
+        //joy4.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
+        //joy4.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));
 
-        joy4.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));
+        joy4.button(4).whileTrue(new InstantCommand(() -> {pulley.setSpeed(1); pulley.setMode(false); 
+                                                                        lift.setSpeed(1); lift.setMode(false);}))
+                                    .onFalse(new InstantCommand(() -> {pulley.setMode(true); lift.setMode(true);}));
 
-        joy4.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
+        joy4.button(1).whileTrue(new InstantCommand(() -> {pulley.setSpeed(-1); pulley.setMode(false); 
+                                                                        lift.setSpeed(-1); lift.setMode(false);}))
+                                    .onFalse(new InstantCommand(() -> {pulley.setMode(true); lift.setMode(true);}));
 
 
         joy4.povLeft().whileTrue(new InstantCommand(() -> {gripperAngle.setSpeed(0.5); 

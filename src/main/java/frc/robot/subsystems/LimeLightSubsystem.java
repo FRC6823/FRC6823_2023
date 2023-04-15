@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -37,14 +39,17 @@ public class LimeLightSubsystem extends SubsystemBase{
         rb_t = rightTable.getEntry("botpose_targetspace");
         rid = rightTable.getEntry("tid");
 
-        if (Constants.isRed){
+        /*if (Constants.isRed){
             lb_f = leftTable.getEntry("botpose_wpired");
             rb_f = rightTable.getEntry("botpose_wpired");
         }
         else {
             lb_f = leftTable.getEntry("botpose_wpiblue");
             rb_f = rightTable.getEntry("botpose_wpiblue");
-        }
+        }*/
+        
+        lb_f = leftTable.getEntry("botpose");
+        rb_f = rightTable.getEntry("botpose");
 
         SendableRegistry.addLW(this, "LimeLight");
     }
@@ -123,6 +128,24 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
     public double lGet3dRY() {
         return lGetTargetSpacePose()[4];
+    }
+
+    public Pose2d lGetFSPose(){
+        double[] poseArr = lb_f.getDoubleArray(new double[]{0,0,0,0,0,0,0});
+        return new Pose2d(poseArr[0], poseArr[1], new Rotation2d(poseArr[5]));
+    }
+
+    public Pose2d rGetFSPose(){
+        double[] poseArr = rb_f.getDoubleArray(new double[]{0,0,0,0,0,0,0});
+        return new Pose2d(poseArr[0], poseArr[1], new Rotation2d(poseArr[5]));
+    }
+
+    public double lGetTime(){
+        return lb_f.getDoubleArray(new double[]{0,0,0,0,0,0,0,0})[6];
+    }
+
+    public double rGetTime(){
+        return rb_f.getDoubleArray(new double[]{0,0,0,0,0,0,0,0})[6];
     }
 
     public void periodic() {

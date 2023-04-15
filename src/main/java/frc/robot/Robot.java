@@ -6,8 +6,10 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.Constants;
 
 public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
@@ -28,6 +30,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        Constants.isRed = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(true);
     }
 
     @Override

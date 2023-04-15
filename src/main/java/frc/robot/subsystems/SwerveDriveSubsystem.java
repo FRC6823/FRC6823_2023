@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,6 +12,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -75,7 +79,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                         frontRight.getSwerveModulePosition(),
                         frontLeft.getSwerveModulePosition()});
 
-        poseEstimator = new SwerveDrivePoseEstimator(kinematics, pigeon.getAngleRad(), getModulePoses(), getRobotPose());
+        Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+        Matrix<N3, N1> visionStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+        poseEstimator = new SwerveDrivePoseEstimator(kinematics, pigeon.getAngleRad(), getModulePoses(), getRobotPose(), stateStdDevs, visionStdDevs);
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
@@ -123,15 +129,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         poseEstimator.update(pigeon.getAngleRad(), getModulePoses());
 
-        /*if (limeLight.lHasValidTarget()){
-            poseEstimator.addVisionMeasurement();
+        if (limeLight.lHasValidTarget()){
+            poseEstimator.addVisionMeasurement(limeLight.lGetFSPose(), limeLight.lGetTime());
         }
         if (limeLight.rHasValidTarget()){
-            poseEstimator.addVisionMeasurement(, L);
-        }*/
-        SmartDashboard.putNumber("X Pose", odometry.getPoseMeters().getX());
-        SmartDashboard.putNumber("Y Pose", odometry.getPoseMeters().getY());
-        SmartDashboard.putNumber("Theta Pose", odometry.getPoseMeters().getRotation().getDegrees());
+            poseEstimator.addVisionMeasurement(limeLight.rGetFSPose(), limeLight.rGetTime());
+        }
+
+        SmartDashboard.putNumber("X Pose", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Y Pose", poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putNumber("Theta Pose", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
     }
 
     public void stop() {
@@ -167,6 +174,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         odometry.resetPosition(pigeon.getAngleRad(), 
                                 getModulePoses(),
                                 new Pose2d(0, 0, pigeon.getAngleRad()));
+
+        poseEstimator.resetPosition(pigeon.getAngleRad(), getModulePoses(), new Pose2d(0, 0, pigeon.getAngleRad()));
     }
 
     public void setPose(double x, double y, double heading)
@@ -174,6 +183,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         odometry.resetPosition(pigeon.getAngleRad(), 
                                 getModulePoses(),
                                 new Pose2d(x, y, new Rotation2d(heading)));
+
+        poseEstimator.resetPosition(pigeon.getAngleRad(), getModulePoses(), new Pose2d(x, y, new Rotation2d(heading)));
     }
 
     public void resetSensors()
@@ -191,6 +202,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public Pose2d getRobotPose()
     {
         return odometry.getPoseMeters();
+    }
+
+    public Pose2d getEstimatorPose()
+    {
+        return poseEstimator.getEstimatedPosition();
     }
 
     public SwerveModulePosition[] getModulePoses(){

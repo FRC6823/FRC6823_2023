@@ -135,12 +135,6 @@ public class PulleySubsystem extends SubsystemBase{
                 }
                 //pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
             } else {
-                if (getPosition() >= Constants.ELEVATOR_MAX){
-                    speed = Math.max(speed, 0);
-                }
-                if (getPosition() <= Constants.ELEVATOR_MIN){
-                    speed = Math.min(speed, 0);
-                }
                 setPoint = getPosition();
                 angleMotor.set(-speed);
             }

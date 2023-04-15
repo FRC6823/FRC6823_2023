@@ -39,4 +39,12 @@ public class PneumaticSubsystem extends SubsystemBase{
     public void togglePneumaticState(){
         state = !state;
     }
+
+    public void close(){
+        state = true;
+    }
+
+    public void open(){
+        state = false;
+    }
 }

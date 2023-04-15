@@ -103,7 +103,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     }
 
     public double getPositionRad() {
-        return MathUtil.mod(angleEncoder.getAbsolutePosition() - (encoderOffset * Math.PI / 180.0), 360) * Math.PI / 180;
+        return MathUtil.mod(getPosition(), 360) * Math.PI / 180;
     }
 
     public double getDistance() {

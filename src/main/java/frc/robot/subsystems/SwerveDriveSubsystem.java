@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,12 +27,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private SwerveWheelModuleSubsystem frontLeft;
     private SwerveDriveKinematics kinematics;
     private ChassisSpeeds speeds;
-    private PIDController angleController; //this angleController is never used?
+    private PIDController angleController; //this angle Controller is never used?
     private Pigeon2Handler pigeon;
+    private LimeLightSubsystem limeLight;
     private SwerveDriveOdometry odometry;
     private boolean disableDrive;
+
+    private SwerveDrivePoseEstimator poseEstimator;
     
-    public SwerveDriveSubsystem(Pigeon2Handler pigeon) {
+    public SwerveDriveSubsystem(Pigeon2Handler pigeon, LimeLightSubsystem limeLight) {
 
         backRight = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", Constants.bROffset);// These are the motors and encoder
                                                                 // CAN IDs for swerve drive
@@ -59,6 +63,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         speeds = new ChassisSpeeds(0, 0, 0);
         disableDrive = false;
         this.pigeon = pigeon;
+        this.limeLight = limeLight;
         odometry = new SwerveDriveOdometry
                     (kinematics, 
 
@@ -69,6 +74,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                         backLeft.getSwerveModulePosition(),
                         frontRight.getSwerveModulePosition(),
                         frontLeft.getSwerveModulePosition()});
+
+        poseEstimator = new SwerveDrivePoseEstimator(kinematics, pigeon.getAngleRad(), getModulePoses(), getRobotPose());
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
@@ -112,11 +119,19 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             setSwerveModuleStates(moduleStates);
 
         odometry.update(pigeon.getAngleRad(), 
-                        new SwerveModulePosition[] {
-                            frontLeft.getSwerveModulePosition(),
-                            frontRight.getSwerveModulePosition(),
-                            backLeft.getSwerveModulePosition(),
-                            backRight.getSwerveModulePosition()});
+                        getModulePoses());
+
+        poseEstimator.update(pigeon.getAngleRad(), getModulePoses());
+
+        /*if (limeLight.lHasValidTarget()){
+            poseEstimator.addVisionMeasurement();
+        }
+        if (limeLight.rHasValidTarget()){
+            poseEstimator.addVisionMeasurement(, L);
+        }*/
+        SmartDashboard.putNumber("X Pose", odometry.getPoseMeters().getX());
+        SmartDashboard.putNumber("Y Pose", odometry.getPoseMeters().getY());
+        SmartDashboard.putNumber("Theta Pose", odometry.getPoseMeters().getRotation().getDegrees());
     }
 
     public void stop() {
@@ -150,22 +165,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void resetPose()
     {
         odometry.resetPosition(pigeon.getAngleRad(), 
-                                new SwerveModulePosition[] {
-                                    frontLeft.getSwerveModulePosition(),
-                                    frontRight.getSwerveModulePosition(),
-                                    backLeft.getSwerveModulePosition(),
-                                    backRight.getSwerveModulePosition()},
+                                getModulePoses(),
                                 new Pose2d(0, 0, pigeon.getAngleRad()));
     }
 
     public void setPose(double x, double y, double heading)
     {
         odometry.resetPosition(pigeon.getAngleRad(), 
-                                new SwerveModulePosition[] {
-                                    frontLeft.getSwerveModulePosition(),
-                                    frontRight.getSwerveModulePosition(),
-                                    backLeft.getSwerveModulePosition(),
-                                    backRight.getSwerveModulePosition()},
+                                getModulePoses(),
                                 new Pose2d(x, y, new Rotation2d(heading)));
     }
 
@@ -184,5 +191,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public Pose2d getRobotPose()
     {
         return odometry.getPoseMeters();
+    }
+
+    public SwerveModulePosition[] getModulePoses(){
+        return new SwerveModulePosition[] {
+            backRight.getSwerveModulePosition(), 
+            backLeft.getSwerveModulePosition(),
+            frontRight.getSwerveModulePosition(),
+            frontLeft.getSwerveModulePosition()};
     }
 }

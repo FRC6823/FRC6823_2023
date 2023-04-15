@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.Constants;
 
 public class LimeLightSubsystem extends SubsystemBase{
     
@@ -18,6 +19,7 @@ public class LimeLightSubsystem extends SubsystemBase{
     private NetworkTableEntry lty, rty;
     //private NetworkTableEntry ltv, rtv;
     private NetworkTableEntry lb_t, rb_t; //Botpose relative to Target
+    private NetworkTableEntry lb_f, rb_f;
     private NetworkTableEntry lid, rid;
 
     public LimeLightSubsystem(){
@@ -34,6 +36,15 @@ public class LimeLightSubsystem extends SubsystemBase{
         //rtv = rightTable.getEntry("tv");
         rb_t = rightTable.getEntry("botpose_targetspace");
         rid = rightTable.getEntry("tid");
+
+        if (Constants.isRed){
+            lb_f = leftTable.getEntry("botpose_wpired");
+            rb_f = rightTable.getEntry("botpose_wpired");
+        }
+        else {
+            lb_f = leftTable.getEntry("botpose_wpiblue");
+            rb_f = rightTable.getEntry("botpose_wpiblue");
+        }
 
         SendableRegistry.addLW(this, "LimeLight");
     }

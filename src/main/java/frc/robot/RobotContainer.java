@@ -76,7 +76,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         pigeon = new Pigeon2Handler(); // pigeon2 input
-        swerveDrive = new SwerveDriveSubsystem(pigeon);
+        swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
         limeLight = new LimeLightSubsystem();
         pneumatics = new PneumaticSubsystem();
         lift = new LiftSubsystem();

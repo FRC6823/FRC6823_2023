@@ -32,10 +32,10 @@ public class LineUp extends CommandBase {
     this.node = node;
     counter = 0;
 
-    xPid = new PIDController(5, 0.001, 0.0);
+    xPid = new PIDController(6, 0.001, 0.0); //5
     yawPid = new PIDController(Constants.yawKp + 0.025, Constants.yawKi, 0);
     tzPid = new PIDController(3.5, 0, 0);//4
-    ryPid = new PIDController(0.05, 0.00, 0);
+    ryPid = new PIDController(0.075, 0.00, 0);
 
     yawPid.enableContinuousInput(0, 360);
     ryPid.enableContinuousInput(-180, 180);
@@ -114,12 +114,12 @@ public class LineUp extends CommandBase {
           // Seeking behavior if either limeLight doesn't detect pickup station tag
           if (leftBias.getSelected()) {
             swerveDrive.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(1, 1, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
+                ChassisSpeeds.fromFieldRelativeSpeeds(1, 0.5, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
           }
 
           else {
             swerveDrive.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(1, -1, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
+                ChassisSpeeds.fromFieldRelativeSpeeds(1, -0.5, yawPid.calculate(pigeon.getYaw()), pigeon.getAngleDeg()));
           }
         }
       }

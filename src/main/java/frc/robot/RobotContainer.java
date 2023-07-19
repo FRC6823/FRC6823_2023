@@ -10,8 +10,6 @@ import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.LineUp;
 import frc.robot.commands.RobotSpaceDrive;
-import frc.robot.commands.StrafeLeft;
-import frc.robot.commands.StrafeRight;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
@@ -34,10 +32,6 @@ public class RobotContainer {
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
     private PositionHandler positionHandler;
-    private PathHandler pathHandler;
-    private LineUp left;
-    private LineUp right;
-    private LineUp pickup;
 
     private AutoCommandGroup auto;
 
@@ -94,12 +88,7 @@ public class RobotContainer {
         robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joy3);
         swerveDrive.setDefaultCommand(fieldSpaceDriveCommand);
 
-        left = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "left");
-        right = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "right");
-        pickup = new LineUp(swerveDrive,pneumatics, limeLight, pigeon, "pickup");
-
         positionHandler = new PositionHandler(lift, pulley, gripperAngle);
-        pathHandler = new PathHandler(swerveDrive);
 
         autoChooser = new SendableChooser<Integer>();
         autoChooser.setDefaultOption("Score", 1);
@@ -144,27 +133,6 @@ public class RobotContainer {
 
         //Snow plow break
         joy3.button(6).whileTrue(new InstantCommand(() -> {swerveDrive.brake(); fieldSpaceDriveCommand.drive(false);})).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
-
-        //Move to score high on left node 
-        joy3.button(10).whileTrue(left).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
-        
-        //Move to score low on left node 
-        joy3.button(9).whileTrue(left).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
-
-        //Move to score high on right node 
-        joy3.button(14).whileTrue(right).whileTrue(new InstantCommand(() -> positionHandler.setPose(4)));
-        
-        //Move to score low on right node 
-        joy3.button(13).whileTrue(right).whileTrue(new InstantCommand(() -> positionHandler.setPose(3)));
-
-        //Pickup
-        joy3.button(12).whileTrue(pickup).whileTrue(new InstantCommand(() -> {positionHandler.setPose(1); pneumatics.open();}));
-
-
-
-
-
-
         
         
         //Soft disable for lift/arm

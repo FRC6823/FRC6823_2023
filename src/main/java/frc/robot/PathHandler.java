@@ -72,7 +72,7 @@ public class PathHandler {
     public Command balanceAuto(){
         PathPlannerTrajectory path = PathPlanner.loadPath("Balance Auto", constraints);
         
-        return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(1.88, 3.27, 180)));
+        return PPSwerveControlCommand(path, true).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.setPose(2, 0.6, 0)));
     }
 
     public Command getPath(int node, int piece, boolean reverse){

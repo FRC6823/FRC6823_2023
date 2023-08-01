@@ -75,6 +75,10 @@ public class RobotContainer {
         return positionHandler;
     }
 
+    public PathHandler getPathHandler(){
+        return pathHandler;
+    }
+
     public RobotContainer() {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         limeLight = new LimeLightSubsystem();
@@ -109,6 +113,7 @@ public class RobotContainer {
         autoChooser.addOption("Score, Backup, Start Pose", 5);
         autoChooser.addOption("Score, Start Pose", 6);
         autoChooser.addOption("Score, Over, Balance", 7);
+        autoChooser.addOption("Path Planner",8);
         
     
         Shuffleboard.getTab("Preferences").add("Autonomous", autoChooser);

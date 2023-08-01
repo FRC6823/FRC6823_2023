@@ -121,7 +121,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void periodic() {
         // Convert to module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
-        //if (!disableDrive)
+        if (!disableDrive)
             setSwerveModuleStates(moduleStates);
 
         odometry.update(pigeon.getAngleRad(), 

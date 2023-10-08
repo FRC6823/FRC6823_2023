@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -20,6 +21,8 @@ public class FieldSpaceDrive extends CommandBase {
     private NavXHandler navX;
     private SimpleWidget speedRateWidget;
     private SimpleWidget turnRateWidget;
+    private PIDController pid;
+    private int counter;
 
     public FieldSpaceDrive(SwerveDriveSubsystem subsystem, 
     JoystickHandler joystickHandler, NavXHandler navX) {
@@ -32,6 +35,10 @@ public class FieldSpaceDrive extends CommandBase {
         this.turnRateWidget = Shuffleboard.getTab("Preferences").addPersistent("Turn Rate", 0.5)
         .withWidget(BuiltInWidgets.kNumberSlider);
         addRequirements(swerveDrive);
+        pid = new PIDController(0, 0, 0);
+        pid.setSetpoint(navX.getAngleDeg().getDegrees());
+        pid.enableContinuousInput(0, 360);
+        counter = 0;
     }
 
     @Override
@@ -52,6 +59,20 @@ public class FieldSpaceDrive extends CommandBase {
         double xval = Math.max(Math.min(joystickHandler.getAxis1() * speedRate, 1), -1);
         double yval = Math.max(Math.min(joystickHandler.getAxis0() * speedRate, 1), -1);
         double spinval = Math.max(Math.min(joystickHandler.getAxis5() * -turnRate, 1), -1);
+
+        if (joystickHandler.getRawAxis5() == 0 && (xval!=0 || yval!=0)){
+            if (counter == 0){
+                spinval = pid.calculate(navX.getAngleDeg().getDegrees());
+            }
+            else {
+                pid.setSetpoint(navX.getAngleDeg().getDegrees());
+                counter--;
+            }
+        }
+        else {
+            pid.setSetpoint(navX.getAngleDeg().getDegrees());
+            counter = 15;
+        }
 
         // mapping field space to robot space
         //double txval = getTransX(xval, yval, robotAngle);

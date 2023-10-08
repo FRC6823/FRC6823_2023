@@ -68,8 +68,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         setSpeed(speed * reverse);
         
         SmartDashboard.putNumber("Encoder " + motorName, getPosition());
-        SmartDashboard.putNumber("Distance " + motorName, getDistance());
-        SmartDashboard.putNumber("Rotation " + motorName, getPositionRad());
+        //SmartDashboard.putNumber("Distance " + motorName, getDistance());
+        //SmartDashboard.putNumber("Rotation " + motorName, getPositionRad());
     }
 
     public int setAngle(double angle, double currentEncoderValue)

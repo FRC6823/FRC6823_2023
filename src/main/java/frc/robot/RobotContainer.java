@@ -16,7 +16,7 @@ public class RobotContainer {
     private FieldSpaceDrive fieldSpaceDriveCommand;
     //private RobotSpaceDrive robotSpaceDriveCommand;
     //private FollowLeader followLeader;
-    public PathHandler pathHandler;
+    //public PathHandler pathHandler;
 
     private JoystickHandler joystickHandler3;
     private JoystickHandler joystickHandler4;
@@ -42,7 +42,7 @@ public class RobotContainer {
         swerveDriveSubsystem.setDefaultCommand(fieldSpaceDriveCommand);
         //swerveDriveSubsystem.setDefaultCommand(targetSpaceDriveCommand);
         //followLeader = new FollowLeader(swerveDriveSubsystem);
-        pathHandler = new PathHandler(swerveDriveSubsystem);
+        //pathHandler = new PathHandler(swerveDriveSubsystem);
 
 
         /*autoSelect = new SendableChooser<String>();
@@ -72,9 +72,9 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    public Command getAutoCommandGroup() {
-        return pathHandler.balanceAuto();
-    }
+    //public Command getAutoCommandGroup() {
+        //return pathHandler.balanceAuto();
+    //}
 
     private void configureButtonBindings() {
         
@@ -88,7 +88,7 @@ public class RobotContainer {
 
         joystickHandler3.button(6).whileTrue(new InstantCommand(() -> swerveDriveSubsystem.resetSensors()));
 
-        joystickHandler4.button(2).onFalse(pathHandler.simpleAuto());
+        //joystickHandler4.button(2).onFalse(pathHandler.simpleAuto());
 
         //joystickHandler4.button(3).whileTrue(pathHandler.TeleopScore(false));
     }

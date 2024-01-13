@@ -12,6 +12,7 @@ import frc.robot.commands.LineUp;
 import frc.robot.commands.RobotSpaceDrive;
 import frc.robot.commands.StrafeLeft;
 import frc.robot.commands.StrafeRight;
+import frc.robot.subsystems.BetterShooter;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
@@ -32,6 +33,7 @@ public class RobotContainer {
     public GripperAngleSubsystem gripperAngle;
     public LEDSubsystem LEDs;
     public ThrottleSubsystem motor1;
+    public BetterShooter shooter;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
@@ -84,6 +86,7 @@ public class RobotContainer {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         limeLight = new LimeLightSubsystem();
         swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
+        shooter = new BetterShooter();
         // pneumatics = new PneumaticSubsystem();
         // lift = new LiftSubsystem();
         // pulley = new PulleySubsystem();
@@ -131,13 +134,20 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+
+        //Shooter Testing Stuff
+        joy3.button(2).whileTrue(new InstantCommand(() -> shooter.setSpeed(joy3.getAxis6())));
+
+
+
+
         // Gripper toggle
         // joy3.button(1).whileTrue(new InstantCommand(() ->
         // pneumatics.togglePneumaticState()));
 
         // Toggle yaw lock
-        joy3.button(2).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()))
-                .onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()));
+        //joy3.button(2).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()))
+                //.onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()));
 
         // This will set the current orientation to be "forward" for field drive
         joy3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));

@@ -41,9 +41,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     
     public SwerveDriveSubsystem(Pigeon2Handler pigeon, LimeLightSubsystem limeLight) {
 
-        backRight = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", Constants.bROffset);// These are the motors and encoder
+        backLeft = new SwerveWheelModuleSubsystem(1, 8, 26, "BR", Constants.bROffset);// These are the motors and encoder
                                                                 // CAN IDs for swerve drive
-        backLeft = new SwerveWheelModuleSubsystem(3, 2, 27, "BL", Constants.bLOffset);
+        backRight = new SwerveWheelModuleSubsystem(3, 2, 27, "BL", Constants.bLOffset);
         frontRight = new SwerveWheelModuleSubsystem(5, 4, 28, "FR", Constants.fROffset);
         frontLeft = new SwerveWheelModuleSubsystem(7, 6, 25, "FL", Constants.fLOffset);// The order is angle, speed,
                                                                                    // encoder, calibrateWidget

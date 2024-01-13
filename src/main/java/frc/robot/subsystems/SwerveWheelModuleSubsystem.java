@@ -19,8 +19,8 @@ import frc.robot.util.MathUtil;
 import frc.robot.util.Constants;
 
 public class SwerveWheelModuleSubsystem extends SubsystemBase {
-    //private final double P = .008;
-    //private final double I = .00001;
+    // private final double P = .008;
+    // private final double I = .00001;
     private final double P = .009;
     private final double I = .00002;
 
@@ -28,10 +28,10 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     private TalonFX speedMotor;
     private PIDController pidController;
     private CANCoder angleEncoder;
-    //private boolean calibrateMode;
+    // private boolean calibrateMode;
     private double encoderOffset;
     private String motorName;
-    //private SimpleWidget speedLim;
+    // private SimpleWidget speedLim;
 
     public SwerveWheelModuleSubsystem(int angleMotorChannel, int speedMotorChannel, int angleEncoderChannel,
             String motorName, double offset) {
@@ -40,8 +40,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         this.speedMotor = new TalonFX(speedMotorChannel);
         this.angleEncoder = new CANCoder(angleEncoderChannel); // CANCoder Encoder
         this.speedMotor.setNeutralMode(NeutralMode.Brake);
-        //angleMotor.configSupplyCurrentLimit(Constants.kdriveCurrentLimit);
-        //speedMotor.configSupplyCurrentLimit(Constants.kdriveCurrentLimit);
+        // angleMotor.configSupplyCurrentLimit(Constants.kdriveCurrentLimit);
+        // speedMotor.configSupplyCurrentLimit(Constants.kdriveCurrentLimit);
         this.motorName = motorName;
 
         this.pidController = new PIDController(P, I, 0); // This is the PID constant,
@@ -57,7 +57,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         SendableRegistry.addChild(this, speedMotor);
         SendableRegistry.addChild(this, angleEncoder);
         SendableRegistry.addLW(this, "Swerve Wheel Module");
-        
+
         encoderOffset = offset;
         resetSensor();
     }
@@ -66,32 +66,29 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         double currentEncoderValue = getPosition();
         int reverse = setAngle(angle, currentEncoderValue);
         setSpeed(speed * reverse);
-        
+
         SmartDashboard.putNumber("Swerve CANCoder " + motorName, getPosition());
     }
 
-    public int setAngle(double angle, double currentEncoderValue)
-    {
+    public int setAngle(double angle, double currentEncoderValue) {
         angle = MathUtil.mod(angle, 360); // ensure setpoint is on scale 0-360
         int reverse = 1;
-        //angle += 90;
+        // angle += 90;
 
-        if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 70)
-        {
+        if (MathUtil.getCyclicalDistance(currentEncoderValue, angle, 360) > 70) {
             reverse = -1;
             angle += 180;
             angle = MathUtil.mod(angle, 360);
         }
-        
+
         double pidOut = -pidController.calculate(currentEncoderValue, angle);
-        
-          angleMotor.set(ControlMode.PercentOutput, pidOut);
+
+        angleMotor.set(ControlMode.PercentOutput, pidOut);
 
         return reverse;
     }
 
-    public void setSpeed(double speed)
-    {
+    public void setSpeed(double speed) {
         speedMotor.set(ControlMode.PercentOutput, speed); // sets motor speed //22150 units/100 ms at 12.4V
     }
 
@@ -108,9 +105,10 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     public double getDistance() {
         if (motorName.equals("BR") || motorName.equals("FR")) {
-            return -(speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO);
+            return -(speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)
+                    / (2048 * Constants.L2_RATIO);
         }
-        return (speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)/(2048 * Constants.L2_RATIO);
+        return (speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE) / (2048 * Constants.L2_RATIO);
     }
 
     public void stop() {
@@ -120,23 +118,23 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Swerve CANCoder " + motorName, getPosition());
+
     }
 
-    public void coast(){
+    public void coast() {
         speedMotor.setNeutralMode(NeutralMode.Coast);
     }
 
-    public void brake(){
+    public void brake() {
         speedMotor.setNeutralMode(NeutralMode.Brake);
     }
 
-    public void resetSensor()
-    {
+    public void resetSensor() {
         speedMotor.setSelectedSensorPosition(0);
     }
 
-    public SwerveModulePosition getSwerveModulePosition()
-    {
+    public SwerveModulePosition getSwerveModulePosition() {
         return new SwerveModulePosition(getDistance(), new Rotation2d(getPositionRad()));
     }
 }
